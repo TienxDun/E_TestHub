@@ -1,0 +1,216 @@
+@{
+    ViewData["Title"] = "eTestHub - Nền tảng thi trắc nghiệm online";
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="~/css/Login.css" rel="stylesheet">
+</head>
+<body>
+    <div class="etesthub-container">
+        <!-- Header -->
+        <header class="etesthub-header">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <a class="navbar-brand fw-bold text-primary fs-3" asp-controller="Home" asp-action="Index">eTestHub</a>
+                    </div>
+                    <div class="col">
+                        <nav class="navbar navbar-expand-lg">
+                            <div class="navbar-nav ms-auto">
+                                <a class="nav-link etesthub-nav-link" asp-action="RedirectToIndex">Trang chủ</a>
+                                <a class="nav-link etesthub-nav-link" href="#">Bảng giá</a>
+                                <a class="nav-link etesthub-nav-link" href="#">Liên hệ</a>
+                                <a class="btn etesthub-btn-primary" asp-controller="Home" asp-action="Register">Đăng ký</a>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="etesthub-main d-flex">
+            <!-- Left Sidebar -->
+            <div class="etesthub-sidebar">
+                <div class="etesthub-sidebar-icons">
+                    <i class="fas fa-home etesthub-sidebar-icon active"></i>
+                    <i class="fas fa-building etesthub-sidebar-icon"></i>
+                    <i class="fas fa-file-text etesthub-sidebar-icon"></i>
+                    <i class="fas fa-file-alt etesthub-sidebar-icon"></i>
+                    <i class="fas fa-bell etesthub-sidebar-icon mt-auto"></i>
+                    <i class="fas fa-user etesthub-sidebar-icon"></i>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="etesthub-content flex-fill d-flex">
+                <!-- Left Content Area -->
+                <div class="etesthub-left-content">
+                    <!-- Badge -->
+                    <div class="etesthub-badge">
+                        #1 Nền tảng thi trắc nghiệm online tốt nhất
+                    </div>
+
+                    <!-- Main Heading -->
+                    <h1 class="etesthub-main-heading">
+                        Có cách đơn giản hơn để<br>
+                        <span class="etesthub-heading-large">tổ chức kỳ thi</span><br>
+                        trắc nghiệm online
+                    </h1>
+
+                    <!-- Description -->
+                    <p class="etesthub-description">
+                        Giải pháp thông minh từ eTestHub cho phép bạn thiết kế câu hỏi và đề thi một cách tiện lợi, tối ưu hóa qua trình học.
+                    </p>
+
+                    <!-- Customer Avatars -->
+                    <div class="etesthub-customers d-flex align-items-center mb-5">
+                        <div class="etesthub-avatars d-flex">
+                            <div class="etesthub-avatar">
+                                <img src="~/images/avatar1.jpg" alt="User 1">
+                            </div>
+                            <div class="etesthub-avatar">
+                                <img src="~/images/avatar2.jpg" alt="User 2">
+                            </div>
+                            <div class="etesthub-avatar">
+                                <img src="~/images/avatar3.jpg" alt="User 3">
+                            </div>
+                            <div class="etesthub-avatar">
+                                <img src="~/images/avatar4.jpg" alt="User 4">
+                            </div>
+                            <div class="etesthub-avatar etesthub-avatar-more">
+                                <span>+</span>
+                            </div>
+                        </div>
+                        <span class="etesthub-customer-text">Hơn 100.000+ khách hàng đã yêu thích sử dụng</span>
+                    </div>
+
+                    <!-- Dashboard Preview Card -->
+                    <div class="etesthub-dashboard-card">
+                        <div class="etesthub-card-header d-flex align-items-center mb-4">
+                            <div class="etesthub-card-icon">
+                                <i class="fas fa-home"></i>
+                            </div>
+                            <div>
+                                <p class="etesthub-greeting">Xin chào,</p>
+                                <p class="etesthub-username">Võ Nguyễn Thanh Hiếu</p>
+                            </div>
+                        </div>
+
+                        <!-- Feature Icons -->
+                        <div class="row mb-4">
+                            <div class="col-4">
+                                <div class="etesthub-feature-card text-center">
+                                    <i class="fas fa-university etesthub-feature-icon"></i>
+                                    <p class="etesthub-feature-text">Ngân hàng câu hỏi</p>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="etesthub-feature-card text-center">
+                                    <i class="fas fa-folder etesthub-feature-icon"></i>
+                                    <p class="etesthub-feature-text">Quản lý đề thi</p>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="etesthub-feature-card text-center">
+                                    <i class="fas fa-chart-bar etesthub-feature-icon"></i>
+                                    <p class="etesthub-feature-text">Xem kết quả thi</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Class Lists -->
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="etesthub-section">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h6 class="etesthub-section-title">Lớp đang giảng dạy</h6>
+                                        <button class="btn etesthub-btn-outline-sm">Xem thêm</button>
+                                    </div>
+                                    <div class="etesthub-class-list">
+                                        <div class="etesthub-class-item d-flex align-items-center">
+                                            <div class="etesthub-class-icon"></div>
+                                            <div>
+                                                <p class="etesthub-class-code">PM233H</p>
+                                                <p class="etesthub-class-info">360 sinh viên</p>
+                                                <p class="etesthub-class-info">Khóa: 2023 - 2027</p>
+                                            </div>
+                                        </div>
+                                        <div class="etesthub-class-item d-flex align-items-center">
+                                            <div class="etesthub-class-icon"></div>
+                                            <div>
+                                                <p class="etesthub-class-code">TM233H</p>
+                                                <p class="etesthub-class-info">36 sinh viên</p>
+                                                <p class="etesthub-class-info">Khóa: 2023 - 2027</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="etesthub-section">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h6 class="etesthub-section-title">Kỳ thi đã tạo gần đây</h6>
+                                        <button class="btn etesthub-btn-outline-sm">Xem thêm</button>
+                                    </div>
+                                    <div class="etesthub-exam-list">
+                                        <div class="etesthub-exam-item d-flex align-items-center">
+                                            <div class="etesthub-exam-icon"></div>
+                                            <div>
+                                                <p class="etesthub-exam-name">Xác suất thống kê</p>
+                                                <p class="etesthub-exam-info">Thứ Sáu, 15-08-2025</p>
+                                                <p class="etesthub-exam-info">Thời gian làm bài: 90 phút</p>
+                                            </div>
+                                        </div>
+                                        <div class="etesthub-exam-item d-flex align-items-center">
+                                            <div class="etesthub-exam-icon"></div>
+                                            <div>
+                                                <p class="etesthub-exam-name">Xác suất thống kê</p>
+                                                <p class="etesthub-exam-info">Thứ Sáu, 15-08-2025</p>
+                                                <p class="etesthub-exam-info">Thời gian làm bài: 90 phút</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Login Form -->
+                <div class="etesthub-login-form">
+                    <h2 class="etesthub-login-title">Đăng nhập</h2>
+                    
+                    <form class="etesthub-form">
+                        <div class="mb-3">
+                            <input type="email" class="form-control etesthub-input" placeholder="example@etesthub.com">
+                        </div>
+                        <div class="mb-3">
+                            <input type="password" class="form-control etesthub-input" placeholder="Mật khẩu">
+                        </div>
+                        <div class="mb-3 text-end">
+                            <a href="#" class="etesthub-forgot-link">Quên mật khẩu?</a>
+                        </div>
+                        <button type="submit" class="btn etesthub-btn-login w-100 mb-3">Đăng nhập</button>
+                        
+                        <div class="etesthub-divider text-center mb-3">Hoặc</div>
+                        
+                        <button type="button" class="btn etesthub-btn-google w-100">
+                            <i class="fab fa-google me-2"></i>
+                            Đăng nhập bằng Google
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

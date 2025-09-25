@@ -1,0 +1,182 @@
+﻿/* eTestHub Custom Styles for ASP.NET Core MVC */
+
+:root {
+  /* eTestHub color palette from Figma */
+  --primary-color: #2e8be9;
+  --background-color: #fafaff;
+  --foreground-color: #2f3542;
+  --secondary-color: #f1f5f9;
+  --muted-color: #b4bbc3;
+  --white: #ffffff;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--foreground-color);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+}
+
+/* Custom Bootstrap overrides */
+.text-primary {
+  color: var(--primary-color) !important;
+}
+
+.bg-primary {
+  background-color: var(--primary-color) !important;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: var(--white);
+}
+
+.btn-primary:hover {
+  background-color: #2577d1;
+  border-color: #2577d1;
+}
+
+.bg-light-custom {
+  background-color: var(--background-color);
+}
+
+.bg-secondary-light {
+  background-color: var(--secondary-color);
+}
+
+.bg-primary-light {
+  background-color: rgba(46, 139, 233, 0.1);
+}
+
+.text-muted {
+  color: var(--muted-color) !important;
+}
+
+.text-light-gray {
+  color: #d1d5db;
+}
+
+/* Header styles */
+.navbar-brand {
+  font-size: 1.5rem;
+}
+
+.hover-primary:hover {
+  color: var(--primary-color) !important;
+}
+
+.hover-white:hover {
+  color: var(--white) !important;
+}
+
+/* Dashboard mockup styles */
+.dashboard-card {
+  background: var(--white);
+  border: none;
+  border-radius: 12px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+}
+
+.user-avatar .bg-white {
+  width: 20px;
+  height: 20px;
+}
+
+.transform-rotate {
+  transform: rotate(2deg);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .display-4 {
+    font-size: 2rem;
+  }
+
+  .display-5 {
+    font-size: 1.75rem;
+  }
+
+  .transform-rotate {
+    transform: none;
+  }
+
+  .dashboard-card {
+    max-width: 100%;
+  }
+}
+
+/* Animation and transitions */
+.btn {
+  transition: all 0.3s ease;
+}
+
+.nav-link {
+  transition: color 0.3s ease;
+}
+
+a {
+  transition: color 0.3s ease;
+  text-decoration: none;
+}
+
+/* Custom spacing */
+.py-5 {
+  padding-top: 4rem !important;
+  padding-bottom: 4rem !important;
+}
+
+/* Footer styles */
+footer ul li {
+  margin-bottom: 0.5rem;
+}
+
+footer a {
+  text-decoration: none;
+}
+
+/* Badge styles */
+.badge {
+  font-weight: 500;
+}
+
+.rounded-pill {
+  border-radius: 50rem !important;
+}
+
+/* Card hover effects */
+.dashboard-card:hover {
+  transform: translateY(-2px);
+  transition: transform 0.3s ease;
+}
+
+/* Text decoration utilities */
+.text-decoration-underline {
+  text-decoration: underline;
+  text-decoration-color: rgba(46, 139, 233, 0.3);
+  text-underline-offset: 4px;
+}
+
+/* Custom button styles */
+.btn-lg {
+  padding: 0.75rem 2rem;
+  font-size: 1.1rem;
+}
+
+/* Ensure proper contrast */
+.bg-dark {
+  background-color: #1a1a1a !important;
+}
+
+.border-secondary {
+  border-color: #495057 !important;
+}
+
+
+

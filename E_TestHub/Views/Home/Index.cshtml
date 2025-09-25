@@ -1,0 +1,211 @@
+﻿@{
+    ViewData["Title"] = "eTestHub - Nền tảng thi trắc nghiệm online";
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="~/css/Index.css" rel="stylesheet" />
+</head>
+<body>
+    <!-- Header -->
+    <header class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold text-primary fs-3" asp-controller="Home" asp-action="Index">eTestHub</a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <nav class="navbar-nav mx-auto">
+                    <a class="nav-link text-dark hover-primary" asp-action="RedirectToIndex">Trang chủ</a>
+                    <a class="nav-link text-dark hover-primary" href="#">Bảng giá</a>
+                    <a class="nav-link text-dark hover-primary" href="#">Liên hệ</a>
+                </nav>
+                
+                <a class="btn btn-primary" asp-controller="Home" asp-action="Login">Đăng nhập</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="py-5 bg-light-custom">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6">
+                    <div class="badge bg-primary-light text-primary px-3 py-2 rounded-pill mb-4">
+                        #1 Nền tảng thi trắc nghiệm online tốt nhất
+                    </div>
+                    
+                    <h1 class="display-4 fw-bold text-dark mb-4">
+                        Có cách đơn giản hơn để <span class="text-primary">tổ chức kỳ thi</span> trắc nghiệm online
+                    </h1>
+                    
+                    <p class="lead text-muted mb-4">
+                        Giải pháp thông minh từ eTestHub cho phép bạn thiết kế câu hỏi và đề thi một cách tiện lợi, tối ưu hóa quy trình học tập.
+                    </p>
+                    
+                    <div class="mb-4">
+                        <small class="text-muted">Hơn 100,000+ khách hàng đã yêu thích sử dụng</small>
+                    </div>
+                    
+                    <button class="btn btn-primary btn-lg">
+                        🎯 Tham gia ngay
+                    </button>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="dashboard-mockup transform-rotate">
+                        <partial name="_DashboardMockup" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-5 bg-secondary-light">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold text-dark mb-4">
+                    Nền tảng kiểm tra đánh giá toàn diện 
+                    <span class="text-primary text-decoration-underline">được tin dùng</span> 
+                    bởi các giáo viên hàng đầu
+                </h2>
+            </div>
+
+            <!-- Feature 1 -->
+            <div class="row align-items-center g-5 mb-5">
+                <div class="col-lg-6">
+                    <partial name="_DashboardMockup" />
+                </div>
+                <div class="col-lg-6">
+                    <h3 class="h2 fw-bold text-dark mb-4">
+                        Tạo và quản lý bài thi <span class="text-primary">linh hoạt</span>
+                    </h3>
+                    <p class="text-muted mb-4">
+                        Giáo viên dễ dàng tạo bài thi mới, thêm, sửa, xóa câu hỏi và thiết lập thời gian làm bài.
+                    </p>
+                    <button class="btn btn-primary">🎯 Trải nghiệm ngay</button>
+                </div>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6 order-lg-2">
+                    <partial name="_DashboardMockup" />
+                </div>
+                <div class="col-lg-6 order-lg-1">
+                    <h3 class="h2 fw-bold text-dark mb-4">
+                        Hệ thống phân quyền <span class="text-primary">đa dạng</span>
+                    </h3>
+                    <p class="text-muted mb-4">
+                        Phân quyền chi tiết cho Học sinh, Giáo viên và Quản trị viên giúp việc quản lý hệ thống chặt chẽ và an toàn.
+                    </p>
+                    <button class="btn btn-primary">🎯 Đặt đơn ngay</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Analytics Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6">
+                    <partial name="_DashboardMockup" />
+                </div>
+                <div class="col-lg-6">
+                    <h3 class="h2 fw-bold text-dark mb-4">
+                        Chấm điểm và thống kê kết quả <span class="text-primary">tự động</span>
+                    </h3>
+                    <p class="text-muted mb-4">
+                        Hệ thống tự động chấm điểm bài làm, cung cấp báo cáo và thống kê chi tiết về kết quả thi theo từng lớp, môn học, giúp đánh giá chính xác hiệu quả giảng dạy và học tập.
+                    </p>
+                    <button class="btn btn-primary">🎯 Dùng thử ngay</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-5 bg-primary text-white">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="display-5 fw-bold mb-4">
+                        Nâng cao chất lượng kiểm tra, đánh giá, trải nghiệm giảng dạy và học tập cùng eTestHub
+                    </h2>
+                    <button class="btn btn-light btn-lg text-primary">
+                        🎯 Tham gia ngay
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-5 bg-dark text-white">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <h5 class="fw-bold mb-3">Về eTestHub</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-light-gray hover-white">Giới thiệu</a></li>
+                        <li><a href="#" class="text-light-gray hover-white">Liên hệ</a></li>
+                        <li><a href="#" class="text-light-gray hover-white">Điều khoản</a></li>
+                        <li><a href="#" class="text-light-gray hover-white">Bảo mật</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-md-3">
+                    <h5 class="fw-bold mb-3">Khám phá</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-light-gray hover-white">Tài ứng dụng</a></li>
+                        <li><a href="#" class="text-light-gray hover-white">Tài thành người dùng</a></li>
+                        <li><a href="#" class="text-light-gray hover-white">Các gói đăng ký và dịch vụ</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-md-3">
+                    <h5 class="fw-bold mb-3">Dành cho Đối tác</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-light-gray hover-white">Trường học</a></li>
+                        <li><a href="#" class="text-light-gray hover-white">Trung tâm giảng dạy</a></li>
+                        <li><a href="#" class="text-light-gray hover-white">Nhà quảng cáo</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-md-3">
+                    <h5 class="fw-bold mb-3">CÔNG TY CỔ PHẦN GIẢI PHÁP CÔNG NGHỆ SỐ DIGITALHUB</h5>
+                    <div class="small text-light-gray">
+                        <p>Mã số thuế: 0317***547</p>
+                        <p>Ngày thành lập: 12/06/2025</p>
+                        <p>Lĩnh vực hoạt động: Giáo dục, công nghệ.</p>
+                        <p>Chúng tôi tập trung xây dựng và phát triển các giải pháp công nghệ số mang lại giá trị cho người dùng tại Việt Nam.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <hr class="my-4 border-secondary">
+            
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h4 class="fw-bold text-primary mb-0">eTestHub</h4>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <small class="text-light-gray">@@2025 eTestHub. Bản quyền thuộc về DigitalHub</small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
