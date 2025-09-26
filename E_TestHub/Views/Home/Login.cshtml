@@ -1,3 +1,4 @@
+@model E_TestHub.Models.LoginViewModel
 @{
     ViewData["Title"] = "eTestHub - Nền tảng thi trắc nghiệm online";
 }
@@ -104,25 +105,43 @@
                                 </div>
                                 <h2 class="etesthub-login-title fw-bold">Đăng nhập</h2>
                                 <p class="text-muted small">Chào mừng trở lại với eTestHub</p>
+                                
+                                <!-- Demo Users Notice -->
+                                <div class="alert alert-info small" role="alert">
+                                    <strong>🎯 Demo Accounts:</strong><br/>
+                                    <div class="text-left mt-2">
+                                        <strong>Student:</strong> student@demo.com / student123<br/>
+                                        <strong>Teacher:</strong> teacher@demo.com / teacher123<br/>
+                                        <strong>Admin:</strong> admin@demo.com / admin123
+                                    </div>
+                                </div>
                             </div>
                             
-                            <form class="etesthub-form">
+                            <form id="loginForm" class="etesthub-form" method="post" asp-action="Login">
+                                @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+                                {
+                                    <div class="alert alert-danger" role="alert">
+                                        @ViewBag.ErrorMessage
+                                    </div>
+                                }
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold text-dark">Email</label>
-                                    <input type="email" class="form-control etesthub-input" placeholder="example@etesthub.com">
+                                    <input asp-for="Email" type="email" class="form-control etesthub-input" placeholder="example@etesthub.com">
+                                    <span asp-validation-for="Email" class="text-danger"></span>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold text-dark">Mật khẩu</label>
-                                    <input type="password" class="form-control etesthub-input" placeholder="Nhập mật khẩu">
+                                    <input asp-for="Password" type="password" class="form-control etesthub-input" placeholder="Nhập mật khẩu">
+                                    <span asp-validation-for="Password" class="text-danger"></span>
                                 </div>
                                 <div class="mb-4 d-flex justify-content-between align-items-center">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="rememberMe">
+                                        <input asp-for="RememberMe" class="form-check-input" type="checkbox" id="rememberMe">
                                         <label class="form-check-label small text-muted" for="rememberMe">
                                             Ghi nhớ đăng nhập
                                         </label>
                                     </div>
-                                    <a href="#" class="etesthub-forgot-link small">Quên mật khẩu?</a>
+                                    <a href="#" id="forgotPasswordLink" class="etesthub-forgot-link small">Quên mật khẩu?</a>
                                 </div>
                                 <button type="submit" class="btn etesthub-btn-login w-100 mb-3 py-3 fw-semibold">Đăng nhập</button>
                                 
@@ -133,6 +152,18 @@
                                     Đăng nhập bằng Google
                                 </button>
                             </form>
+
+                            <form id="forgotPasswordForm" class="etesthub-form" style="display: none;">
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold text-dark">Email</label>
+                                    <input type="email" class="form-control etesthub-input" placeholder="Nhập email để khôi phục mật khẩu">
+                                </div>
+                                <button type="submit" class="btn etesthub-btn-login w-100 mb-3 py-3 fw-semibold">Gửi yêu cầu</button>
+                                
+                                <div class="text-center">
+                                    <a href="#" id="backToLoginLink" class="etesthub-forgot-link small">Quay lại đăng nhập</a>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -141,5 +172,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/login.js"></script>
 </body>
 </html>

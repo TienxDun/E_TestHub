@@ -57,9 +57,11 @@ C:\Users\leuti\Desktop\ASP.NET Core\E_TestHub\E_TestHub\obj\Debug\net8.0\staticw
 C:\Users\leuti\Desktop\ASP.NET Core\E_TestHub\E_TestHub\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Users\leuti\Desktop\ASP.NET Core\E_TestHub\E_TestHub\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\leuti\Desktop\ASP.NET Core\E_TestHub\E_TestHub\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-C:\Users\leuti\Desktop\ASP.NET Core\E_TestHub\E_TestHub\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\leuti\Desktop\ASP.NET Core\E_TestHub\E_TestHub\obj\Debug\net8.0\E_TestHub.dll
 C:\Users\leuti\Desktop\ASP.NET Core\E_TestHub\E_TestHub\obj\Debug\net8.0\refint\E_TestHub.dll
 C:\Users\leuti\Desktop\ASP.NET Core\E_TestHub\E_TestHub\obj\Debug\net8.0\E_TestHub.pdb
 C:\Users\leuti\Desktop\ASP.NET Core\E_TestHub\E_TestHub\obj\Debug\net8.0\E_TestHub.genruntimeconfig.cache
 C:\Users\leuti\Desktop\ASP.NET Core\E_TestHub\E_TestHub\obj\Debug\net8.0\ref\E_TestHub.dll
+C:\Users\leuti\Desktop\ASP.NET Core\E_TestHub\E_TestHub\bin\Debug\net8.0\BCrypt.Net-Next.dll
+C:\Users\leuti\Desktop\ASP.NET Core\E_TestHub\E_TestHub\obj\Debug\net8.0\E_TestHub.csproj.AssemblyReference.cache
+C:\Users\leuti\Desktop\ASP.NET Core\E_TestHub\E_TestHub\obj\Debug\net8.0\E_TestHub.csproj.Up2Date

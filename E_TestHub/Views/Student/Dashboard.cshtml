@@ -1,0 +1,101 @@
+@{
+    ViewData["Title"] = "Dashboard - Sinh Viên";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@section Styles {
+    <link href="~/css/dashboard_sv.css" rel="stylesheet">
+}
+
+<!-- Header Section -->
+<div class="header-section">
+    <div class="welcome-text">
+        <h1 class="greeting">Xin chào,</h1>
+        <h2 class="user-name">@ViewBag.UserName</h2>
+    </div>
+</div>
+
+<!-- Quick Action Cards -->
+<div class="quick-actions">
+    <a href="@Url.Action("Classes", "Student")" class="action-card">
+        <div class="card-icon">
+            <i class="fas fa-university"></i>
+        </div>
+        <h3 class="card-title">Danh sách lớp</h3>
+    </a>
+    <a href="@Url.Action("ExamHistory", "Student")" class="action-card">
+        <div class="card-icon">
+            <i class="fas fa-chart-line"></i>
+        </div>
+        <h3 class="card-title">Lịch sử thi</h3>
+    </a>
+</div>
+
+<!-- Content Grid -->
+<div class="content-grid">
+    <!-- Recently Accessed Classes -->
+    <div class="content-section">
+        <div class="section-header">
+            <h3 class="section-title">Lớp truy cập gần đây</h3>
+            <a href="@Url.Action("Classes", "Student")" class="view-more">
+                <span class="external-link-icon">⧉</span>
+                Xem thêm
+            </a>
+        </div>
+        <div class="section-content">
+            <div class="item-row">
+                <div class="item-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="item-details">
+                    <h4 class="item-title">PM233H</h4>
+                    <p class="item-subtitle">360 sinh viên</p>
+                    <p class="item-subtitle">Khóa: 2023 - 2027</p>
+                </div>
+            </div>
+            <div class="item-row">
+                <div class="item-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="item-details">
+                    <h4 class="item-title">TM231H</h4>
+                    <p class="item-subtitle">36 sinh viên</p>
+                    <p class="item-subtitle">Khóa: 2023 - 2027</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upcoming Exams -->
+    <div class="content-section">
+        <div class="section-header">
+            <h3 class="section-title">Lịch thi sắp tới</h3>
+            <a href="@Url.Action("ViewResults", "Student")" class="view-more">
+                <span class="external-link-icon">⧉</span>
+                Xem thêm
+            </a>
+        </div>
+        <div class="section-content">
+            <div class="item-row">
+                <div class="item-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="item-details">
+                    <h4 class="item-title">Tiếng Anh Tổng Quát 1</h4>
+                    <p class="item-subtitle">Thứ Bảy, 15-08-2025</p>
+                    <p class="item-subtitle">Thời gian làm bài: 90 phút</p>
+                </div>
+            </div>
+            <div class="item-row">
+                <div class="item-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="item-details">
+                    <h4 class="item-title">Xác suất thống kê</h4>
+                    <p class="item-subtitle">Thứ Sáu, 15-08-2025</p>
+                    <p class="item-subtitle">Thời gian làm bài: 90 phút</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

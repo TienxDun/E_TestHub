@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using E_TestHub.Models;
+using E_TestHub.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_TestHub.Controllers
@@ -7,10 +8,12 @@ namespace E_TestHub.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IUserService _userService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IUserService userService)
         {
             _logger = logger;
+            _userService = userService;
         }
 
         public IActionResult Index()
@@ -27,31 +30,65 @@ namespace E_TestHub.Controllers
         
         // POST: /Home/Login
         [HttpPost]
-        public IActionResult Login(string email, string password)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
-            // Demo: kiểm tra tài khoản mẫu
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            if (!ModelState.IsValid)
             {
-                ViewBag.Error = "Vui lòng nhập đầy đủ thông tin.";
-                return View();
+                return View(model);
             }
 
-            // Tài khoản mẫu: admin@example.com / 123456
-            if (email == "admin@example.com" && password == "123456")
+            var user = await _userService.AuthenticateAsync(model.Email, model.Password);
+            
+            if (user != null)
             {
-                // Đăng nhập thành công, chuyển hướng đến Dashboard
-                return RedirectToAction("Dashboard");
+                // Store user info in session (In production, use proper authentication)
+                HttpContext.Session.SetInt32("UserId", user.Id);
+                HttpContext.Session.SetString("UserName", user.FullName);
+                HttpContext.Session.SetString("UserRole", user.Role.ToString());
+
+                // Redirect based on role
+                return user.Role switch
+                {
+                    UserRole.Student => RedirectToAction("Dashboard", "Student"),
+                    UserRole.Teacher => RedirectToAction("Dashboard", "Teacher"),
+                    UserRole.Admin => RedirectToAction("Dashboard", "Admin"),
+                    _ => RedirectToAction("Index")
+                };
             }
             else
             {
-                ViewBag.Error = "Email hoặc mật khẩu không đúng.";
-                return View();
+                ViewBag.ErrorMessage = "Email hoặc mật khẩu không đúng.";
+                return View(model);
             }
         }
 
-        public IActionResult Dashboard_GV()
+        // POST: /Home/ForgotPassword
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
-            return View();
+            if (!ModelState.IsValid)
+            {
+                return View("Login", model);
+            }
+
+            var result = await _userService.ResetPasswordAsync(model.Email);
+            
+            if (result)
+            {
+                ViewBag.Message = "Đã gửi email hướng dẫn đặt lại mật khẩu.";
+            }
+            else
+            {
+                ViewBag.Error = "Không tìm thấy email trong hệ thống.";
+            }
+
+            return View("Login");
+        }
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

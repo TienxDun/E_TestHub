@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "/lrUt6nNYvg=",
+  "dgSpecHash": "MkyByeXj/Us=",
   "success": true,
   "projectFilePath": "C:\\Users\\leuti\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\E_TestHub.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\leuti\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512"
+  ],
   "logs": []
 }

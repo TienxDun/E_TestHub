@@ -1,3 +1,5 @@
+using E_TestHub.Services;
+
 namespace E_TestHub
 {
     public class Program
@@ -9,13 +11,23 @@ namespace E_TestHub
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            // Add session support
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
+            // Register services
+            builder.Services.AddScoped<IUserService, UserService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -23,6 +35,9 @@ namespace E_TestHub
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            // Add session middleware (must be before UseAuthorization)
+            app.UseSession();
 
             app.UseAuthorization();
 
