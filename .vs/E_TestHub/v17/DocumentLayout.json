@@ -1,42 +1,10 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\",
+  "WorkspaceRootPath": "C:\\Users\\leuti\\Desktop\\ASP.NET Core\\E_TestHub\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{40C8232A-A923-4CD3-8FEA-3FD96386E4E4}|E_TestHub\\E_TestHub.csproj|c:\\users\\admin\\desktop\\asp.net core\\e_testhub\\e_testhub\\views\\home\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{40C8232A-A923-4CD3-8FEA-3FD96386E4E4}|E_TestHub\\E_TestHub.csproj|c:\\users\\leuti\\desktop\\asp.net core\\e_testhub\\e_testhub\\views\\home\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{40C8232A-A923-4CD3-8FEA-3FD96386E4E4}|E_TestHub\\E_TestHub.csproj|solutionrelative:e_testhub\\views\\home\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{40C8232A-A923-4CD3-8FEA-3FD96386E4E4}|E_TestHub\\E_TestHub.csproj|c:\\users\\admin\\desktop\\asp.net core\\e_testhub\\e_testhub\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{40C8232A-A923-4CD3-8FEA-3FD96386E4E4}|E_TestHub\\E_TestHub.csproj|solutionrelative:e_testhub\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{40C8232A-A923-4CD3-8FEA-3FD96386E4E4}|E_TestHub\\E_TestHub.csproj|c:\\users\\admin\\desktop\\asp.net core\\e_testhub\\e_testhub\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{40C8232A-A923-4CD3-8FEA-3FD96386E4E4}|E_TestHub\\E_TestHub.csproj|solutionrelative:e_testhub\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{40C8232A-A923-4CD3-8FEA-3FD96386E4E4}|E_TestHub\\E_TestHub.csproj|c:\\users\\admin\\desktop\\asp.net core\\e_testhub\\e_testhub\\wwwroot\\js\\etesthub.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{40C8232A-A923-4CD3-8FEA-3FD96386E4E4}|E_TestHub\\E_TestHub.csproj|solutionrelative:e_testhub\\wwwroot\\js\\etesthub.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{40C8232A-A923-4CD3-8FEA-3FD96386E4E4}|E_TestHub\\E_TestHub.csproj|c:\\users\\admin\\desktop\\asp.net core\\e_testhub\\e_testhub\\wwwroot\\css\\etesthub.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
-      "RelativeMoniker": "D:0:0:{40C8232A-A923-4CD3-8FEA-3FD96386E4E4}|E_TestHub\\E_TestHub.csproj|solutionrelative:e_testhub\\wwwroot\\css\\etesthub.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{40C8232A-A923-4CD3-8FEA-3FD96386E4E4}|E_TestHub\\E_TestHub.csproj|c:\\users\\admin\\desktop\\asp.net core\\e_testhub\\e_testhub\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
-      "RelativeMoniker": "D:0:0:{40C8232A-A923-4CD3-8FEA-3FD96386E4E4}|E_TestHub\\E_TestHub.csproj|solutionrelative:e_testhub\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{40C8232A-A923-4CD3-8FEA-3FD96386E4E4}|E_TestHub\\E_TestHub.csproj|c:\\users\\admin\\desktop\\asp.net core\\e_testhub\\e_testhub\\views\\shared\\_dashboardmockup.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{40C8232A-A923-4CD3-8FEA-3FD96386E4E4}|E_TestHub\\E_TestHub.csproj|solutionrelative:e_testhub\\views\\shared\\_dashboardmockup.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{40C8232A-A923-4CD3-8FEA-3FD96386E4E4}|E_TestHub\\E_TestHub.csproj|c:\\users\\admin\\desktop\\asp.net core\\e_testhub\\e_testhub\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{40C8232A-A923-4CD3-8FEA-3FD96386E4E4}|E_TestHub\\E_TestHub.csproj|solutionrelative:e_testhub\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{40C8232A-A923-4CD3-8FEA-3FD96386E4E4}|E_TestHub\\E_TestHub.csproj|c:\\users\\admin\\desktop\\asp.net core\\e_testhub\\e_testhub\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{40C8232A-A923-4CD3-8FEA-3FD96386E4E4}|E_TestHub\\E_TestHub.csproj|solutionrelative:e_testhub\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -46,123 +14,23 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 1,
           "Children": [
             {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "launchSettings.json",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\Properties\\launchSettings.json",
-              "RelativeDocumentMoniker": "E_TestHub\\Properties\\launchSettings.json",
-              "ToolTip": "C:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\Properties\\launchSettings.json",
-              "RelativeToolTip": "E_TestHub\\Properties\\launchSettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAAvAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-09-24T17:51:49.861Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "etesthub.js",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\wwwroot\\js\\etesthub.js",
-              "RelativeDocumentMoniker": "E_TestHub\\wwwroot\\js\\etesthub.js",
-              "ToolTip": "C:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\wwwroot\\js\\etesthub.js",
-              "RelativeToolTip": "E_TestHub\\wwwroot\\js\\etesthub.js",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEEAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-09-24T17:47:38.329Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "site.css",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\wwwroot\\css\\site.css",
-              "RelativeDocumentMoniker": "E_TestHub\\wwwroot\\css\\site.css",
-              "ToolTip": "C:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\wwwroot\\css\\site.css",
-              "RelativeToolTip": "E_TestHub\\wwwroot\\css\\site.css",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2025-09-24T17:40:09.571Z",
-              "EditorCaption": ""
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Login.cshtml",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\Views\\Home\\Login.cshtml",
+              "DocumentMoniker": "C:\\Users\\leuti\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\Views\\Home\\Login.cshtml",
               "RelativeDocumentMoniker": "E_TestHub\\Views\\Home\\Login.cshtml",
-              "ToolTip": "C:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\Views\\Home\\Login.cshtml",
+              "ToolTip": "C:\\Users\\leuti\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\Views\\Home\\Login.cshtml",
               "RelativeToolTip": "E_TestHub\\Views\\Home\\Login.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAANgAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAABKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-09-24T17:34:58.36Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "HomeController.cs",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\Controllers\\HomeController.cs",
-              "RelativeDocumentMoniker": "E_TestHub\\Controllers\\HomeController.cs",
-              "ToolTip": "C:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\Controllers\\HomeController.cs",
-              "RelativeToolTip": "E_TestHub\\Controllers\\HomeController.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAB8AAAAIAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-24T17:34:05.401Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "etesthub.css",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\wwwroot\\css\\etesthub.css",
-              "RelativeDocumentMoniker": "E_TestHub\\wwwroot\\css\\etesthub.css",
-              "ToolTip": "C:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\wwwroot\\css\\etesthub.css",
-              "RelativeToolTip": "E_TestHub\\wwwroot\\css\\etesthub.css",
-              "ViewState": "AgIAACACAAAAAAAAAAAswGQCAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2025-09-24T17:25:27.367Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "_Layout.cshtml",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\Views\\Shared\\_Layout.cshtml",
-              "RelativeDocumentMoniker": "E_TestHub\\Views\\Shared\\_Layout.cshtml",
-              "ToolTip": "C:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\Views\\Shared\\_Layout.cshtml",
-              "RelativeToolTip": "E_TestHub\\Views\\Shared\\_Layout.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAYwBMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-09-24T17:25:04.321Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "_DashboardMockup.cshtml",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\Views\\Shared\\_DashboardMockup.cshtml",
-              "RelativeDocumentMoniker": "E_TestHub\\Views\\Shared\\_DashboardMockup.cshtml",
-              "ToolTip": "C:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\Views\\Shared\\_DashboardMockup.cshtml",
-              "RelativeToolTip": "E_TestHub\\Views\\Shared\\_DashboardMockup.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-09-24T17:24:55.67Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\Views\\Home\\Index.cshtml",
-              "RelativeDocumentMoniker": "E_TestHub\\Views\\Home\\Index.cshtml",
-              "ToolTip": "C:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\Views\\Home\\Index.cshtml",
-              "RelativeToolTip": "E_TestHub\\Views\\Home\\Index.cshtml",
-              "ViewState": "AgIAAHIAAAAAAAAAAAAAAFkAAAAxAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-09-24T17:24:35.523Z",
+              "WhenOpened": "2025-09-26T01:15:54.032Z",
               "EditorCaption": ""
             }
           ]

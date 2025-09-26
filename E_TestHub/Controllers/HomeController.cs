@@ -49,48 +49,7 @@ namespace E_TestHub.Controllers
             }
         }
 
-        // GET: /Home/Register
-        [HttpGet]
-        public IActionResult Register()
-        {
-            return View();
-        }
-
-        // POST: /Home/Register
-        [HttpPost]
-        public IActionResult Register(string fullName, string email, string password, string confirmPassword)
-        {
-            // Kiểm tra dữ liệu đầu vào
-            if (string.IsNullOrEmpty(fullName))
-            {
-                ViewBag.Error = "Vui lòng nhập họ tên.";
-                return View();
-            }
-
-            if (string.IsNullOrEmpty(email))
-            {
-                ViewBag.Error = "Vui lòng nhập email.";
-                return View();
-            }
-
-            if (string.IsNullOrEmpty(password))
-            {
-                ViewBag.Error = "Vui lòng nhập mật khẩu.";
-                return View();
-            }
-
-            if (password != confirmPassword)
-            {
-                ViewBag.Error = "Mật khẩu xác nhận không khớp.";
-                return View();
-            }
-
-            // Demo: Giả lập đăng ký thành công
-            ViewBag.Success = "Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.";
-            return View();
-        }
-
-        public IActionResult Dashboard()
+        public IActionResult Dashboard_GV()
         {
             return View();
         }

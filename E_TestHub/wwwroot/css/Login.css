@@ -21,13 +21,20 @@ body {
 
 .etesthub-container {
   min-height: 100vh;
+}
+
+.etesthub-container-bg {
   background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+  border-radius: 1rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  padding: 2rem;
 }
 
 /* Header Styles */
 .etesthub-header {
   background-color: var(--light-bg);
-  padding: 1rem 2rem;
 }
 
 .etesthub-logo {
@@ -101,7 +108,7 @@ body {
 
 .etesthub-left-content {
   flex: 1;
-  padding: 3rem 2rem;
+  padding: 0;
 }
 
 /* Badge */
@@ -306,6 +313,27 @@ body {
   padding: 2rem;
 }
 
+.etesthub-login-form-card {
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.login-icon-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+  border-radius: 50%;
+  margin: 0 auto;
+}
+
+.login-icon-wrapper i {
+  color: white !important;
+}
+
 .etesthub-login-title {
   color: var(--dark-text);
   font-size: 1.5rem;
@@ -338,7 +366,6 @@ body {
 }
 
 .etesthub-btn-login {
-  height: 3rem;
   background-color: var(--primary-blue);
   border: none;
   color: white;
@@ -376,7 +403,6 @@ body {
 }
 
 .etesthub-btn-google {
-  height: 3rem;
   border: 1px solid var(--primary-blue);
   color: var(--primary-blue);
   background: transparent;
@@ -408,12 +434,7 @@ body {
   .etesthub-content {
     flex-direction: column;
   }
-
-  .etesthub-left-content {
-    padding: 2rem 1rem;
-  }
 }
-
 @media (max-width: 576px) {
   .etesthub-dashboard-card {
     margin: 0 -1rem;
