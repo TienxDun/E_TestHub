@@ -9,61 +9,85 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = E_TestHub
 build_property.RootNamespace = E_TestHub
-build_property.ProjectDir = C:\Users\leuti\Desktop\ASP.NET Core\E_TestHub\E_TestHub\
+build_property.ProjectDir = C:\Users\ADMIN\Desktop\ASP.NET Core\E_TestHub\E_TestHub\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\leuti\Desktop\ASP.NET Core\E_TestHub\E_TestHub
+build_property.MSBuildProjectDirectory = C:\Users\ADMIN\Desktop\ASP.NET Core\E_TestHub\E_TestHub
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 8.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/leuti/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Admin/Dashboard.cshtml]
+[C:/Users/ADMIN/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Admin/Dashboard.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRGFzaGJvYXJkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/leuti/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Home/Index.cshtml]
+[C:/Users/ADMIN/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/leuti/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Home/Login.cshtml]
+[C:/Users/ADMIN/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Home/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/leuti/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Shared/Error.cshtml]
+[C:/Users/ADMIN/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/leuti/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Shared/_DashboardLayout.cshtml]
+[C:/Users/ADMIN/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Shared/_DashboardLayout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9EYXNoYm9hcmRMYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/leuti/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Shared/_DashboardMockup.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9EYXNoYm9hcmRNb2NrdXAuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/leuti/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Shared/_Layout.cshtml]
+[C:/Users/ADMIN/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/leuti/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/ADMIN/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/leuti/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Student/Dashboard.cshtml]
+[C:/Users/ADMIN/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Student/Classes.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxDbGFzc2VzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ADMIN/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Student/Dashboard.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxEYXNoYm9hcmQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/leuti/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Teacher/Dashboard.cshtml]
+[C:/Users/ADMIN/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Student/ExamHistory.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxFeGFtSGlzdG9yeS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ADMIN/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Student/ExamInfo.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxFeGFtSW5mby5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ADMIN/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Student/ExamSchedule.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxFeGFtU2NoZWR1bGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ADMIN/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Student/Profile.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxQcm9maWxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ADMIN/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Student/TakeExam.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxUYWtlRXhhbS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ADMIN/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Student/ViewResults.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxWaWV3UmVzdWx0cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ADMIN/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Teacher/Dashboard.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVhY2hlclxEYXNoYm9hcmQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/leuti/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/_ViewImports.cshtml]
+[C:/Users/ADMIN/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/leuti/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/_ViewStart.cshtml]
+[C:/Users/ADMIN/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 

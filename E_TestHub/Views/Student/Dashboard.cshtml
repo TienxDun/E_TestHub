@@ -4,7 +4,7 @@
 }
 
 @section Styles {
-    <link href="~/css/dashboard_sv.css" rel="stylesheet">
+    <link href="~/css/dashboard.css" rel="stylesheet">
 }
 
 <!-- Header Section -->
@@ -23,11 +23,23 @@
         </div>
         <h3 class="card-title">Danh sách lớp</h3>
     </a>
+    <a href="@Url.Action("ExamSchedule", "Student")" class="action-card">
+        <div class="card-icon">
+            <i class="fas fa-calendar-alt"></i>
+        </div>
+        <h3 class="card-title">Lịch thi</h3>
+    </a>
     <a href="@Url.Action("ExamHistory", "Student")" class="action-card">
         <div class="card-icon">
             <i class="fas fa-chart-line"></i>
         </div>
         <h3 class="card-title">Lịch sử thi</h3>
+    </a>
+    <a href="@Url.Action("Profile", "Student")" class="action-card">
+        <div class="card-icon">
+            <i class="fas fa-user-cog"></i>
+        </div>
+        <h3 class="card-title">Quản lý tài khoản</h3>
     </a>
 </div>
 
@@ -85,6 +97,12 @@
                     <p class="item-subtitle">Thứ Bảy, 15-08-2025</p>
                     <p class="item-subtitle">Thời gian làm bài: 90 phút</p>
                 </div>
+                <div class="item-actions">
+                    <a href="@Url.Action("ExamInfo", "Student", new { examId = 1 })" class="join-exam-btn">
+                        <i class="fas fa-play"></i>
+                        Tham gia
+                    </a>
+                </div>
             </div>
             <div class="item-row">
                 <div class="item-icon">
@@ -94,6 +112,12 @@
                     <h4 class="item-title">Xác suất thống kê</h4>
                     <p class="item-subtitle">Thứ Sáu, 15-08-2025</p>
                     <p class="item-subtitle">Thời gian làm bài: 90 phút</p>
+                </div>
+                <div class="item-actions">
+                    <a href="@Url.Action("ExamInfo", "Student", new { examId = 2 })" class="join-exam-btn">
+                        <i class="fas fa-play"></i>
+                        Tham gia
+                    </a>
                 </div>
             </div>
         </div>

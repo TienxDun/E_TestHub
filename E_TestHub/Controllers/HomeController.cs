@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
-using E_TestHub.Models;
 using E_TestHub.Services;
+using E_TestHub.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_TestHub.Controllers
@@ -30,65 +30,88 @@ namespace E_TestHub.Controllers
         
         // POST: /Home/Login
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(string email, string password)
         {
-            if (!ModelState.IsValid)
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
-                return View(model);
+                ViewBag.Error = "Vui lòng nhập đầy đủ thông tin.";
+                return View();
             }
 
-            var user = await _userService.AuthenticateAsync(model.Email, model.Password);
-            
+            var user = await _userService.AuthenticateAsync(email, password);
             if (user != null)
             {
-                // Store user info in session (In production, use proper authentication)
-                HttpContext.Session.SetInt32("UserId", user.Id);
-                HttpContext.Session.SetString("UserName", user.FullName);
+                // Đăng nhập thành công, lưu thông tin user vào session
+                HttpContext.Session.SetString("UserEmail", user.Email);
                 HttpContext.Session.SetString("UserRole", user.Role.ToString());
+                HttpContext.Session.SetString("UserName", user.FullName);
+                HttpContext.Session.SetString("UserId", user.Id.ToString());
 
-                // Redirect based on role
+                // Chuyển hướng đến Dashboard phù hợp với role
                 return user.Role switch
                 {
-                    UserRole.Student => RedirectToAction("Dashboard", "Student"),
-                    UserRole.Teacher => RedirectToAction("Dashboard", "Teacher"),
                     UserRole.Admin => RedirectToAction("Dashboard", "Admin"),
-                    _ => RedirectToAction("Index")
+                    UserRole.Teacher => RedirectToAction("Dashboard", "Teacher"),
+                    UserRole.Student => RedirectToAction("Dashboard", "Student"),
+                    _ => RedirectToAction("Index", "Home")
                 };
             }
             else
             {
-                ViewBag.ErrorMessage = "Email hoặc mật khẩu không đúng.";
-                return View(model);
+                ViewBag.Error = "Email hoặc mật khẩu không đúng.";
+                return View();
             }
         }
 
-        // POST: /Home/ForgotPassword
-        [HttpPost]
-        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        // GET: /Home/Register
+        [HttpGet]
+        public IActionResult Register()
         {
-            if (!ModelState.IsValid)
-            {
-                return View("Login", model);
-            }
-
-            var result = await _userService.ResetPasswordAsync(model.Email);
-            
-            if (result)
-            {
-                ViewBag.Message = "Đã gửi email hướng dẫn đặt lại mật khẩu.";
-            }
-            else
-            {
-                ViewBag.Error = "Không tìm thấy email trong hệ thống.";
-            }
-
-            return View("Login");
+            return View();
         }
 
+        // POST: /Home/Register
+        [HttpPost]
+        public IActionResult Register(string fullName, string email, string password, string confirmPassword)
+        {
+            // Kiểm tra dữ liệu đầu vào
+            if (string.IsNullOrEmpty(fullName))
+            {
+                ViewBag.Error = "Vui lòng nhập họ tên.";
+                return View();
+            }
+
+            if (string.IsNullOrEmpty(email))
+            {
+                ViewBag.Error = "Vui lòng nhập email.";
+                return View();
+            }
+
+            if (string.IsNullOrEmpty(password))
+            {
+                ViewBag.Error = "Vui lòng nhập mật khẩu.";
+                return View();
+            }
+
+            if (password != confirmPassword)
+            {
+                ViewBag.Error = "Mật khẩu xác nhận không khớp.";
+                return View();
+            }
+
+            // Demo: Giả lập đăng ký thành công
+            ViewBag.Success = "Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.";
+            return View();
+        }
+
+        // GET: /Home/Logout
         public IActionResult Logout()
         {
+            // Xóa tất cả session data
             HttpContext.Session.Clear();
-            return RedirectToAction("Index");
+            
+            // Chuyển hướng về trang chủ
+            return RedirectToAction("Login", "Home");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -14,8 +14,19 @@ namespace E_TestHub.Controllers
             return View();
         }
 
+        public IActionResult ExamSchedule()
+        {
+            return View();
+        }
+
         public IActionResult ExamHistory()
         {
+            return View();
+        }
+
+        public IActionResult ExamInfo(int examId)
+        {
+            ViewBag.ExamId = examId;
             return View();
         }
 
@@ -25,6 +36,11 @@ namespace E_TestHub.Controllers
         }
 
         public IActionResult ViewResults()
+        {
+            return View();
+        }
+
+        public IActionResult Profile()
         {
             return View();
         }

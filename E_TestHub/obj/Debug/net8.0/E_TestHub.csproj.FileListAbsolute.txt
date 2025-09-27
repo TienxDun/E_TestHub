@@ -18,9 +18,7 @@ C:\Users\ADMIN\Desktop\ASP.NET Core\E_TestHub\E_TestHub\obj\Debug\net8.0\E_TestH
 C:\Users\ADMIN\Desktop\ASP.NET Core\E_TestHub\E_TestHub\obj\Debug\net8.0\rjimswa.dswa.cache.json
 C:\Users\ADMIN\Desktop\ASP.NET Core\E_TestHub\E_TestHub\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
 C:\Users\ADMIN\Desktop\ASP.NET Core\E_TestHub\E_TestHub\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
-C:\Users\ADMIN\Desktop\ASP.NET Core\E_TestHub\E_TestHub\obj\Debug\net8.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Users\ADMIN\Desktop\ASP.NET Core\E_TestHub\E_TestHub\obj\Debug\net8.0\scopedcss\bundle\E_TestHub.styles.css
-C:\Users\ADMIN\Desktop\ASP.NET Core\E_TestHub\E_TestHub\obj\Debug\net8.0\scopedcss\projectbundle\E_TestHub.bundle.scp.css
 C:\Users\ADMIN\Desktop\ASP.NET Core\E_TestHub\E_TestHub\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\ADMIN\Desktop\ASP.NET Core\E_TestHub\E_TestHub\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Users\ADMIN\Desktop\ASP.NET Core\E_TestHub\E_TestHub\obj\Debug\net8.0\staticwebassets.development.json
@@ -65,3 +63,6 @@ C:\Users\leuti\Desktop\ASP.NET Core\E_TestHub\E_TestHub\obj\Debug\net8.0\ref\E_T
 C:\Users\leuti\Desktop\ASP.NET Core\E_TestHub\E_TestHub\bin\Debug\net8.0\BCrypt.Net-Next.dll
 C:\Users\leuti\Desktop\ASP.NET Core\E_TestHub\E_TestHub\obj\Debug\net8.0\E_TestHub.csproj.AssemblyReference.cache
 C:\Users\leuti\Desktop\ASP.NET Core\E_TestHub\E_TestHub\obj\Debug\net8.0\E_TestHub.csproj.Up2Date
+c:\Users\ADMIN\Desktop\ASP.NET Core\E_TestHub\E_TestHub\bin\Debug\net8.0\BCrypt.Net-Next.dll
+c:\Users\ADMIN\Desktop\ASP.NET Core\E_TestHub\E_TestHub\obj\Debug\net8.0\E_TestHub.csproj.AssemblyReference.cache
+c:\Users\ADMIN\Desktop\ASP.NET Core\E_TestHub\E_TestHub\obj\Debug\net8.0\E_TestHub.csproj.Up2Date
