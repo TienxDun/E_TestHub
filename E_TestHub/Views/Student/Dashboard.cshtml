@@ -4,7 +4,7 @@
 }
 
 @section Styles {
-    <link href="~/css/dashboard.css" rel="stylesheet">
+    <link href="~/css/shared/dashboard.css" rel="stylesheet">
 }
 
 <!-- Header Section -->
@@ -23,17 +23,11 @@
         </div>
         <h3 class="card-title">Danh sách lớp</h3>
     </a>
-    <a href="@Url.Action("ExamSchedule", "Student")" class="action-card">
+    <a href="@Url.Action("MyExams", "Student")" class="action-card">
         <div class="card-icon">
-            <i class="fas fa-calendar-alt"></i>
+            <i class="fas fa-file-alt"></i>
         </div>
-        <h3 class="card-title">Lịch thi</h3>
-    </a>
-    <a href="@Url.Action("ExamHistory", "Student")" class="action-card">
-        <div class="card-icon">
-            <i class="fas fa-chart-line"></i>
-        </div>
-        <h3 class="card-title">Lịch sử thi</h3>
+        <h3 class="card-title">Bài thi của tôi</h3>
     </a>
     <a href="@Url.Action("Profile", "Student")" class="action-card">
         <div class="card-icon">
@@ -50,7 +44,7 @@
         <div class="section-header">
             <h3 class="section-title">Lớp truy cập gần đây</h3>
             <a href="@Url.Action("Classes", "Student")" class="view-more">
-                <span class="external-link-icon">⧉</span>
+                <span class="fas fa-external-link-alt"></span>
                 Xem thêm
             </a>
         </div>
@@ -82,8 +76,8 @@
     <div class="content-section">
         <div class="section-header">
             <h3 class="section-title">Lịch thi sắp tới</h3>
-            <a href="@Url.Action("ViewResults", "Student")" class="view-more">
-                <span class="external-link-icon">⧉</span>
+            <a href="@Url.Action("MyExams", "Student")" class="view-more">
+                <span class="fas fa-external-link-alt"></span>
                 Xem thêm
             </a>
         </div>

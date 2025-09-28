@@ -1,0 +1,346 @@
+@{
+    ViewData["Title"] = "Bài thi của tôi - Sinh Viên";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@section Styles {
+    <link href="~/css/shared/dashboard.css" rel="stylesheet">
+    <link href="~/css/student/my-exams.css" rel="stylesheet">
+}
+
+<div class="my-exams-container">
+    <div class="my-exams-header">
+        <h1 class="my-exams-title">Danh sách các bài thi</h1>
+        
+        <!-- Exam Filters -->
+        <div class="exam-filters">
+            <div class="filter-group">
+                <label class="filter-label">Trạng thái:</label>
+                <select class="filter-select" id="statusFilter">
+                    <option value="all">Tất cả</option>
+                    <option value="upcoming">Sắp diễn ra</option>
+                    <option value="completed">Đã hoàn thành</option>
+                    <option value="in-progress">Đang diễn ra</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label class="filter-label">Môn học:</label>
+                <select class="filter-select" id="subjectFilter">
+                    <option value="all">Tất cả môn học</option>
+                    <option value="Lịch sử">Lịch sử</option>
+                    <option value="ReactJS">ReactJS</option>
+                    <option value="Địa lý">Địa lý</option>
+                    <option value="Lập trình Web">Lập trình Web</option>
+                    <option value="Cơ sở dữ liệu">Cơ sở dữ liệu</option>
+                    <option value="Web Frontend">Web Frontend</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <div class="search-box">
+                    <input type="text" placeholder="Tìm kiếm bài thi..." id="examSearch">
+                    <i class="fas fa-search"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="exams-table-container">
+        <table class="exams-table">
+            <thead>
+                <tr>
+                    <th>Tên bài thi</th>
+                    <th>Môn học</th>
+                    <th>Ngày thi</th>
+                    <th>Thời gian</th>
+                    <th>Trạng thái</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="examTableBody">
+                <!-- Bài thi đang diễn ra - 28/9/2025 (hôm nay) -->
+                <tr data-status="in-progress" data-subject="ReactJS" data-date="2025-09-28">
+                    <td>
+                        <div class="exam-name">Kiểm tra giữa kỳ ReactJS</div>
+                    </td>
+                    <td>
+                        <div class="subject-name">ReactJS</div>
+                    </td>
+                    <td>
+                        <div class="exam-date">28/9/2025</div>
+                    </td>
+                    <td>
+                        <div class="exam-duration">45 phút</div>
+                    </td>
+                    <td>
+                        <span class="exam-status in-progress">Đang diễn ra</span>
+                    </td>
+                    <td>
+                        <div class="exam-actions">
+                            <a href="@Url.Action("ExamInfo", "Student", new { examId = 1 })" class="exam-action-btn primary">
+                                <i class="fas fa-play"></i>
+                                Vào thi
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                
+                <!-- 5/10/2025 -->
+                <tr data-status="upcoming" data-subject="Lịch sử" data-date="2025-10-05">
+                    <td>
+                        <div class="exam-name">Kiểm tra cuối kỳ Lịch sử</div>
+                    </td>
+                    <td>
+                        <div class="subject-name">Lịch sử</div>
+                    </td>
+                    <td>
+                        <div class="exam-date">5/10/2025</div>
+                    </td>
+                    <td>
+                        <div class="exam-duration">90 phút</div>
+                    </td>
+                    <td>
+                        <span class="exam-status upcoming">Sắp diễn ra</span>
+                    </td>
+                    <td>
+                        <div class="exam-actions">
+                            <div class="exam-actions">
+                            <a href="@Url.Action("ExamInfo", "Student", new { examId = 2 })" class="exam-action-btn secondary">
+                                <i class="fas fa-info-circle"></i>
+                                Chi tiết
+                            </a>
+                        </div>
+                        </div>
+                    </td>
+                </tr>
+                
+                <!-- 15/10/2025 -->
+                <tr data-status="upcoming" data-subject="Lập trình Web" data-date="2025-10-15">
+                    <td>
+                        <div class="exam-name">Bài tập lớn Lập trình Web</div>
+                    </td>
+                    <td>
+                        <div class="subject-name">Lập trình Web</div>
+                    </td>
+                    <td>
+                        <div class="exam-date">15/10/2025</div>
+                    </td>
+                    <td>
+                        <div class="exam-duration">120 phút</div>
+                    </td>
+                    <td>
+                        <span class="exam-status upcoming">Sắp diễn ra</span>
+                    </td>
+                    <td>
+                        <div class="exam-actions">
+                            <a href="@Url.Action("ExamInfo", "Student", new { examId = 4 })" class="exam-action-btn secondary">
+                                <i class="fas fa-info-circle"></i>
+                                Chi tiết
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                
+                <!-- 25/10/2025 -->
+                <tr data-status="upcoming" data-subject="Cơ sở dữ liệu" data-date="2025-10-25">
+                    <td>
+                        <div class="exam-name">Kiểm tra Cơ sở dữ liệu</div>
+                    </td>
+                    <td>
+                        <div class="subject-name">Cơ sở dữ liệu</div>
+                    </td>
+                    <td>
+                        <div class="exam-date">25/10/2025</div>
+                    </td>
+                    <td>
+                        <div class="exam-duration">90 phút</div>
+                    </td>
+                    <td>
+                        <span class="exam-status upcoming">Sắp diễn ra</span>
+                    </td>
+                    <td>
+                        <div class="exam-actions">
+                            <a href="@Url.Action("ExamInfo", "Student", new { examId = 5 })" class="exam-action-btn secondary">
+                                <i class="fas fa-info-circle"></i>
+                                Chi tiết
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                
+                <!-- Bài thi đã hoàn thành - 23/9/2025 -->
+                <tr data-status="completed" data-subject="Địa lý" data-date="2025-09-23">
+                    <td>
+                        <div class="exam-name">Kiểm tra 15 phút Địa lý</div>
+                    </td>
+                    <td>
+                        <div class="subject-name">Địa lý</div>
+                    </td>
+                    <td>
+                        <div class="exam-date">23/9/2025</div>
+                    </td>
+                    <td>
+                        <div class="exam-duration">15 phút</div>
+                    </td>
+                    <td>
+                        <span class="exam-status completed">Đã hoàn thành</span>
+                    </td>
+                    <td>
+                        <div class="exam-actions">
+                            <a href="@Url.Action("ViewResults", "Student")" class="exam-action-btn success">
+                                <i class="fas fa-eye"></i>
+                                Xem lại
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                
+                <!-- 18/9/2025 -->
+                <tr data-status="completed" data-subject="Web Frontend" data-date="2025-09-18">
+                    <td>
+                        <div class="exam-name">Thi thực hành HTML/CSS</div>
+                    </td>
+                    <td>
+                        <div class="subject-name">Web Frontend</div>
+                    </td>
+                    <td>
+                        <div class="exam-date">18/9/2025</div>
+                    </td>
+                    <td>
+                        <div class="exam-duration">60 phút</div>
+                    </td>
+                    <td>
+                        <span class="exam-status completed">Đã hoàn thành</span>
+                    </td>
+                    <td>
+                        <div class="exam-actions">
+                            <a href="@Url.Action("ViewResults", "Student")" class="exam-action-btn success">
+                                <i class="fas fa-eye"></i>
+                                Xem lại
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusFilter = document.getElementById('statusFilter');
+            const subjectFilter = document.getElementById('subjectFilter');
+            const searchInput = document.getElementById('examSearch');
+            const tableBody = document.getElementById('examTableBody');
+            const allRows = Array.from(tableBody.querySelectorAll('tr'));
+
+            // Filter functionality
+            function filterExams() {
+                const statusValue = statusFilter.value;
+                const subjectValue = subjectFilter.value;
+                const searchValue = searchInput.value.toLowerCase().trim();
+
+                allRows.forEach(row => {
+                    const rowStatus = row.getAttribute('data-status');
+                    const rowSubject = row.getAttribute('data-subject');
+                    const examName = row.querySelector('.exam-name').textContent.toLowerCase();
+                    const subjectName = row.querySelector('.subject-name').textContent.toLowerCase();
+
+                    // Check status filter
+                    const statusMatch = statusValue === 'all' || rowStatus === statusValue;
+                    
+                    // Check subject filter
+                    const subjectMatch = subjectValue === 'all' || rowSubject === subjectValue;
+                    
+                    // Check search filter
+                    const searchMatch = searchValue === '' || 
+                                      examName.includes(searchValue) || 
+                                      subjectName.includes(searchValue);
+
+                    // Show/hide row based on all filters
+                    if (statusMatch && subjectMatch && searchMatch) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+
+                // Update table visibility
+                updateTableVisibility();
+            }
+
+            // Update table visibility and show message if no results
+            function updateTableVisibility() {
+                const visibleRows = allRows.filter(row => row.style.display !== 'none');
+                
+                // Remove existing no-results message
+                const existingMessage = document.querySelector('.no-results-message');
+                if (existingMessage) {
+                    existingMessage.remove();
+                }
+
+                if (visibleRows.length === 0) {
+                    // Create and show no results message
+                    const noResultsMessage = document.createElement('tr');
+                    noResultsMessage.className = 'no-results-message';
+                    noResultsMessage.innerHTML = `
+                        <td colspan="6" style="text-align: center; padding: 40px; color: #666; font-style: italic;">
+                            <i class="fas fa-search" style="font-size: 24px; margin-bottom: 10px; display: block;"></i>
+                            Không tìm thấy bài thi nào phù hợp với bộ lọc
+                        </td>
+                    `;
+                    tableBody.appendChild(noResultsMessage);
+                }
+            }
+
+            // Sort exams by date (nearest first for upcoming, latest first for completed)
+            function sortExams() {
+                const upcomingExams = [];
+                const completedExams = [];
+                const inProgressExams = [];
+
+                allRows.forEach(row => {
+                    const status = row.getAttribute('data-status');
+                    const dateStr = row.getAttribute('data-date');
+                    row.examDate = new Date(dateStr);
+
+                    if (status === 'upcoming') {
+                        upcomingExams.push(row);
+                    } else if (status === 'completed') {
+                        completedExams.push(row);
+                    } else if (status === 'in-progress') {
+                        inProgressExams.push(row);
+                    }
+                });
+
+                // Sort upcoming exams by nearest date first
+                upcomingExams.sort((a, b) => a.examDate - b.examDate);
+                
+                // Sort completed exams by latest date first
+                completedExams.sort((a, b) => b.examDate - a.examDate);
+                
+                // Sort in-progress exams by nearest date first
+                inProgressExams.sort((a, b) => a.examDate - b.examDate);
+
+                // Clear table body and re-append sorted rows
+                tableBody.innerHTML = '';
+                [...upcomingExams, ...inProgressExams, ...completedExams].forEach(row => {
+                    tableBody.appendChild(row);
+                });
+            }
+
+            // Event listeners
+            statusFilter.addEventListener('change', filterExams);
+            subjectFilter.addEventListener('change', filterExams);
+            searchInput.addEventListener('input', filterExams);
+
+            // Initial sort
+            sortExams();
+            
+            // Initial filter (show all)
+            filterExams();
+        });
+    </script>
+}

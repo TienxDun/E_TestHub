@@ -4,162 +4,36 @@
 }
 
 @section Styles {
-    <link href="~/css/dashboard.css" rel="stylesheet">
-    <style>
-        .exam-info-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        .exam-info-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        
-        .exam-info-title {
-            font-size: 32px;
-            font-weight: 600;
-            color: #4A90E2;
-            margin-bottom: 10px;
-        }
-        
-        .exam-info-subtitle {
-            font-size: 16px;
-            color: #666;
-        }
-        
-        .exam-details-card {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-            margin-bottom: 30px;
-        }
-        
-        .exam-detail-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        
-        .exam-detail-row:last-child {
-            border-bottom: none;
-        }
-        
-        .exam-detail-label {
-            font-weight: 500;
-            color: #333;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .exam-detail-label i {
-            color: #4A90E2;
-            width: 20px;
-        }
-        
-        .exam-detail-value {
-            font-weight: 600;
-            color: #4A90E2;
-        }
-        
-        .exam-actions {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 30px;
-        }
-        
-        .exam-action-btn {
-            padding: 12px 30px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-        }
-        
-        .exam-action-btn.primary {
-            background: #4A90E2;
-            color: white;
-        }
-        
-        .exam-action-btn.primary:hover {
-            background: #357ABD;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
-            color: white;
-            text-decoration: none;
-        }
-        
-        .exam-action-btn.secondary {
-            background: white;
-            color: #4A90E2;
-            border: 2px solid #4A90E2;
-        }
-        
-        .exam-action-btn.secondary:hover {
-            background: #4A90E2;
-            color: white;
-            text-decoration: none;
-        }
-        
-        .exam-instructions {
-            background: #f8f9fa;
-            border-left: 4px solid #4A90E2;
-            padding: 20px;
-            border-radius: 0 8px 8px 0;
-            margin-bottom: 30px;
-        }
-        
-        .exam-instructions h4 {
-            color: #4A90E2;
-            margin-bottom: 15px;
-            font-size: 18px;
-        }
-        
-        .exam-instructions ul {
-            margin: 0;
-            padding-left: 20px;
-        }
-        
-        .exam-instructions li {
-            margin-bottom: 8px;
-            color: #666;
-        }
-        
-        @@media (max-width: 768px) {
-            .exam-actions {
-                flex-direction: column;
-            }
-            
-            .exam-action-btn {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .exam-detail-row {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 5px;
-            }
-        }
-    </style>
+    <link href="~/css/shared/dashboard.css" rel="stylesheet">
+    <link href="~/css/student/exam-info.css" rel="stylesheet">
 }
 
 <div class="exam-info-container">
     <div class="exam-info-header">
-        <h1 class="exam-info-title">Xác suất thống kê</h1>
+        <h1 class="exam-info-title">Kiểm tra giữa kỳ ReactJS</h1>
         <p class="exam-info-subtitle">Thông tin chi tiết về bài thi</p>
+        
+        @if (ViewBag.ExamStatus == "in-progress")
+        {
+            <div class="exam-status-banner in-progress">
+                <i class="fas fa-play-circle"></i>
+                Bài thi đang diễn ra - Có thể vào thi ngay
+            </div>
+        }
+        else if (ViewBag.ExamStatus == "upcoming")
+        {
+            <div class="exam-status-banner upcoming">
+                <i class="fas fa-clock"></i>
+                Bài thi chưa bắt đầu - Vui lòng chờ đến giờ thi
+            </div>
+        }
+        else if (ViewBag.ExamStatus == "completed")
+        {
+            <div class="exam-status-banner completed">
+                <i class="fas fa-check-circle"></i>
+                Bài thi đã kết thúc
+            </div>
+        }
     </div>
     
     <div class="exam-details-card">
@@ -216,14 +90,31 @@
     </div>
     
     <div class="exam-actions">
-        <a href="@Url.Action("TakeExam", "Student", new { examId = ViewBag.ExamId })" class="exam-action-btn primary">
-            <i class="fas fa-play"></i>
-            Bắt đầu thi
-        </a>
+        @if (ViewBag.ExamStatus == "in-progress")
+        {
+            <a href="@Url.Action("TakeExam", "Student", new { examId = ViewBag.ExamId })" class="exam-action-btn primary">
+                <i class="fas fa-play"></i>
+                Bắt đầu thi
+            </a>
+        }
+        else if (ViewBag.ExamStatus == "upcoming")
+        {
+            <div class="exam-action-btn disabled">
+                <i class="fas fa-clock"></i>
+                Chưa đến giờ thi
+            </div>
+        }
+        else if (ViewBag.ExamStatus == "completed")
+        {
+            <a href="@Url.Action("ViewResults", "Student", new { examId = ViewBag.ExamId })" class="exam-action-btn success">
+                <i class="fas fa-eye"></i>
+                Xem kết quả
+            </a>
+        }
         
-        <a href="@Url.Action("ExamHistory", "Student")" class="exam-action-btn secondary">
-            <i class="fas fa-history"></i>
-            Xem lịch sử làm bài
+        <a href="@Url.Action("MyExams", "Student")" class="exam-action-btn secondary">
+            <i class="fas fa-arrow-left"></i>
+            Quay lại danh sách
         </a>
     </div>
 </div>
