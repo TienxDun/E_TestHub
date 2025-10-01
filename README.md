@@ -1,9 +1,3 @@
-# eTestHub - Nền tảng thi trắc nghiệm online
-
-![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core-8.0-blue.svg)
-![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3.0-purple.svg)
-![License](https://img.shields.io/badge/License-MIT-green.svg)
-
 ## 📖 Giới thiệu
 
 **eTestHub** là nền tảng thi trắc nghiệm online hiện đại được xây dựng trên ASP.NET Core 8.0 MVC, cung cấp giải pháp toàn diện cho việc tổ chức và quản lý các kỳ thi trực tuyến dành cho trường học và tổ chức giáo dục.
@@ -299,67 +293,6 @@ wwwroot/css/
 - ✅ Maintainability: Dễ dàng tìm và chỉnh sửa CSS cho từng module
 - ✅ Scalability: Dễ dàng mở rộng cho Teacher, Admin roles
 - ✅ Performance: Có thể optimize loading CSS theo từng role
-
-## 🎯 Tính năng sắp tới
-
-### Database & Backend
-- [ ] Tích hợp cơ sở dữ liệu (Entity Framework Core với SQL Server/PostgreSQL)
-- [ ] Hệ thống phân quyền nâng cao (ASP.NET Core Identity)
-- [ ] API RESTful cho mobile app
-- [ ] Real-time notifications với SignalR
-- [ ] File upload & management system
-
-### Exam Management
-- [ ] Ngân hàng câu hỏi với categories và tags
-- [ ] Tạo đề thi tự động từ ngân hàng câu hỏi
-- [ ] Hỗ trợ nhiều loại câu hỏi (Multiple choice, True/False, Essay)
-- [ ] Import/Export đề thi (Excel, CSV)
-- [ ] Randomize câu hỏi và đáp án
-
-### Student Features
-- [ ] Lịch sử làm bài chi tiết với analytics
-- [ ] So sánh kết quả với trung bình lớp
-- [ ] Thống kê tiến độ học tập
-- [ ] Certificate generation
-- [ ] Practice mode (unlimited attempts)
-
-### Teacher Features
-- [ ] Quản lý lớp học và sinh viên
-- [ ] Tạo và chỉnh sửa đề thi online
-- [ ] Chấm điểm tự động và thủ công
-- [ ] Báo cáo thống kê chi tiết theo lớp/sinh viên
-- [ ] Bulk operations (import students, create multiple exams)
-
-### Admin Features
-- [ ] Dashboard với real-time analytics
-- [ ] Quản lý người dùng và phân quyền
-- [ ] System monitoring và logging
-- [ ] Backup & restore tự động
-- [ ] Email notifications system
-
-### Security & Performance
-- [ ] Two-factor authentication (2FA)
-- [ ] Rate limiting và CSRF protection
-- [ ] Caching strategy (Redis/Memory cache)
-- [ ] CDN integration cho static files
-- [ ] Performance monitoring
-
-### UI/UX Improvements
-- [ ] Dark mode support
-- [ ] Multi-language support (i18n)
-- [ ] Progressive Web App (PWA)
-- [ ] Mobile app (iOS/Android)
-- [ ] Accessibility improvements (WCAG compliance)
-
-## 🤝 Đóng góp
-
-Chúng tôi hoan nghênh mọi đóng góp! Để đóng góp:
-
-1. Fork dự án
-2. Tạo feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit thay đổi (`git commit -m 'Add some AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Mở Pull Request
 
 ## 📧 Liên hệ
 

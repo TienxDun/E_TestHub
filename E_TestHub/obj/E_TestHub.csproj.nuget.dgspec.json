@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/home/runner/work/E_TestHub/E_TestHub/E_TestHub/E_TestHub.csproj": {}
+    "/workspaces/E_TestHub/E_TestHub/E_TestHub.csproj": {}
   },
   "projects": {
-    "/home/runner/work/E_TestHub/E_TestHub/E_TestHub/E_TestHub.csproj": {
+    "/workspaces/E_TestHub/E_TestHub/E_TestHub.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/runner/work/E_TestHub/E_TestHub/E_TestHub/E_TestHub.csproj",
+        "projectUniqueName": "/workspaces/E_TestHub/E_TestHub/E_TestHub.csproj",
         "projectName": "E_TestHub",
-        "projectPath": "/home/runner/work/E_TestHub/E_TestHub/E_TestHub/E_TestHub.csproj",
-        "packagesPath": "/home/runner/.nuget/packages/",
-        "outputPath": "/home/runner/work/E_TestHub/E_TestHub/E_TestHub/obj/",
+        "projectPath": "/workspaces/E_TestHub/E_TestHub/E_TestHub.csproj",
+        "packagesPath": "/home/codespace/.nuget/packages/",
+        "outputPath": "/workspaces/E_TestHub/E_TestHub/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/runner/.nuget/NuGet/NuGet.Config"
+          "/home/codespace/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -37,8 +37,7 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.300"
+        }
       },
       "frameworks": {
         "net8.0": {
@@ -68,7 +67,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.305/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.412/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

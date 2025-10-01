@@ -9,81 +9,79 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = E_TestHub
 build_property.RootNamespace = E_TestHub
-build_property.ProjectDir = /home/runner/work/E_TestHub/E_TestHub/E_TestHub/
+build_property.ProjectDir = /workspaces/E_TestHub/E_TestHub/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = /home/runner/work/E_TestHub/E_TestHub/E_TestHub
+build_property.MSBuildProjectDirectory = /workspaces/E_TestHub/E_TestHub
 build_property._RazorSourceGeneratorDebug = 
-build_property.EffectiveAnalysisLevelStyle = 8.0
-build_property.EnableCodeStyleSeverity = 
 
-[/home/runner/work/E_TestHub/E_TestHub/E_TestHub/Views/Admin/Dashboard.cshtml]
+[/workspaces/E_TestHub/E_TestHub/Views/Admin/Dashboard.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWRtaW4vRGFzaGJvYXJkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/home/runner/work/E_TestHub/E_TestHub/E_TestHub/Views/Home/Index.cshtml]
+[/workspaces/E_TestHub/E_TestHub/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9JbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/home/runner/work/E_TestHub/E_TestHub/E_TestHub/Views/Home/Login.cshtml]
+[/workspaces/E_TestHub/E_TestHub/Views/Home/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9Mb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/home/runner/work/E_TestHub/E_TestHub/E_TestHub/Views/Shared/Error.cshtml]
+[/workspaces/E_TestHub/E_TestHub/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL0Vycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/home/runner/work/E_TestHub/E_TestHub/E_TestHub/Views/Shared/_DashboardLayout.cshtml]
+[/workspaces/E_TestHub/E_TestHub/Views/Shared/_DashboardLayout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19EYXNoYm9hcmRMYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/home/runner/work/E_TestHub/E_TestHub/E_TestHub/Views/Shared/_Layout.cshtml]
+[/workspaces/E_TestHub/E_TestHub/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/home/runner/work/E_TestHub/E_TestHub/E_TestHub/Views/Shared/_ValidationScriptsPartial.cshtml]
+[/workspaces/E_TestHub/E_TestHub/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/home/runner/work/E_TestHub/E_TestHub/E_TestHub/Views/Student/Classes.cshtml]
+[/workspaces/E_TestHub/E_TestHub/Views/Student/Classes.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU3R1ZGVudC9DbGFzc2VzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/home/runner/work/E_TestHub/E_TestHub/E_TestHub/Views/Student/Dashboard.cshtml]
+[/workspaces/E_TestHub/E_TestHub/Views/Student/Dashboard.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU3R1ZGVudC9EYXNoYm9hcmQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/home/runner/work/E_TestHub/E_TestHub/E_TestHub/Views/Student/ExamInfo.cshtml]
+[/workspaces/E_TestHub/E_TestHub/Views/Student/ExamInfo.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU3R1ZGVudC9FeGFtSW5mby5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/home/runner/work/E_TestHub/E_TestHub/E_TestHub/Views/Student/MyExams.cshtml]
+[/workspaces/E_TestHub/E_TestHub/Views/Student/MyExams.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU3R1ZGVudC9NeUV4YW1zLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/home/runner/work/E_TestHub/E_TestHub/E_TestHub/Views/Student/Profile.cshtml]
+[/workspaces/E_TestHub/E_TestHub/Views/Student/Profile.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU3R1ZGVudC9Qcm9maWxlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/home/runner/work/E_TestHub/E_TestHub/E_TestHub/Views/Student/TakeExam.cshtml]
+[/workspaces/E_TestHub/E_TestHub/Views/Student/TakeExam.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU3R1ZGVudC9UYWtlRXhhbS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/home/runner/work/E_TestHub/E_TestHub/E_TestHub/Views/Student/ViewResults.cshtml]
+[/workspaces/E_TestHub/E_TestHub/Views/Student/ViewResults.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU3R1ZGVudC9WaWV3UmVzdWx0cy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/home/runner/work/E_TestHub/E_TestHub/E_TestHub/Views/Teacher/Dashboard.cshtml]
+[/workspaces/E_TestHub/E_TestHub/Views/Teacher/Dashboard.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVGVhY2hlci9EYXNoYm9hcmQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/home/runner/work/E_TestHub/E_TestHub/E_TestHub/Views/_ViewImports.cshtml]
+[/workspaces/E_TestHub/E_TestHub/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/home/runner/work/E_TestHub/E_TestHub/E_TestHub/Views/_ViewStart.cshtml]
+[/workspaces/E_TestHub/E_TestHub/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
