@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\E_TestHub.csproj": {}
+    "C:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\E_TestHub.csproj": {}
   },
   "projects": {
-    "c:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\E_TestHub.csproj": {
+    "C:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\E_TestHub.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\E_TestHub.csproj",
+        "projectUniqueName": "C:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\E_TestHub.csproj",
         "projectName": "E_TestHub",
-        "projectPath": "c:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\E_TestHub.csproj",
+        "projectPath": "C:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\E_TestHub.csproj",
         "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\obj\\",
+        "outputPath": "C:\\Users\\ADMIN\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

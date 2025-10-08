@@ -19,6 +19,11 @@ namespace E_TestHub.Controllers
             return View();
         }
 
+        public IActionResult TestCalendar()
+        {
+            return View();
+        }
+
         public IActionResult ExamInfo(int examId)
         {
             ViewBag.ExamId = examId;
