@@ -1,0 +1,329 @@
+@{
+    ViewData["Title"] = "Tạo đề thi mới";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@section Styles {
+    <link href="~/css/shared/dashboard.css" rel="stylesheet">
+    <link href="~/css/teacher/create-exam.css" rel="stylesheet">
+}
+
+<div class="create-exam-container">
+    <!-- Page Header -->
+    <div class="create-exam-header">
+        <h1 class="create-exam-title">
+            <i class="fas fa-file-plus"></i> Tạo đề thi mới
+        </h1>
+        <a href="@Url.Action("ExamManagement", "Teacher")" class="create-exam-back-btn">
+            <i class="fas fa-arrow-left"></i>
+            Quay lại
+        </a>
+    </div>
+
+    <!-- Step Progress Bar -->
+    <div class="exam-steps-container">
+        <div class="exam-steps">
+            <div class="exam-step active" data-step="1">
+                <div class="exam-step-circle">1</div>
+                <span class="exam-step-label">Thông tin cơ bản</span>
+            </div>
+            <div class="exam-step" data-step="2">
+                <div class="exam-step-circle">2</div>
+                <span class="exam-step-label">Chọn câu hỏi</span>
+            </div>
+            <div class="exam-step" data-step="3">
+                <div class="exam-step-circle">3</div>
+                <span class="exam-step-label">Cấu hình</span>
+            </div>
+            <div class="exam-step" data-step="4">
+                <div class="exam-step-circle">4</div>
+                <span class="exam-step-label">Xác nhận</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Container -->
+    <form id="createExamForm" class="exam-form-container">
+        <!-- Step 1: Basic Information -->
+        <div class="exam-form-section active" data-section="1">
+            <h2 style="color: #2E8BE9; font-size: 28px; font-weight: 700; margin-bottom: 30px;">
+                Bước 1: Thông tin cơ bản
+            </h2>
+
+            <div class="exam-form-group">
+                <label class="exam-form-label required" for="examName">Tên đề thi</label>
+                <input type="text" id="examName" name="examName" class="exam-form-input" placeholder="VD: Kiểm tra giữa kỳ - Xác suất thống kê" required />
+                <span class="exam-error-message">Vui lòng nhập tên đề thi</span>
+            </div>
+
+            <div class="exam-form-row">
+                <div class="exam-form-group">
+                    <label class="exam-form-label required" for="subject">Môn học</label>
+                    <select id="subject" name="subject" class="exam-form-select" required>
+                        <option value="">-- Chọn môn học --</option>
+                        <option value="xstk">Xác suất thống kê</option>
+                        <option value="ctdl">Cấu trúc dữ liệu</option>
+                        <option value="csdl">Cơ sở dữ liệu</option>
+                        <option value="mmt">Mạng máy tính</option>
+                        <option value="ttnt">Trí tuệ nhân tạo</option>
+                    </select>
+                    <span class="exam-error-message">Vui lòng chọn môn học</span>
+                </div>
+
+                <div class="exam-form-group">
+                    <label class="exam-form-label required" for="duration">Thời gian làm bài (phút)</label>
+                    <input type="number" id="duration" name="duration" class="exam-form-input" placeholder="90" min="1" max="300" required />
+                    <span class="exam-error-message">Vui lòng nhập thời gian (1-300 phút)</span>
+                </div>
+            </div>
+
+            <div class="exam-form-group">
+                <label class="exam-form-label" for="description">Mô tả đề thi</label>
+                <textarea id="description" name="description" class="exam-form-textarea" placeholder="Nhập mô tả ngắn về đề thi..."></textarea>
+                <div class="exam-form-hint">Mô tả sẽ hiển thị cho sinh viên khi xem đề thi</div>
+            </div>
+
+            <div class="exam-form-row">
+                <div class="exam-form-group">
+                    <label class="exam-form-label required" for="startDate">Ngày mở đề</label>
+                    <input type="datetime-local" id="startDate" name="startDate" class="exam-form-input" required />
+                    <span class="exam-error-message">Vui lòng chọn ngày mở đề</span>
+                </div>
+
+                <div class="exam-form-group">
+                    <label class="exam-form-label required" for="endDate">Ngày đóng đề</label>
+                    <input type="datetime-local" id="endDate" name="endDate" class="exam-form-input" required />
+                    <span class="exam-error-message">Vui lòng chọn ngày đóng đề</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Question Selection -->
+        <div class="exam-form-section" data-section="2">
+            <h2 style="color: #2E8BE9; font-size: 28px; font-weight: 700; margin-bottom: 30px;">
+                Bước 2: Chọn câu hỏi
+            </h2>
+
+            <div class="exam-form-group">
+                <label class="exam-form-label">Lọc câu hỏi theo độ khó</label>
+                <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" class="question-filter" data-difficulty="all" checked />
+                        <span>Tất cả</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" class="question-filter" data-difficulty="easy" />
+                        <span class="question-badge easy">Dễ</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" class="question-filter" data-difficulty="medium" />
+                        <span class="question-badge medium">Trung bình</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" class="question-filter" data-difficulty="hard" />
+                        <span class="question-badge hard">Khó</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-bank-list" id="questionBankList">
+                @if (ViewBag.Questions != null && ViewBag.Questions.Count > 0)
+                {
+                    @foreach (var question in ViewBag.Questions)
+                    {
+                        <div class="question-item" data-difficulty="@question.Difficulty" data-id="@question.Id">
+                            <input type="checkbox" class="question-checkbox" name="selectedQuestions" value="@question.Id" />
+                            <div class="question-content">
+                                <div class="question-text">@question.Text</div>
+                                <div class="question-meta">
+                                    <span class="question-badge @question.Difficulty.ToLower()">@question.DifficultyLabel</span>
+                                    <span><i class="fas fa-book"></i> @question.Subject</span>
+                                    <span><i class="fas fa-star"></i> @question.Points điểm</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div style="text-align: center; padding: 40px; color: #6c757d;">
+                        <i class="fas fa-inbox" style="font-size: 60px; margin-bottom: 20px;"></i>
+                        <p>Chưa có câu hỏi nào trong ngân hàng</p>
+                        <a href="@Url.Action("QuestionBank", "Teacher")" class="exam-btn exam-btn-primary" style="margin-top: 20px;">
+                            <i class="fas fa-plus"></i> Tạo câu hỏi mới
+                        </a>
+                    </div>
+                }
+            </div>
+
+            <div class="selected-questions-summary">
+                <span class="selected-count">Đã chọn: <span id="selectedCount">0</span> câu hỏi</span>
+                <span style="float: right; color: #6c757d;">Tổng điểm: <span id="totalPoints">0</span></span>
+            </div>
+        </div>
+
+        <!-- Step 3: Configuration -->
+        <div class="exam-form-section" data-section="3">
+            <h2 style="color: #2E8BE9; font-size: 28px; font-weight: 700; margin-bottom: 30px;">
+                Bước 3: Cấu hình đề thi
+            </h2>
+
+            <div class="exam-form-group">
+                <label class="exam-form-label">Tùy chọn hiển thị</label>
+                
+                <div class="config-option">
+                    <input type="checkbox" id="shuffleQuestions" name="shuffleQuestions" class="config-checkbox" />
+                    <label for="shuffleQuestions" class="config-label">
+                        Xáo trộn câu hỏi
+                        <div class="config-description">Thứ tự câu hỏi sẽ khác nhau cho mỗi sinh viên</div>
+                    </label>
+                </div>
+
+                <div class="config-option">
+                    <input type="checkbox" id="shuffleAnswers" name="shuffleAnswers" class="config-checkbox" />
+                    <label for="shuffleAnswers" class="config-label">
+                        Xáo trộn đáp án
+                        <div class="config-description">Thứ tự các đáp án sẽ được xáo trộn</div>
+                    </label>
+                </div>
+
+                <div class="config-option">
+                    <input type="checkbox" id="showResults" name="showResults" class="config-checkbox" checked />
+                    <label for="showResults" class="config-label">
+                        Hiện kết quả ngay
+                        <div class="config-description">Sinh viên xem điểm và đáp án ngay sau khi nộp bài</div>
+                    </label>
+                </div>
+
+                <div class="config-option">
+                    <input type="checkbox" id="allowReview" name="allowReview" class="config-checkbox" checked />
+                    <label for="allowReview" class="config-label">
+                        Cho phép xem lại
+                        <div class="config-description">Sinh viên có thể xem lại bài thi sau khi hoàn thành</div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="exam-form-group">
+                <label class="exam-form-label required" for="assignTo">Giao cho lớp</label>
+                <select id="assignTo" name="assignTo" class="exam-form-select" multiple size="5" required>
+                    <option value="all" selected>Tất cả sinh viên</option>
+                    <option value="pm233h">PM233H - Xác suất thống kê (360 SV)</option>
+                    <option value="tm231h">TM231H - Toán cao cấp (36 SV)</option>
+                    <option value="pm234h">PM234H - Cấu trúc dữ liệu (280 SV)</option>
+                </select>
+                <div class="exam-form-hint">Giữ Ctrl (hoặc Cmd) để chọn nhiều lớp</div>
+            </div>
+
+            <div class="exam-form-group">
+                <label class="exam-form-label" for="passingScore">Điểm đạt (%)</label>
+                <input type="number" id="passingScore" name="passingScore" class="exam-form-input" placeholder="50" min="0" max="100" value="50" />
+                <div class="exam-form-hint">Sinh viên cần đạt ít nhất điểm này để pass</div>
+            </div>
+        </div>
+
+        <!-- Step 4: Preview & Confirm -->
+        <div class="exam-form-section" data-section="4">
+            <h2 style="color: #2E8BE9; font-size: 28px; font-weight: 700; margin-bottom: 30px;">
+                Bước 4: Xác nhận và xuất bản
+            </h2>
+
+            <div class="exam-preview-card">
+                <div class="preview-section">
+                    <h3 class="preview-section-title">Thông tin đề thi</h3>
+                    <div class="preview-item">
+                        <span class="preview-label">Tên đề thi:</span>
+                        <span class="preview-value" id="preview-examName">-</span>
+                    </div>
+                    <div class="preview-item">
+                        <span class="preview-label">Môn học:</span>
+                        <span class="preview-value" id="preview-subject">-</span>
+                    </div>
+                    <div class="preview-item">
+                        <span class="preview-label">Thời gian:</span>
+                        <span class="preview-value" id="preview-duration">-</span>
+                    </div>
+                    <div class="preview-item">
+                        <span class="preview-label">Ngày mở đề:</span>
+                        <span class="preview-value" id="preview-startDate">-</span>
+                    </div>
+                    <div class="preview-item">
+                        <span class="preview-label">Ngày đóng đề:</span>
+                        <span class="preview-value" id="preview-endDate">-</span>
+                    </div>
+                </div>
+
+                <div class="preview-section">
+                    <h3 class="preview-section-title">Câu hỏi đã chọn</h3>
+                    <div class="preview-item">
+                        <span class="preview-label">Số lượng câu hỏi:</span>
+                        <span class="preview-value" id="preview-questionCount">-</span>
+                    </div>
+                    <div class="preview-item">
+                        <span class="preview-label">Tổng điểm:</span>
+                        <span class="preview-value" id="preview-totalPoints">-</span>
+                    </div>
+                </div>
+
+                <div class="preview-section">
+                    <h3 class="preview-section-title">Cấu hình</h3>
+                    <div class="preview-item">
+                        <span class="preview-label">Xáo trộn câu hỏi:</span>
+                        <span class="preview-value" id="preview-shuffle">-</span>
+                    </div>
+                    <div class="preview-item">
+                        <span class="preview-label">Hiện kết quả ngay:</span>
+                        <span class="preview-value" id="preview-showResults">-</span>
+                    </div>
+                    <div class="preview-item">
+                        <span class="preview-label">Giao cho:</span>
+                        <span class="preview-value" id="preview-assignTo">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: #fff3cd; padding: 20px; border-radius: 8px; border-left: 4px solid #ffc107; margin-top: 20px;">
+                <strong><i class="fas fa-exclamation-triangle"></i> Lưu ý:</strong>
+                <ul style="margin: 10px 0 0 20px;">
+                    <li>Sau khi xuất bản, đề thi sẽ hiển thị cho sinh viên theo thời gian đã cấu hình</li>
+                    <li>Bạn có thể lưu nháp để chỉnh sửa sau hoặc xuất bản ngay</li>
+                    <li>Đề thi đã xuất bản vẫn có thể chỉnh sửa nếu chưa có sinh viên nào làm</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="exam-form-actions">
+            <button type="button" id="prevBtn" class="exam-btn exam-btn-secondary" style="display: none;">
+                <i class="fas fa-arrow-left"></i>
+                Quay lại
+            </button>
+            
+            <div style="display: flex; gap: 15px;">
+                <button type="button" id="saveDraftBtn" class="exam-btn exam-btn-secondary">
+                    <i class="fas fa-save"></i>
+                    Lưu nháp
+                </button>
+                <button type="button" id="nextBtn" class="exam-btn exam-btn-primary">
+                    Tiếp theo
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <button type="submit" id="publishBtn" class="exam-btn exam-btn-success" style="display: none;">
+                    <i class="fas fa-rocket"></i>
+                    Xuất bản đề thi
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Loading Spinner -->
+    <div class="exam-loading" id="loadingSpinner">
+        <div class="spinner"></div>
+        <p>Đang xử lý...</p>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/teacher/create-exam.js"></script>
+}
+

@@ -1,0 +1,340 @@
+/* ExamManagement.cshtml Styles */
+/* Design tokens from Figma */
+:root {
+    --primary-blue: #2E8BE9;
+    --white: #FAFAFF;
+    --black: #2F3542;
+    --gray-bg: #F1F5F9;
+    --border-gray: #B4BBC3;
+}
+
+/* Main Container */
+.exam-management-container {
+    padding: 50px;
+    background-color: var(--gray-bg);
+    min-height: 100vh;
+}
+
+/* Page Title */
+.exam-management-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 40px;
+    color: var(--primary-blue);
+    margin-bottom: 50px;
+}
+
+/* Search and Actions Bar */
+.exam-search-actions-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 50px;
+    gap: 50px;
+}
+
+/* Search Box */
+.exam-search-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 350px;
+    height: 36px;
+    padding: 7.5px;
+    border: 1.5px solid var(--primary-blue);
+    border-radius: 5px;
+    background-color: var(--white);
+}
+
+.exam-search-box input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--primary-blue);
+    background-color: transparent;
+}
+
+.exam-search-box input::placeholder {
+    color: var(--primary-blue);
+    opacity: 0.7;
+}
+
+.exam-search-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--primary-blue);
+    margin-left: 10px;
+}
+
+/* Action Buttons Group */
+.exam-action-buttons {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+/* Primary Button */
+.exam-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 7.5px;
+    padding: 7.5px;
+    background-color: var(--primary-blue);
+    border: none;
+    border-radius: 10px;
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.exam-action-btn:hover {
+    background-color: #1a73d9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(46, 139, 233, 0.3);
+}
+
+.exam-action-btn i {
+    font-size: 18px;
+}
+
+/* Recent Exams Section */
+.exam-recent-section {
+    margin-bottom: 50px;
+}
+
+.exam-section-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 30px;
+    color: var(--black);
+    margin-bottom: 30px;
+}
+
+/* Recent Exam Cards Grid */
+.exam-recent-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.exam-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background-color: var(--white);
+    border-radius: 10px;
+    box-shadow: 0px 4px 40px -7px rgba(0, 0, 0, 0.16);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+}
+
+.exam-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0px 6px 50px -7px rgba(0, 0, 0, 0.25);
+}
+
+.exam-card-icon {
+    width: 38px;
+    height: 38px;
+    color: var(--primary-blue);
+    flex-shrink: 0;
+}
+
+.exam-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.exam-card-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--primary-blue);
+    margin: 0;
+}
+
+.exam-card-info {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+    color: var(--black);
+    margin: 0;
+}
+
+/* All Exams Table Section */
+.exam-all-section {
+    margin-bottom: 50px;
+}
+
+/* Table Container */
+.exam-table-container {
+    background-color: var(--white);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 4px 40px -7px rgba(0, 0, 0, 0.16);
+}
+
+.exam-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Table Header */
+.exam-table thead tr {
+    border-bottom: 1px solid var(--border-gray);
+}
+
+.exam-table th {
+    padding: 27px 30px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--black);
+    text-align: left;
+}
+
+.exam-table th:not(:first-child) {
+    text-align: center;
+}
+
+/* Table Body */
+.exam-table tbody tr {
+    border-bottom: 1px solid var(--border-gray);
+    transition: background-color 0.2s ease;
+}
+
+.exam-table tbody tr:hover {
+    background-color: rgba(46, 139, 233, 0.05);
+}
+
+.exam-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.exam-table td {
+    padding: 20px 30px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+    color: var(--black);
+}
+
+.exam-table td:not(:first-child) {
+    text-align: center;
+}
+
+/* First Column with Icon */
+.exam-table-name-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.exam-table-icon {
+    width: 38px;
+    height: 38px;
+    color: var(--black);
+    flex-shrink: 0;
+}
+
+.exam-table-name {
+    font-weight: 700;
+}
+
+/* Status Badge */
+.exam-status-badge {
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.exam-status-published {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.exam-status-draft {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+/* Empty State */
+.exam-empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--border-gray);
+}
+
+.exam-empty-state i {
+    font-size: 60px;
+    margin-bottom: 20px;
+}
+
+.exam-empty-state p {
+    font-size: 18px;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .exam-recent-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .exam-management-container {
+        padding: 30px 20px;
+    }
+
+    .exam-management-title {
+        font-size: 32px;
+    }
+
+    .exam-search-actions-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .exam-search-box {
+        width: 100%;
+    }
+
+    .exam-action-buttons {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .exam-recent-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .exam-table-container {
+        overflow-x: auto;
+    }
+
+    .exam-table {
+        min-width: 600px;
+    }
+
+    .exam-table th,
+    .exam-table td {
+        padding: 15px;
+        font-size: 16px;
+    }
+}

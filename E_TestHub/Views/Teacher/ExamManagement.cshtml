@@ -1,0 +1,140 @@
+@{
+    ViewData["Title"] = "Quản lý đề thi";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@section Styles {
+    <link href="~/css/shared/dashboard.css" rel="stylesheet">
+    <link href="~/css/teacher/exam-management.css" rel="stylesheet">
+}
+
+<div class="exam-management-container">
+    <!-- Page Title -->
+    <h1 class="exam-management-title">Quản lý đề thi</h1>
+
+    <!-- Search and Actions Bar -->
+    <div class="exam-search-actions-bar">
+        <!-- Search Box -->
+        <div class="exam-search-box">
+            <input type="text" id="examSearch" placeholder="Tìm kiếm" />
+            <i class="fas fa-search exam-search-icon"></i>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="exam-action-buttons">
+            <a href="@Url.Action("CreateExam", "Teacher")" class="exam-action-btn">
+                <i class="fas fa-file-plus"></i>
+                <span>Tạo đề thi</span>
+            </a>
+            <a href="#" class="exam-action-btn" onclick="alert('Tính năng đang phát triển'); return false;">
+                <i class="fas fa-folder-plus"></i>
+                <span>Tạo thư mục</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Recent Exams Section -->
+    <div class="exam-recent-section">
+        <h2 class="exam-section-title">Đã tải lên gần đây</h2>
+        <div class="exam-recent-grid">
+            @if (ViewBag.RecentExams != null && ViewBag.RecentExams.Count > 0)
+            {
+                @foreach (var exam in ViewBag.RecentExams)
+                {
+                    <a href="@Url.Action("ExamDetails", "Teacher", new { examId = exam.Id })" class="exam-card">
+                        <i class="fas fa-book-open exam-card-icon"></i>
+                        <div class="exam-card-content">
+                            <h3 class="exam-card-title">@exam.Name</h3>
+                            <p class="exam-card-info">@exam.QuestionCount câu</p>
+                            <p class="exam-card-info">Ngày tạo: @exam.CreatedDate.ToString("dd/MM/yyyy")</p>
+                        </div>
+                    </a>
+                }
+            }
+            else
+            {
+                <div class="exam-empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <p>Chưa có đề thi nào được tạo gần đây</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- All Exams Table Section -->
+    <div class="exam-all-section">
+        <h2 class="exam-section-title">Tất cả đề thi</h2>
+        <div class="exam-table-container">
+            <table class="exam-table">
+                <thead>
+                    <tr>
+                        <th>Tên</th>
+                        <th>Số bài đã nộp</th>
+                        <th>Trạng thái</th>
+                        <th>Đã giao cho</th>
+                    </tr>
+                </thead>
+                <tbody id="examTableBody">
+                    @if (ViewBag.AllExams != null && ViewBag.AllExams.Count > 0)
+                    {
+                        @foreach (var exam in ViewBag.AllExams)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="exam-table-name-cell">
+                                        <i class="fas fa-book-open exam-table-icon"></i>
+                                        <span class="exam-table-name">@exam.Name</span>
+                                    </div>
+                                </td>
+                                <td>@exam.SubmittedCount</td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(exam.Status))
+                                    {
+                                        <span class="exam-status-badge exam-status-@(exam.Status.ToLower().Replace(" ", "-"))">
+                                            @exam.Status
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span>-</span>
+                                    }
+                                </td>
+                                <td>@(string.IsNullOrEmpty(exam.AssignedTo) ? "-" : exam.AssignedTo)</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4">
+                                <div class="exam-empty-state">
+                                    <i class="fas fa-inbox"></i>
+                                    <p>Chưa có đề thi nào</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Simple search functionality
+        document.getElementById('examSearch').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const tableRows = document.querySelectorAll('#examTableBody tr');
+            
+            tableRows.forEach(row => {
+                const examName = row.querySelector('.exam-table-name')?.textContent.toLowerCase() || '';
+                if (examName.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    </script>
+}
