@@ -2,10 +2,14 @@
 
 let currentStep = 1;
 const totalSteps = 4;
+let manualQuestionIndex = 0;
+let manualQuestions = [];
 
 document.addEventListener('DOMContentLoaded', function() {
     initializeForm();
     setupEventListeners();
+    setupTabSystem();
+    setupManualQuestions();
     updateStepDisplay();
 });
 
@@ -37,10 +41,10 @@ function setupEventListeners() {
         publishExam();
     });
     
-    // Question selection
+    // Bank question selection
     const questionCheckboxes = document.querySelectorAll('.question-checkbox');
     questionCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', updateSelectedQuestions);
+        checkbox.addEventListener('change', updateQuestionCounts);
     });
     
     // Question item click (toggle checkbox)
@@ -171,12 +175,66 @@ function validateStep(step) {
             break;
             
         case 2:
-            // Validate question selection
-            const selectedQuestions = document.querySelectorAll('.question-checkbox:checked');
-            if (selectedQuestions.length === 0) {
-                alert('Vui lòng chọn ít nhất 1 câu hỏi cho đề thi');
+            // Validate question selection (manual + bank)
+            const manualCards = document.querySelectorAll('.manual-question-card');
+            const bankQuestions = document.querySelectorAll('.question-checkbox:checked');
+            
+            if (manualCards.length === 0 && bankQuestions.length === 0) {
+                alert('Vui lòng nhập câu hỏi thủ công hoặc chọn từ ngân hàng câu hỏi');
                 isValid = false;
+                break;
             }
+            
+            // Validate manual questions
+            manualCards.forEach(card => {
+                const questionText = card.querySelector('.manual-question-text').value.trim();
+                const questionType = card.querySelector('.manual-question-type').value;
+                const points = card.querySelector('.manual-question-points').value;
+                
+                if (!questionText) {
+                    alert('Vui lòng nhập nội dung cho tất cả câu hỏi');
+                    isValid = false;
+                    return;
+                }
+                
+                if (!points || points < 1) {
+                    alert('Vui lòng nhập điểm hợp lệ cho tất cả câu hỏi (tối thiểu 1 điểm)');
+                    isValid = false;
+                    return;
+                }
+                
+                // Validate answers for multiple choice questions
+                if (questionType !== 'essay') {
+                    const answers = card.querySelectorAll('.answer-text');
+                    const checkedAnswer = card.querySelector('.answer-radio:checked');
+                    
+                    if (answers.length < 2) {
+                        alert('Mỗi câu hỏi trắc nghiệm cần ít nhất 2 đáp án');
+                        isValid = false;
+                        return;
+                    }
+                    
+                    // Check if all answers have text
+                    let allAnswersFilled = true;
+                    answers.forEach(answer => {
+                        if (!answer.value.trim()) {
+                            allAnswersFilled = false;
+                        }
+                    });
+                    
+                    if (!allAnswersFilled) {
+                        alert('Vui lòng nhập nội dung cho tất cả đáp án');
+                        isValid = false;
+                        return;
+                    }
+                    
+                    if (!checkedAnswer) {
+                        alert('Vui lòng chọn đáp án đúng cho tất cả câu hỏi trắc nghiệm');
+                        isValid = false;
+                        return;
+                    }
+                }
+            });
             break;
             
         case 3:
@@ -291,9 +349,12 @@ function updatePreview() {
     document.getElementById('preview-endDate').textContent = formatDateTime(endDate);
     
     // Questions
-    const selectedCount = document.querySelectorAll('.question-checkbox:checked').length;
+    const manualCount = document.querySelectorAll('.manual-question-card').length;
+    const bankCount = document.querySelectorAll('.question-checkbox:checked').length;
+    const totalQuestions = manualCount + bankCount;
     const totalPoints = document.getElementById('totalPoints').textContent;
-    document.getElementById('preview-questionCount').textContent = selectedCount;
+    
+    document.getElementById('preview-questionCount').textContent = `${totalQuestions} (${manualCount} thủ công + ${bankCount} từ ngân hàng)`;
     document.getElementById('preview-totalPoints').textContent = totalPoints;
     
     // Configuration
@@ -318,11 +379,25 @@ function saveDraft() {
     const formData = collectFormData();
     formData.status = 'draft';
     
+    // Calculate total questions and points
+    const manualCount = formData.manualQuestions.length;
+    const bankCount = formData.bankQuestions.length;
+    const totalQuestions = manualCount + bankCount;
+    
+    // Calculate total points (assuming 1 point per question for demo)
+    let totalPoints = manualCount; // Manual questions = 1 point each
+    formData.bankQuestions.forEach(() => {
+        totalPoints += 1; // Bank questions = 1 point each (demo)
+    });
+    
     // Simulate API call
     setTimeout(() => {
         showLoading(false);
-        alert('Đã lưu nháp thành công!');
-        window.location.href = '/Teacher/ExamManagement';
+        
+        // Redirect to success page with exam details
+        const examName = encodeURIComponent(formData.examName);
+        const status = 'draft';
+        window.location.href = `/Teacher/CreateExamSuccess?examName=${examName}&status=${status}&questionCount=${totalQuestions}&totalPoints=${totalPoints}`;
     }, 1500);
 }
 
@@ -342,16 +417,57 @@ function publishExam() {
     const formData = collectFormData();
     formData.status = 'published';
     
+    // Calculate total questions and points
+    const manualCount = formData.manualQuestions.length;
+    const bankCount = formData.bankQuestions.length;
+    const totalQuestions = manualCount + bankCount;
+    
+    // Calculate total points (assuming 1 point per question for demo)
+    let totalPoints = manualCount; // Manual questions = 1 point each
+    formData.bankQuestions.forEach(() => {
+        totalPoints += 1; // Bank questions = 1 point each (demo)
+    });
+    
     // Simulate API call
     setTimeout(() => {
         showLoading(false);
-        alert('Đã xuất bản đề thi thành công!');
-        window.location.href = '/Teacher/ExamManagement';
+        
+        // Redirect to success page with exam details
+        const examName = encodeURIComponent(formData.examName);
+        const status = 'published';
+        window.location.href = `/Teacher/CreateExamSuccess?examName=${examName}&status=${status}&questionCount=${totalQuestions}&totalPoints=${totalPoints}`;
     }, 1500);
 }
 
 // Collect form data
 function collectFormData() {
+    // Collect manual questions
+    const manualQuestions = [];
+    document.querySelectorAll('.manual-question-card').forEach(card => {
+        const questionData = {
+            text: card.querySelector('.manual-question-text').value,
+            type: card.querySelector('.manual-question-type').value,
+            difficulty: card.querySelector('.manual-question-difficulty').value,
+            points: card.querySelector('.manual-question-points').value,
+            answers: []
+        };
+        
+        // Collect answers if not essay
+        if (questionData.type !== 'essay') {
+            card.querySelectorAll('.answer-item').forEach(answerItem => {
+                const answerText = answerItem.querySelector('.answer-text').value;
+                const isCorrect = answerItem.querySelector('.answer-radio').checked;
+                
+                questionData.answers.push({
+                    text: answerText,
+                    isCorrect: isCorrect
+                });
+            });
+        }
+        
+        manualQuestions.push(questionData);
+    });
+    
     const formData = {
         examName: document.getElementById('examName').value,
         subject: document.getElementById('subject').value,
@@ -359,7 +475,8 @@ function collectFormData() {
         duration: document.getElementById('duration').value,
         startDate: document.getElementById('startDate').value,
         endDate: document.getElementById('endDate').value,
-        selectedQuestions: Array.from(document.querySelectorAll('.question-checkbox:checked')).map(cb => cb.value),
+        manualQuestions: manualQuestions,
+        bankQuestions: Array.from(document.querySelectorAll('.question-checkbox:checked')).map(cb => cb.value),
         shuffleQuestions: document.getElementById('shuffleQuestions').checked,
         shuffleAnswers: document.getElementById('shuffleAnswers').checked,
         showResults: document.getElementById('showResults').checked,
@@ -368,6 +485,7 @@ function collectFormData() {
         passingScore: document.getElementById('passingScore').value
     };
     
+    console.log('Form Data:', formData); // Debug
     return formData;
 }
 
@@ -408,4 +526,196 @@ function formatDateTime(dateString) {
     const minutes = String(date.getMinutes()).padStart(2, '0');
     
     return `${day}/${month}/${year} ${hours}:${minutes}`;
+}
+
+// ============ TAB SYSTEM ============
+function setupTabSystem() {
+    const tabs = document.querySelectorAll('.question-tab');
+    const panels = document.querySelectorAll('.question-tab-panel');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const targetPanel = this.dataset.tab;
+            
+            // Update active tab
+            tabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Update active panel
+            panels.forEach(p => {
+                p.classList.toggle('active', p.dataset.panel === targetPanel);
+            });
+        });
+    });
+}
+
+// ============ MANUAL QUESTIONS ============
+function setupManualQuestions() {
+    const addBtn = document.getElementById('addManualQuestionBtn');
+    if (addBtn) {
+        addBtn.addEventListener('click', addManualQuestion);
+    }
+}
+
+function addManualQuestion() {
+    manualQuestionIndex++;
+    const template = document.getElementById('manualQuestionTemplate');
+    const clone = template.content.cloneNode(true);
+    
+    // Set question number
+    const card = clone.querySelector('.manual-question-card');
+    card.dataset.questionIndex = manualQuestionIndex;
+    clone.querySelector('.question-number').textContent = manualQuestionIndex;
+    
+    // Setup delete button
+    const deleteBtn = clone.querySelector('.delete-question-btn');
+    deleteBtn.addEventListener('click', function() {
+        deleteManualQuestion(this.closest('.manual-question-card'));
+    });
+    
+    // Setup question type change
+    const typeSelect = clone.querySelector('.manual-question-type');
+    typeSelect.addEventListener('change', function() {
+        handleQuestionTypeChange(this);
+    });
+    
+    // Setup add answer button
+    const addAnswerBtn = clone.querySelector('.add-answer-btn');
+    addAnswerBtn.addEventListener('click', function() {
+        addAnswer(this.closest('.manual-question-card'));
+    });
+    
+    // Setup points input change
+    const pointsInput = clone.querySelector('.manual-question-points');
+    pointsInput.addEventListener('change', updateQuestionCounts);
+    
+    // Add 4 default answers for multiple choice
+    const answersList = clone.querySelector('.answers-list');
+    for (let i = 0; i < 4; i++) {
+        const answerClone = createAnswerElement(manualQuestionIndex);
+        answersList.appendChild(answerClone);
+    }
+    
+    // Append to list
+    document.getElementById('manualQuestionsList').appendChild(clone);
+    
+    // Update counts
+    updateQuestionCounts();
+    
+    // Scroll to new question
+    setTimeout(() => {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+}
+
+function createAnswerElement(questionIndex) {
+    const template = document.getElementById('answerTemplate');
+    const clone = template.content.cloneNode(true);
+    
+    // Update radio button name to be unique per question
+    const radio = clone.querySelector('.answer-radio');
+    radio.name = `correct-answer-${questionIndex}`;
+    
+    // Setup delete button
+    const deleteBtn = clone.querySelector('.delete-answer-btn');
+    deleteBtn.addEventListener('click', function() {
+        this.closest('.answer-item').remove();
+    });
+    
+    return clone;
+}
+
+function addAnswer(questionCard) {
+    const questionIndex = questionCard.dataset.questionIndex;
+    const answersList = questionCard.querySelector('.answers-list');
+    const answerElement = createAnswerElement(questionIndex);
+    answersList.appendChild(answerElement);
+}
+
+function deleteManualQuestion(questionCard) {
+    if (!confirm('Bạn có chắc chắn muốn xóa câu hỏi này?')) {
+        return;
+    }
+    
+    questionCard.remove();
+    updateQuestionCounts();
+    renumberQuestions();
+}
+
+function renumberQuestions() {
+    const questions = document.querySelectorAll('.manual-question-card');
+    questions.forEach((question, index) => {
+        question.querySelector('.question-number').textContent = index + 1;
+    });
+}
+
+function handleQuestionTypeChange(select) {
+    const card = select.closest('.manual-question-card');
+    const answersSection = card.querySelector('.answers-section');
+    const type = select.value;
+    
+    // Show/hide answers section based on question type
+    if (type === 'essay') {
+        answersSection.style.display = 'none';
+    } else if (type === 'true-false') {
+        // Clear existing answers and add True/False
+        const answersList = answersSection.querySelector('.answers-list');
+        answersList.innerHTML = '';
+        
+        const questionIndex = card.dataset.questionIndex;
+        
+        // Add True answer
+        const trueAnswer = createAnswerElement(questionIndex);
+        trueAnswer.querySelector('.answer-text').value = 'Đúng';
+        trueAnswer.querySelector('.answer-text').readOnly = true;
+        trueAnswer.querySelector('.delete-answer-btn').style.display = 'none';
+        answersList.appendChild(trueAnswer);
+        
+        // Add False answer
+        const falseAnswer = createAnswerElement(questionIndex);
+        falseAnswer.querySelector('.answer-text').value = 'Sai';
+        falseAnswer.querySelector('.answer-text').readOnly = true;
+        falseAnswer.querySelector('.delete-answer-btn').style.display = 'none';
+        answersList.appendChild(falseAnswer);
+        
+        answersSection.style.display = 'block';
+        card.querySelector('.add-answer-btn').style.display = 'none';
+    } else {
+        answersSection.style.display = 'block';
+        card.querySelector('.add-answer-btn').style.display = 'block';
+    }
+}
+
+// Update question counts (both manual and bank)
+function updateQuestionCounts() {
+    // Count manual questions
+    const manualCards = document.querySelectorAll('.manual-question-card');
+    let manualCount = manualCards.length;
+    let manualPoints = 0;
+    
+    manualCards.forEach(card => {
+        const points = parseInt(card.querySelector('.manual-question-points')?.value || 0);
+        manualPoints += points;
+    });
+    
+    // Count bank questions
+    const bankCheckboxes = document.querySelectorAll('.question-checkbox:checked');
+    let bankCount = bankCheckboxes.length;
+    let bankPoints = 0;
+    
+    bankCheckboxes.forEach(checkbox => {
+        const item = checkbox.closest('.question-item');
+        const points = parseInt(item?.dataset.points || 0);
+        bankPoints += points;
+    });
+    
+    // Update UI
+    document.getElementById('manualCount').textContent = manualCount;
+    document.getElementById('bankCount').textContent = bankCount;
+    document.getElementById('totalPoints').textContent = manualPoints + bankPoints;
+}
+
+// Update old function name
+function updateSelectedQuestions() {
+    updateQuestionCounts();
 }

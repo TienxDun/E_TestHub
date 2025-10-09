@@ -56,6 +56,113 @@ Luôn theo cấu trúc:
 
 ---
 
+## 🔒 Business Rules & Constraints (CRITICAL)
+
+Đây là các ràng buộc nghiệp vụ cốt lõi mà **MỌI thay đổi phải tuân thủ**. Khi thiết kế database, API, hoặc UI logic, PHẢI kiểm tra với các quy tắc này:
+
+### 1. Account & Authentication Rules
+- **Unique Account**: Mỗi học sinh được cấp **1 tài khoản duy nhất** trên hệ thống
+  - Implementation: `StudentId` (MSSV) là Primary Key, UNIQUE constraint
+  - Không cho phép duplicate accounts với cùng email hoặc student ID
+  
+### 2. Student-Class Relationship
+- **One Student - One Class**: Mỗi học sinh **chỉ thuộc vào một lớp** nhất định
+  - Implementation: Foreign Key `ClassId` trong bảng `Students` (NOT NULL)
+  - Relationship: One-to-Many (một lớp → nhiều học sinh, một học sinh → một lớp)
+  - Business Logic: Khi chuyển lớp, phải update `ClassId`, không được thuộc nhiều lớp cùng lúc
+
+### 3. Exam Access Control (Time-based)
+- **Scheduled Access Only**: Học sinh chỉ có thể làm bài thi vào **đúng thời gian đã lên lịch**
+  - Implementation: Check `StartDate <= CurrentTime <= EndDate` trước khi cho phép truy cập
+  - Business Logic: 
+    - Trước `StartDate`: Hiển thị "Chưa đến giờ thi" + disable button
+    - Trong khoảng `StartDate - EndDate`: Hiển thị "Bắt đầu thi" + enable button
+    - Sau `EndDate`: Hiển thị "Đã kết thúc" hoặc "Xem kết quả"
+  - UI Pattern: 3 trạng thái badge (upcoming/in-progress/completed) như trong `StudentController.MyExams()`
+
+### 4. Auto-Submit on Timeout
+- **Forced Submission**: Khi hết thời gian, hệ thống **tự động nộp bài** cho học sinh
+  - Implementation: JavaScript `setTimeout()` theo `duration` của exam
+  - Backend Validation: Kiểm tra `SubmitTime - StartTime <= Duration` khi nhận submission
+  - Business Logic: Đảm bảo tất cả học sinh có **cùng thời gian làm bài** (fairness)
+
+### 5. Manual Grading by Admin
+- **No Auto-Grading**: Hệ thống **KHÔNG tự động chấm điểm** sau khi học sinh nộp bài
+  - Implementation: Trường `GradedAt` và `GradedBy` trong bảng `ExamResults` (nullable)
+  - Business Logic: 
+    - Submission → Status = "Submitted", Score = NULL
+    - Admin clicks "Chấm bài" → Status = "Graded", Score = calculated value
+  - UI: Hiển thị "Đang chờ chấm điểm" nếu `GradedAt == null`
+
+### 6. Exam Immutability After Publishing
+- **Locked After Save**: Sau khi lưu, giáo viên **KHÔNG được phép sửa** đề thi và đáp án
+  - Implementation: 
+    - Trường `IsPublished` (boolean) trong bảng `Exams`
+    - Trường `PublishedAt` (DateTime, nullable) để track thời điểm publish
+  - Business Logic:
+    - Draft mode (`IsPublished = false`): Cho phép edit/delete
+    - Published mode (`IsPublished = true`): Disable edit buttons, show warning nếu cố gắng sửa
+  - Exception: Có thể sửa nếu **chưa có học sinh nào làm** (check `COUNT(Submissions) == 0`)
+
+### 7. Multiple Choice Question Structure
+- **4 Options Maximum**: Mỗi câu hỏi trắc nghiệm có **tối đa 4 phương án** (A, B, C, D)
+  - Implementation: Bảng `QuestionOptions` với `OptionOrder` (1-4)
+  - Validation: Frontend và Backend đều check `optionCount <= 4`
+- **Single Answer Only**: Học sinh chỉ được chọn **1 trong 4** phương án
+  - Implementation: Radio button (NOT checkbox) trong UI
+  - Database: Lưu `SelectedOptionId` (single FK), không phải array
+
+### 8. No Overlapping Exam Schedule
+- **Schedule Conflict Prevention**: Admin phải đảm bảo **không có môn thi nào của cùng một lớp bị đan chéo thời gian**
+  - Implementation: Validation function khi tạo/update exam schedule:
+    ```csharp
+    // Pseudo-code
+    CheckScheduleConflict(classId, newStartDate, newEndDate) {
+        existingExams = GetExamsForClass(classId);
+        foreach (exam in existingExams) {
+            if (newStartDate < exam.EndDate && newEndDate > exam.StartDate) {
+                throw ConflictException("Trùng lịch thi với môn " + exam.Subject);
+            }
+        }
+    }
+    ```
+  - UI: Hiển thị warning/error khi detect conflict, suggest alternative time slots
+
+### 9. No Delete for Master Data
+- **Soft Delete Only**: Admin **không được phép xóa** (hard delete) các thông tin: Lớp, Khóa học, Môn học
+  - Implementation: 
+    - Thêm trường `IsDeleted` (boolean, default = false) vào các bảng master data
+    - Thay vì `DELETE FROM Classes`, dùng `UPDATE Classes SET IsDeleted = true`
+  - Business Logic: Filter `WHERE IsDeleted = false` trong mọi queries
+  - UI: Hide delete button hoặc disable với tooltip "Không được phép xóa dữ liệu gốc"
+
+### 10. Cascade Delete for Student Data
+- **Full Data Removal**: Khi xóa học sinh, phải **đồng thời xóa toàn bộ**: Điểm thi, Bài làm, Submissions
+  - Implementation: Database `ON DELETE CASCADE` cho Foreign Keys:
+    ```sql
+    -- Example
+    ALTER TABLE ExamResults 
+    ADD CONSTRAINT FK_ExamResults_Students
+    FOREIGN KEY (StudentId) REFERENCES Students(StudentId) 
+    ON DELETE CASCADE;
+    ```
+  - Business Logic: Khi xóa student, tự động trigger cascade delete cho:
+    - `ExamResults` (điểm thi)
+    - `ExamSubmissions` (bài làm)
+    - `StudentAnswers` (câu trả lời chi tiết)
+  - UI: Hiển thị confirmation popup nghiêm túc: "Xóa học sinh sẽ xóa toàn bộ dữ liệu liên quan. Không thể hoàn tác!"
+
+### 🚨 Validation Checklist (Before Implementing Any Feature)
+
+Trước khi code, PHẢI kiểm tra:
+- [ ] Feature này có vi phạm quy tắc nào trong 10 rules trên không?
+- [ ] Database schema có enforce constraints đúng không? (UNIQUE, NOT NULL, FK, CHECK)
+- [ ] Business logic layer có validate rules này không?
+- [ ] UI có prevent user actions vi phạm rules không? (disable buttons, show warnings)
+- [ ] Error messages có rõ ràng khi user vi phạm rules không?
+
+---
+
 ## Project Overview
 
 E_TestHub is an ASP.NET Core 8.0 MVC online exam platform with **role-based architecture** (Student, Teacher, Admin). Currently at v0.3.0 with Student module completed, pending database integration.

@@ -89,5 +89,17 @@ namespace E_TestHub.Controllers
             ViewBag.ExamId = examId;
             return View();
         }
+
+        public IActionResult CreateExamSuccess(string examName, string status, int questionCount, int totalPoints)
+        {
+            // Pass exam creation info to success page
+            ViewBag.ExamName = examName;
+            ViewBag.Status = status; // "published" or "draft"
+            ViewBag.QuestionCount = questionCount;
+            ViewBag.TotalPoints = totalPoints;
+            ViewBag.CreatedDate = DateTime.Now;
+            
+            return View();
+        }
     }
 }
