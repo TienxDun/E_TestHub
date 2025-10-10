@@ -1,0 +1,235 @@
+@{
+    ViewData["Title"] = $"Chi tiết kết quả - {ViewBag.SubjectInfo.Name}";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@section Styles {
+    <link href="~/css/shared/dashboard.css" rel="stylesheet">
+    <link href="~/css/teacher/subject-exam-details.css" rel="stylesheet">
+}
+
+<div class="subject-details-container">
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-nav">
+        <a href="@Url.Action("ViewResults", "Teacher")" class="breadcrumb-link">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+    </div>
+
+    <!-- Subject Header -->
+    <div class="subject-header">
+        <div class="subject-header-content">
+            <h1 class="subject-title">
+                <i class="fas fa-book"></i>
+                @ViewBag.SubjectInfo.Name
+            </h1>
+            <p class="subject-code-label">Mã môn: <span class="subject-code-value">@ViewBag.SubjectInfo.Code</span></p>
+        </div>
+        <div class="subject-stats">
+            <div class="stat-item">
+                <span class="stat-label">Số bài thi:</span>
+                <span class="stat-value">@ViewBag.SubjectInfo.ExamCount</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Điểm TB:</span>
+                <span class="stat-value">@ViewBag.SubjectInfo.AverageScore.ToString("0.0")</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exams List Section -->
+    <div class="exams-list-section">
+        <h2 class="section-title">
+            <i class="fas fa-file-alt"></i>
+            Danh sách bài thi
+        </h2>
+        
+        <div class="exams-cards-grid">
+            @foreach (var exam in ViewBag.Exams)
+            {
+                <div class="exam-card">
+                    <div class="exam-card-header">
+                        <h3 class="exam-card-title">@exam.Name</h3>
+                        <span class="exam-card-badge">@exam.StudentCount sinh viên</span>
+                    </div>
+                    <div class="exam-card-body">
+                        <div class="exam-info-item">
+                            <i class="fas fa-calendar"></i>
+                            <span>@exam.Date.ToString("dd/MM/yyyy")</span>
+                        </div>
+                        <div class="exam-info-item">
+                            <i class="fas fa-clock"></i>
+                            <span>@exam.Duration phút</span>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Student Results Section -->
+    <div class="student-results-section">
+        <div class="results-section-header">
+            <h2 class="section-title">
+                <i class="fas fa-users"></i>
+                Bảng điểm học sinh
+            </h2>
+            
+            <!-- Filter & Search Controls -->
+            <div class="results-controls">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="studentSearch" placeholder="Tìm kiếm theo MSSV hoặc tên...">
+                </div>
+                <select id="gradeFilter" class="grade-filter">
+                    <option value="">Tất cả xếp loại</option>
+                    <option value="excellent">Xuất sắc (≥ 8.5)</option>
+                    <option value="good">Giỏi (7.0 - 8.4)</option>
+                    <option value="fair">Khá (5.5 - 6.9)</option>
+                    <option value="average">Trung bình (4.0 - 5.4)</option>
+                    <option value="poor">Yếu (< 4.0)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="results-table-container">
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>MSSV</th>
+                        <th>Họ và tên</th>
+                        <th>Bài thi 1</th>
+                        <th>Bài thi 2</th>
+                        <th>Bài thi 3</th>
+                        <th>Điểm TB</th>
+                        <th>Xếp loại</th>
+                    </tr>
+                </thead>
+                <tbody id="studentResultsTable">
+                    @foreach (var student in ViewBag.StudentResults)
+                    {
+                        var gradeClass = student.Average >= 8.5 ? "grade-excellent" :
+                                       student.Average >= 7.0 ? "grade-good" :
+                                       student.Average >= 5.5 ? "grade-fair" :
+                                       student.Average >= 4.0 ? "grade-average" : "grade-poor";
+                        
+                        var gradeLabel = student.Average >= 8.5 ? "Xuất sắc" :
+                                       student.Average >= 7.0 ? "Giỏi" :
+                                       student.Average >= 5.5 ? "Khá" :
+                                       student.Average >= 4.0 ? "Trung bình" : "Yếu";
+
+                        <tr data-student-id="@student.StudentId" 
+                            data-student-name="@student.StudentName" 
+                            data-average="@student.Average"
+                            data-grade-class="@gradeClass">
+                            <td>
+                                <div class="student-id">@student.StudentId</div>
+                            </td>
+                            <td>
+                                <div class="student-name">@student.StudentName</div>
+                            </td>
+                            <td>
+                                <div class="exam-score">@student.Exam1.ToString("0.0")</div>
+                            </td>
+                            <td>
+                                <div class="exam-score">@student.Exam2.ToString("0.0")</div>
+                            </td>
+                            <td>
+                                <div class="exam-score">@student.Exam3.ToString("0.0")</div>
+                            </td>
+                            <td>
+                                <div class="average-score">@student.Average.ToString("0.0")</div>
+                            </td>
+                            <td>
+                                <span class="grade-badge @gradeClass">@gradeLabel</span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('studentSearch');
+            const gradeFilter = document.getElementById('gradeFilter');
+            const tableBody = document.getElementById('studentResultsTable');
+            const allRows = Array.from(tableBody.querySelectorAll('tr'));
+
+            function filterResults() {
+                const searchValue = searchInput.value.toLowerCase().trim();
+                const gradeValue = gradeFilter.value;
+
+                allRows.forEach(row => {
+                    const studentId = row.dataset.studentId.toLowerCase();
+                    const studentName = row.dataset.studentName.toLowerCase();
+                    const average = parseFloat(row.dataset.average);
+                    const gradeClass = row.dataset.gradeClass;
+
+                    // Check search filter
+                    const searchMatch = searchValue === '' || 
+                                      studentId.includes(searchValue) || 
+                                      studentName.includes(searchValue);
+
+                    // Check grade filter
+                    let gradeMatch = true;
+                    if (gradeValue !== '') {
+                        switch(gradeValue) {
+                            case 'excellent':
+                                gradeMatch = gradeClass === 'grade-excellent';
+                                break;
+                            case 'good':
+                                gradeMatch = gradeClass === 'grade-good';
+                                break;
+                            case 'fair':
+                                gradeMatch = gradeClass === 'grade-fair';
+                                break;
+                            case 'average':
+                                gradeMatch = gradeClass === 'grade-average';
+                                break;
+                            case 'poor':
+                                gradeMatch = gradeClass === 'grade-poor';
+                                break;
+                        }
+                    }
+
+                    // Show/hide row
+                    if (searchMatch && gradeMatch) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+
+                updateNoResultsMessage();
+            }
+
+            function updateNoResultsMessage() {
+                const visibleRows = allRows.filter(row => row.style.display !== 'none');
+                const existingMessage = tableBody.querySelector('.no-results-row');
+                
+                if (existingMessage) {
+                    existingMessage.remove();
+                }
+
+                if (visibleRows.length === 0) {
+                    const noResultsRow = document.createElement('tr');
+                    noResultsRow.className = 'no-results-row';
+                    noResultsRow.innerHTML = `
+                        <td colspan="7" style="text-align: center; padding: 40px; color: #666;">
+                            <i class="fas fa-search" style="font-size: 24px; margin-bottom: 10px; display: block;"></i>
+                            Không tìm thấy kết quả nào
+                        </td>
+                    `;
+                    tableBody.appendChild(noResultsRow);
+                }
+            }
+
+            searchInput.addEventListener('input', filterResults);
+            gradeFilter.addEventListener('change', filterResults);
+        });
+    </script>
+}

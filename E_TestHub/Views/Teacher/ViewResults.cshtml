@@ -1,25 +1,571 @@
 @{
-    ViewData["Title"] = "Xem kết quả thi";
+    ViewData["Title"] = "Xem kết quả thi - Giáo Viên";
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 }
 
 @section Styles {
     <link href="~/css/shared/dashboard.css" rel="stylesheet">
+    <link href="~/css/teacher/view-results.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 }
 
-<div class="dashboard-container" style="padding: 50px;">
-    <h1 style="color: #2E8BE9; font-size: 40px; font-weight: 700; margin-bottom: 30px;">
-        <i class="fas fa-chart-line"></i> Xem kết quả thi
-    </h1>
-    
-    <div style="background: white; padding: 60px; border-radius: 10px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-        <i class="fas fa-tools" style="font-size: 80px; color: #2E8BE9; margin-bottom: 20px;"></i>
-        <h2 style="color: #2F3542; font-size: 28px; margin-bottom: 15px;">Tính năng đang phát triển</h2>
-        <p style="color: #666; font-size: 18px; margin-bottom: 30px;">
-            Trang xem kết quả thi đang được xây dựng. Vui lòng quay lại sau.
-        </p>
-        <a href="@Url.Action("Dashboard", "Teacher")" class="btn btn-primary" style="background: #2E8BE9; color: white; padding: 12px 30px; border-radius: 8px; text-decoration: none; display: inline-block;">
-            <i class="fas fa-arrow-left"></i> Quay lại Dashboard
-        </a>
+<div class="view-results-container">
+    <!-- Page Header -->
+    <div class="view-results-header">
+        <h1 class="view-results-title">
+            <i class="fas fa-chart-line"></i>
+            Xem kết quả thi
+        </h1>
+        <button class="export-all-btn" onclick="exportAllResults()">
+            <i class="fas fa-file-excel"></i>
+            Xuất toàn bộ báo cáo
+        </button>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="summary-cards-grid">
+        <div class="stat-card">
+            <div class="stat-card-icon">
+                <i class="fas fa-book"></i>
+            </div>
+            <div class="stat-card-content">
+                <h3 class="stat-card-value">@ViewBag.TotalSubjects</h3>
+                <p class="stat-card-label">Môn học</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card-icon">
+                <i class="fas fa-file-alt"></i>
+            </div>
+            <div class="stat-card-content">
+                <h3 class="stat-card-value">@ViewBag.TotalExams</h3>
+                <p class="stat-card-label">Bài thi đã tạo</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-section">
+        <div class="chart-container">
+            <h3 class="chart-title">
+                <i class="fas fa-chart-bar"></i>
+                Điểm trung bình theo môn học
+            </h3>
+            <canvas id="averageScoreChart"></canvas>
+        </div>
+        
+        <div class="chart-container">
+            <h3 class="chart-title">
+                <i class="fas fa-chart-pie"></i>
+                Phân bố xếp loại
+            </h3>
+            <canvas id="gradeDistributionChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Subject Results Table -->
+    <div class="results-section">
+        <div class="results-section-header">
+            <h2 class="section-title">Danh sách môn học</h2>
+            
+            <!-- Filter & Search Controls -->
+            <div class="results-controls">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="subjectSearch" placeholder="Tìm kiếm theo mã môn hoặc tên môn...">
+                </div>
+                <select id="scoreFilter" class="score-filter">
+                    <option value="">Tất cả mức điểm</option>
+                    <option value="excellent">Xuất sắc (≥ 8.5)</option>
+                    <option value="good">Giỏi (7.0 - 8.4)</option>
+                    <option value="fair">Khá (5.5 - 6.9)</option>
+                    <option value="average">Trung bình (< 5.5)</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="results-table-container">
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th class="sortable" data-column="code">
+                            Mã môn
+                            <i class="fas fa-sort sort-icon"></i>
+                        </th>
+                        <th class="sortable" data-column="name">
+                            Tên môn
+                            <i class="fas fa-sort sort-icon"></i>
+                        </th>
+                        <th class="sortable" data-column="examCount">
+                            Số bài đã tạo
+                            <i class="fas fa-sort sort-icon"></i>
+                        </th>
+                        <th class="sortable" data-column="average">
+                            Điểm trung bình
+                            <i class="fas fa-sort sort-icon"></i>
+                        </th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="subjectResultsTable">
+                    @foreach (var subject in ViewBag.SubjectResults)
+                    {
+                        var scoreClass = subject.AverageScore >= 8.5 ? "score-excellent" :
+                                       subject.AverageScore >= 7.0 ? "score-good" :
+                                       subject.AverageScore >= 5.5 ? "score-fair" : "score-average";
+
+                        <tr data-subject-code="@subject.SubjectCode" 
+                            data-subject-name="@subject.SubjectName"
+                            data-exam-count="@subject.ExamCount"
+                            data-average-score="@subject.AverageScore"
+                            data-score-class="@scoreClass">
+                            <td>
+                                <div class="subject-code">@subject.SubjectCode</div>
+                            </td>
+                            <td>
+                                <div class="subject-name">@subject.SubjectName</div>
+                            </td>
+                            <td>
+                                <div class="exam-count">@subject.ExamCount</div>
+                            </td>
+                            <td>
+                                <div class="average-score">@subject.AverageScore.ToString("0.0")</div>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="@Url.Action("SubjectExamDetails", "Teacher", new { subjectCode = subject.SubjectCode })" 
+                                       class="action-btn view-btn" 
+                                       title="Xem chi tiết"
+                                       onclick="event.stopPropagation()">
+                                        <i class="fas fa-eye"></i>
+                                        Xem chi tiết
+                                    </a>
+                                    <button class="action-btn export-btn" 
+                                            title="Xuất Excel"
+                                            onclick="event.stopPropagation(); exportToExcel('@subject.SubjectCode', '@subject.SubjectName')">
+                                        <i class="fas fa-file-excel"></i>
+                                        Xuất Excel
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination-container" id="paginationContainer" style="display: none;">
+            <nav aria-label="Subject results pagination">
+                <ul class="pagination" id="paginationList">
+                    <!-- Pagination items will be generated by JavaScript -->
+                </ul>
+            </nav>
+            <div class="pagination-info">
+                Hiển thị <span id="currentRange">1-4</span> trong tổng số <span id="totalItems">4</span> môn học
+            </div>
+        </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Charts
+            initializeCharts();
+
+            const searchInput = document.getElementById('subjectSearch');
+            const scoreFilter = document.getElementById('scoreFilter');
+            const tableBody = document.getElementById('subjectResultsTable');
+            const allRows = Array.from(tableBody.querySelectorAll('tr'));
+            
+            // Pagination setup
+            const itemsPerPage = 10;
+            let currentPage = 1;
+            const paginationContainer = document.getElementById('paginationContainer');
+            const paginationList = document.getElementById('paginationList');
+            const totalItemsSpan = document.getElementById('totalItems');
+            const currentRangeSpan = document.getElementById('currentRange');
+
+            function filterSubjects() {
+                const searchValue = searchInput.value.toLowerCase().trim();
+                const scoreValue = scoreFilter.value;
+
+                allRows.forEach(row => {
+                    const subjectCode = row.dataset.subjectCode.toLowerCase();
+                    const subjectName = row.dataset.subjectName.toLowerCase();
+                    const scoreClass = row.dataset.scoreClass;
+
+                    // Check search filter
+                    const searchMatch = searchValue === '' || 
+                                      subjectCode.includes(searchValue) || 
+                                      subjectName.includes(searchValue);
+
+                    // Check score filter
+                    let scoreMatch = true;
+                    if (scoreValue !== '') {
+                        switch(scoreValue) {
+                            case 'excellent':
+                                scoreMatch = scoreClass === 'score-excellent';
+                                break;
+                            case 'good':
+                                scoreMatch = scoreClass === 'score-good';
+                                break;
+                            case 'fair':
+                                scoreMatch = scoreClass === 'score-fair';
+                                break;
+                            case 'average':
+                                scoreMatch = scoreClass === 'score-average';
+                                break;
+                        }
+                    }
+
+                    // Show/hide row
+                    if (searchMatch && scoreMatch) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+
+                updateNoResultsMessage();
+                updatePagination();
+            }
+
+            function updatePagination() {
+                const visibleRows = allRows.filter(row => row.style.display !== 'none' && !row.classList.contains('no-results-row'));
+                const totalItems = visibleRows.length;
+                const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+                // Show/hide pagination based on total items
+                if (totalItems > itemsPerPage) {
+                    paginationContainer.style.display = 'flex';
+                } else {
+                    paginationContainer.style.display = 'none';
+                    // Show all rows if no pagination needed
+                    visibleRows.forEach(row => row.style.display = '');
+                    return;
+                }
+
+                // Paginate rows
+                visibleRows.forEach((row, index) => {
+                    const page = Math.floor(index / itemsPerPage) + 1;
+                    row.style.display = (page === currentPage) ? '' : 'none';
+                });
+
+                // Update pagination info
+                const startRange = ((currentPage - 1) * itemsPerPage) + 1;
+                const endRange = Math.min(currentPage * itemsPerPage, totalItems);
+                currentRangeSpan.textContent = `${startRange}-${endRange}`;
+                totalItemsSpan.textContent = totalItems;
+
+                // Generate pagination buttons
+                paginationList.innerHTML = '';
+
+                // Previous button
+                const prevLi = document.createElement('li');
+                prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+                prevLi.innerHTML = `<a class="page-link" href="#" data-page="${currentPage - 1}"><i class="fas fa-chevron-left"></i></a>`;
+                paginationList.appendChild(prevLi);
+
+                // Page numbers
+                for (let i = 1; i <= totalPages; i++) {
+                    if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                        const pageLi = document.createElement('li');
+                        pageLi.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                        pageLi.innerHTML = `<a class="page-link" href="#" data-page="${i}">${i}</a>`;
+                        paginationList.appendChild(pageLi);
+                    } else if (i === currentPage - 2 || i === currentPage + 2) {
+                        const ellipsisLi = document.createElement('li');
+                        ellipsisLi.className = 'page-item disabled';
+                        ellipsisLi.innerHTML = '<a class="page-link">...</a>';
+                        paginationList.appendChild(ellipsisLi);
+                    }
+                }
+
+                // Next button
+                const nextLi = document.createElement('li');
+                nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+                nextLi.innerHTML = `<a class="page-link" href="#" data-page="${currentPage + 1}"><i class="fas fa-chevron-right"></i></a>`;
+                paginationList.appendChild(nextLi);
+
+                // Add click handlers
+                paginationList.querySelectorAll('a.page-link').forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        if (!this.parentElement.classList.contains('disabled')) {
+                            const page = parseInt(this.dataset.page);
+                            if (page && page >= 1 && page <= totalPages) {
+                                currentPage = page;
+                                updatePagination();
+                            }
+                        }
+                    });
+                });
+            }
+
+            function updateNoResultsMessage() {
+                const visibleRows = allRows.filter(row => row.style.display !== 'none');
+                const existingMessage = tableBody.querySelector('.no-results-row');
+                
+                if (existingMessage) {
+                    existingMessage.remove();
+                }
+
+                if (visibleRows.length === 0) {
+                    const noResultsRow = document.createElement('tr');
+                    noResultsRow.className = 'no-results-row';
+                    noResultsRow.innerHTML = `
+                        <td colspan="5" style="text-align: center; padding: 40px; color: #666;">
+                            <i class="fas fa-search" style="font-size: 24px; margin-bottom: 10px; display: block;"></i>
+                            Không tìm thấy môn học nào phù hợp
+                        </td>
+                    `;
+                    tableBody.appendChild(noResultsRow);
+                }
+            }
+
+            searchInput.addEventListener('input', filterSubjects);
+            scoreFilter.addEventListener('change', filterSubjects);
+
+            // Sorting functionality
+            const sortableHeaders = document.querySelectorAll('.results-table th.sortable');
+            let currentSortColumn = null;
+            let currentSortDirection = 'asc';
+
+            sortableHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    const column = this.dataset.column;
+                    
+                    // Toggle direction if same column, otherwise reset to ascending
+                    if (currentSortColumn === column) {
+                        currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+                    } else {
+                        currentSortDirection = 'asc';
+                        currentSortColumn = column;
+                    }
+
+                    // Update sort icons
+                    sortableHeaders.forEach(h => {
+                        const icon = h.querySelector('.sort-icon');
+                        icon.className = 'fas fa-sort sort-icon';
+                    });
+
+                    const icon = this.querySelector('.sort-icon');
+                    icon.className = currentSortDirection === 'asc' ? 
+                        'fas fa-sort-up sort-icon active' : 
+                        'fas fa-sort-down sort-icon active';
+
+                    // Sort rows
+                    sortTable(column, currentSortDirection);
+                });
+            });
+
+            function sortTable(column, direction) {
+                const sortedRows = [...allRows].sort((a, b) => {
+                    let aValue, bValue;
+
+                    switch(column) {
+                        case 'code':
+                            aValue = a.dataset.subjectCode.toLowerCase();
+                            bValue = b.dataset.subjectCode.toLowerCase();
+                            break;
+                        case 'name':
+                            aValue = a.dataset.subjectName.toLowerCase();
+                            bValue = b.dataset.subjectName.toLowerCase();
+                            break;
+                        case 'examCount':
+                            aValue = parseInt(a.dataset.examCount);
+                            bValue = parseInt(b.dataset.examCount);
+                            break;
+                        case 'average':
+                            aValue = parseFloat(a.dataset.averageScore);
+                            bValue = parseFloat(b.dataset.averageScore);
+                            break;
+                    }
+
+                    if (aValue < bValue) return direction === 'asc' ? -1 : 1;
+                    if (aValue > bValue) return direction === 'asc' ? 1 : -1;
+                    return 0;
+                });
+
+                // Clear and re-append sorted rows
+                tableBody.innerHTML = '';
+                sortedRows.forEach(row => tableBody.appendChild(row));
+
+                // Reapply filters
+                filterSubjects();
+            }
+        });
+
+        // Initialize Charts
+        function initializeCharts() {
+            // Data from ViewBag
+            const subjects = @Html.Raw(Json.Serialize(ViewBag.SubjectResults));
+            
+            // Extract data for charts
+            const subjectNames = subjects.map(s => s.SubjectCode);
+            const averageScores = subjects.map(s => s.AverageScore);
+            
+            // Calculate grade distribution (demo data - will be dynamic after DB integration)
+            const gradeDistribution = {
+                excellent: 0,
+                good: 0,
+                fair: 0,
+                average: 0,
+                poor: 0
+            };
+            
+            subjects.forEach(s => {
+                if (s.AverageScore >= 8.5) gradeDistribution.excellent++;
+                else if (s.AverageScore >= 7.0) gradeDistribution.good++;
+                else if (s.AverageScore >= 5.5) gradeDistribution.fair++;
+                else if (s.AverageScore >= 4.0) gradeDistribution.average++;
+                else gradeDistribution.poor++;
+            });
+
+            // Bar Chart - Average Score by Subject
+            const avgScoreCtx = document.getElementById('averageScoreChart').getContext('2d');
+            new Chart(avgScoreCtx, {
+                type: 'bar',
+                data: {
+                    labels: subjectNames,
+                    datasets: [{
+                        label: 'Điểm trung bình',
+                        data: averageScores,
+                        backgroundColor: [
+                            'rgba(102, 126, 234, 0.8)',
+                            'rgba(118, 75, 162, 0.8)',
+                            'rgba(13, 110, 253, 0.8)',
+                            'rgba(40, 167, 69, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(102, 126, 234, 1)',
+                            'rgba(118, 75, 162, 1)',
+                            'rgba(13, 110, 253, 1)',
+                            'rgba(40, 167, 69, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 10,
+                            ticks: {
+                                stepSize: 2
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Điểm TB: ' + context.parsed.y.toFixed(1);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Pie Chart - Grade Distribution
+            const gradeDistCtx = document.getElementById('gradeDistributionChart').getContext('2d');
+            new Chart(gradeDistCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Xuất sắc (≥8.5)', 'Giỏi (7-8.4)', 'Khá (5.5-6.9)', 'Trung bình (4-5.4)', 'Yếu (<4)'],
+                    datasets: [{
+                        data: [
+                            gradeDistribution.excellent,
+                            gradeDistribution.good,
+                            gradeDistribution.fair,
+                            gradeDistribution.average,
+                            gradeDistribution.poor
+                        ],
+                        backgroundColor: [
+                            'rgba(40, 167, 69, 0.8)',
+                            'rgba(13, 110, 253, 0.8)',
+                            'rgba(255, 193, 7, 0.8)',
+                            'rgba(255, 152, 0, 0.8)',
+                            'rgba(220, 53, 69, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(40, 167, 69, 1)',
+                            'rgba(13, 110, 253, 1)',
+                            'rgba(255, 193, 7, 1)',
+                            'rgba(255, 152, 0, 1)',
+                            'rgba(220, 53, 69, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.parsed;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return label + ': ' + value + ' môn (' + percentage + '%)';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Export to Excel function (single subject)
+        function exportToExcel(subjectCode, subjectName) {
+            // Show loading message
+            alert(`Chức năng xuất Excel cho môn "${subjectName}" (${subjectCode}) đang được phát triển.\n\nSau khi tích hợp database, file Excel sẽ bao gồm:\n- Thông tin môn học\n- Danh sách bài thi\n- Bảng điểm chi tiết từng học sinh\n- Biểu đồ thống kê`);
+            
+            // TODO: Implement actual Excel export after database integration
+            // Example implementation:
+            // window.location.href = `/Teacher/ExportSubjectResults?subjectCode=${subjectCode}`;
+        }
+
+        // Export all results function
+        function exportAllResults() {
+            const confirmed = confirm(
+                'Xuất toàn bộ báo cáo kết quả thi?\n\n' +
+                'File Excel sẽ bao gồm:\n' +
+                '- Tổng quan thống kê\n' +
+                '- Chi tiết từng môn học (4 sheets)\n' +
+                '- Bảng điểm tất cả học sinh\n' +
+                '- Biểu đồ phân tích\n\n' +
+                'Quá trình xuất có thể mất vài giây...'
+            );
+
+            if (confirmed) {
+                // Show processing message
+                alert('Chức năng xuất toàn bộ báo cáo đang được phát triển.\n\nSau khi tích hợp database và thư viện EPPlus/ClosedXML, báo cáo sẽ được tạo tự động với:\n- Sheet 1: Tổng quan\n- Sheet 2-5: Chi tiết từng môn\n- Sheet 6: Danh sách học sinh\n- Formatting chuyên nghiệp với màu sắc và biểu đồ');
+                
+                // TODO: Implement actual full export after database integration
+                // Example implementation:
+                // window.location.href = '/Teacher/ExportAllResults';
+            }
+        }
+    </script>
+}
