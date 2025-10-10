@@ -1,72 +1,5 @@
 ﻿/* QuestionBank.cshtml - Dashboard Style */
 
-.question-filter-section {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-    margin-bottom: 40px;
-    padding: 20px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-}
-
-.filter-group {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.filter-group label {
-    font-weight: 600;
-    color: #333;
-    white-space: nowrap;
-}
-
-.filter-select {
-    padding: 10px 15px;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 14px;
-    min-width: 200px;
-    cursor: pointer;
-    transition: border-color 0.3s;
-}
-
-.filter-select:focus {
-    outline: none;
-    border-color: #4A90E2;
-}
-
-.filter-search {
-    position: relative;
-    flex: 1;
-    max-width: 400px;
-    margin-left: auto;
-}
-
-.filter-search input {
-    width: 100%;
-    padding: 10px 40px 10px 15px;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 14px;
-    transition: border-color 0.3s;
-}
-
-.filter-search input:focus {
-    outline: none;
-    border-color: #4A90E2;
-}
-
-.filter-search i {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #999;
-}
-
 .subject-distribution {
     display: flex;
     flex-direction: column;
@@ -235,6 +168,207 @@
     font-size: 12px;
 }
 
+/* ========================================
+   SUBJECT TABS & PAGINATION
+   ======================================== */
+
+.subject-tabs-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.subject-tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    flex: 1;
+}
+
+.subject-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.subject-tab i {
+    font-size: 16px;
+}
+
+.subject-tab:hover {
+    border-color: #4A90E2;
+    background: #f8fafc;
+    color: #4A90E2;
+}
+
+.subject-tab.active {
+    background: linear-gradient(135deg, #4A90E2, #357ABD);
+    border-color: #4A90E2;
+    color: white;
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+.subject-tab.active:hover {
+    background: linear-gradient(135deg, #357ABD, #2868a8);
+    color: white;
+}
+
+.tab-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 8px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.subject-tab.active .tab-count {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* Pagination Controls */
+.pagination-controls-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.items-per-page-select {
+    padding: 10px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    background: white;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.items-per-page-select:hover {
+    border-color: #4A90E2;
+}
+
+.items-per-page-select:focus {
+    outline: none;
+    border-color: #4A90E2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+/* Pagination Footer */
+.pagination-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 2px solid #f0f0f0;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.pagination-info {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+}
+
+.pagination-info span {
+    font-weight: 700;
+    color: #333;
+}
+
+.pagination-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.pagination-btn {
+    min-width: 40px;
+    height: 40px;
+    padding: 0 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    background: white;
+    color: #666;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    border-color: #4A90E2;
+    background: #f8fafc;
+    color: #4A90E2;
+}
+
+.pagination-btn.active {
+    background: linear-gradient(135deg, #4A90E2, #357ABD);
+    border-color: #4A90E2;
+    color: white;
+}
+
+.pagination-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.pagination-dots {
+    padding: 0 8px;
+    color: #999;
+    font-weight: 700;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    background: white;
+    border-radius: 12px;
+    border: 2px dashed #e0e0e0;
+}
+
+.empty-state i {
+    font-size: 64px;
+    color: #ccc;
+    margin-bottom: 20px;
+}
+
+.empty-state h3 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.empty-state p {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+}
+
 .question-modal {
     display: none;
     position: fixed;
@@ -270,6 +404,12 @@
     }
 }
 
+.question-modal-content-large {
+    max-width: 1000px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
 .question-modal-header {
     display: flex;
     justify-content: space-between;
@@ -282,6 +422,7 @@
     margin: 0;
     font-size: 20px;
     color: #333;
+    flex: 1;
 }
 
 .modal-close-btn {
@@ -308,32 +449,251 @@
     padding: 25px;
 }
 
+/* ========================================
+   BATCH MODE STYLES
+   ======================================== */
+
+.batch-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.batch-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+}
+
+.batch-info i {
+    font-size: 20px;
+}
+
+.batch-info strong {
+    font-size: 18px;
+}
+
+.batch-controls .btn {
+    background: white;
+    color: #667eea;
+}
+
+.batch-controls .btn:hover {
+    background: #f0f0f0;
+}
+
+.batch-questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 4px;
+}
+
+.batch-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #999;
+    font-size: 14px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    border: 2px dashed #e0e0e0;
+}
+
+.batch-question-item {
+    display: flex;
+    gap: 16px;
+    padding: 16px;
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+.batch-question-item:hover {
+    border-color: #4A90E2;
+    box-shadow: 0 2px 8px rgba(74, 144, 226, 0.15);
+}
+
+.batch-question-number {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #4A90E2, #357ABD);
+    color: white;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.batch-question-content {
+    flex: 1;
+}
+
+.batch-question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.batch-subject-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: #e3f2fd;
+    color: #1976d2;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.batch-remove-btn {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.batch-remove-btn:hover {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.batch-question-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.batch-question-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.batch-option {
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #666;
+    border: 1px solid transparent;
+}
+
+.batch-option-correct {
+    background: #d4edda;
+    color: #155724;
+    border-color: #28a745;
+    font-weight: 600;
+}
+
+.batch-current-form {
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    border: 2px dashed #d0d0d0;
+    margin-bottom: 20px;
+}
+
+.batch-form-header {
+    margin-bottom: 20px;
+}
+
+.batch-form-header h4 {
+    margin: 0;
+    font-size: 16px;
+    color: #4A90E2;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.batch-save-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 20px;
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    border-radius: 12px;
+    margin-top: 20px;
+}
+
+.batch-save-actions .btn {
+    flex: 1;
+}
+
+.batch-save-actions .btn-success {
+    background: white;
+    color: #11998e;
+    border: none;
+    font-weight: 700;
+}
+
+.batch-save-actions .btn-success:hover {
+    background: #f0f0f0;
+}
+
+.batch-save-actions .btn-outline {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+}
+
+.batch-save-actions .btn-outline:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Toast animations */
+@keyframes slideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+}
+
 @media (max-width: 992px) {
-    .question-filter-section {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .filter-search {
-        max-width: none;
-        margin-left: 0;
-    }
-
     .question-list-container {
         grid-template-columns: 1fr;
     }
 }
 
 @media (max-width: 768px) {
-    .filter-group {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .filter-select {
-        width: 100%;
-    }
-
     .question-options {
         grid-template-columns: 1fr;
     }
@@ -621,246 +981,145 @@ textarea.form-control {
 }
 
 /* ========================================
-   ENHANCED STATISTICS SECTION STYLES
+   MODERN STATISTICS SECTION - CLEAN & SIMPLE
    ======================================== */
 
-.exam-stats-grid {
+.stats-grid-modern {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
     margin-bottom: 30px;
 }
 
-.exam-stat-card {
-    position: relative;
+.stat-card-modern {
     background: white;
     border-radius: 12px;
-    padding: 20px 18px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     transition: all 0.2s ease;
-    overflow: hidden;
-    border: 1px solid rgba(0, 0, 0, 0.04);
+    border: 1px solid #f0f0f0;
 }
 
-.exam-stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #4A90E2, #357ABD);
-    transform: scaleX(0);
-    transition: transform 0.2s ease;
-}
-
-.exam-stat-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.10);
-}
-
-.exam-stat-card:hover::before {
-    transform: scaleX(1);
-}
-
-/* Background Decorative Icon */
-.stat-card-background {
-    position: absolute;
-    right: -15px;
-    bottom: -15px;
-    font-size: 90px;
-    opacity: 0.03;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
-}
-
-.exam-stat-card:hover .stat-card-background {
-    opacity: 0.04;
+.stat-card-modern:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
 }
 
 /* Icon Container */
-.exam-stat-icon {
-    width: 52px;
-    height: 52px;
+.stat-icon-modern {
+    width: 56px;
+    height: 56px;
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 24px;
-    margin-bottom: 14px;
-    position: relative;
-    z-index: 1;
-    transition: transform 0.2s ease;
+    flex-shrink: 0;
 }
 
-.exam-stat-card:hover .exam-stat-icon {
-    transform: scale(1.05);
+.stat-icon-modern.stat-primary {
+    background: #e3f2fd;
+    color: #1976d2;
 }
 
-/* Color Schemes for Different Card Types */
-.stat-card-primary .exam-stat-icon {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+.stat-icon-modern.stat-success {
+    background: #e8f5e9;
+    color: #388e3c;
 }
 
-.stat-card-primary::before {
-    background: linear-gradient(90deg, #667eea, #764ba2);
+.stat-icon-modern.stat-warning {
+    background: #fff3e0;
+    color: #f57c00;
 }
 
-.stat-card-success .exam-stat-icon {
-    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-    color: white;
-    box-shadow: 0 8px 16px rgba(17, 153, 142, 0.3);
+.stat-icon-modern.stat-info {
+    background: #e1f5fe;
+    color: #0288d1;
 }
 
-.stat-card-success::before {
-    background: linear-gradient(90deg, #11998e, #38ef7d);
+/* Info Container */
+.stat-info-modern {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
-.stat-card-warning .exam-stat-icon {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    color: white;
-    box-shadow: 0 8px 16px rgba(240, 147, 251, 0.3);
-}
-
-.stat-card-warning::before {
-    background: linear-gradient(90deg, #f093fb, #f5576c);
-}
-
-.stat-card-info .exam-stat-icon {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    color: white;
-    box-shadow: 0 8px 16px rgba(79, 172, 254, 0.3);
-}
-
-.stat-card-info::before {
-    background: linear-gradient(90deg, #4facfe, #00f2fe);
-}
-
-/* Content Styles */
-.exam-stat-content {
-    position: relative;
-    z-index: 1;
-}
-
-.exam-stat-number {
-    font-size: 34px;
+.stat-number-modern {
+    font-size: 28px;
     font-weight: 700;
     color: #1a1a1a;
-    margin: 0 0 6px 0;
     line-height: 1;
 }
 
-.stat-card-info .exam-stat-number::after {
-    content: '%';
-    font-size: 22px;
-    margin-left: 4px;
-    color: #666;
-}
-
-.exam-stat-label {
+.stat-label-modern {
     font-size: 13px;
     color: #666;
     font-weight: 500;
-    margin: 0 0 8px 0;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
 }
 
-/* Trend Indicators */
-.stat-trend {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 4px 10px;
-    border-radius: 16px;
-    font-size: 11px;
-    font-weight: 600;
-    margin-top: 4px;
-}
-
-.stat-trend i {
-    font-size: 10px;
-}
-
-.stat-trend-up {
-    background-color: #e8f5e9;
-    color: #2e7d32;
-}
-
-.stat-trend-down {
-    background-color: #ffebee;
-    color: #c62828;
-}
-
-.stat-trend-neutral {
-    background-color: #f5f5f5;
-    color: #757575;
-}
-
-/* Progress Bar for Usage Rate */
-.stat-progress-bar {
-    width: 100%;
-    height: 6px;
-    background-color: #e0e0e0;
-    border-radius: 8px;
-    overflow: hidden;
-    margin-top: 8px;
-    position: relative;
-}
-
-.stat-progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
-    border-radius: 8px;
-    transition: width 0.8s ease;
-    position: relative;
-}
-
-/* Counter Animation - Simplified */
-@keyframes countUp {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-.exam-stat-number {
-    animation: countUp 0.3s ease-out;
-}
-
-/* Responsive Design */
-@media (max-width: 1200px) {
-    .exam-stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
+/* Responsive Design for Modern Stats */
 @media (max-width: 768px) {
-    .exam-stats-grid {
+    .stats-grid-modern {
         grid-template-columns: 1fr;
     }
     
-    .exam-stat-card {
-        padding: 18px 16px;
+    .stat-card-modern {
+        padding: 20px;
     }
     
-    .exam-stat-number {
-        font-size: 30px;
-    }
-    
-    .exam-stat-icon {
+    .stat-icon-modern {
         width: 48px;
         height: 48px;
-        font-size: 22px;
-        margin-bottom: 12px;
+        font-size: 20px;
     }
     
-    .stat-card-background {
-        font-size: 70px;
+    .stat-number-modern {
+        font-size: 24px;
+    }
+
+    /* Tabs Responsive */
+    .subject-tabs-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .subject-tabs {
+        width: 100%;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 8px;
+    }
+
+    .subject-tab {
+        flex-shrink: 0;
+    }
+
+    .subject-tab span:not(.tab-count) {
+        display: none;
+    }
+
+    .subject-tab i {
+        font-size: 18px;
+    }
+
+    .pagination-controls-top {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .pagination-footer {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .pagination-buttons {
+        justify-content: center;
+        flex-wrap: wrap;
     }
     
     .preview-options {
@@ -884,5 +1143,32 @@ textarea.form-control {
     .option-input {
         flex-direction: column;
         align-items: stretch;
+    }
+
+    /* Batch Mode Responsive */
+    .batch-controls {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+    }
+
+    .batch-controls .btn {
+        width: 100%;
+    }
+
+    .batch-question-item {
+        flex-direction: column;
+    }
+
+    .batch-question-number {
+        align-self: flex-start;
+    }
+
+    .batch-question-options {
+        grid-template-columns: 1fr;
+    }
+
+    .batch-save-actions {
+        flex-direction: column;
     }
 }

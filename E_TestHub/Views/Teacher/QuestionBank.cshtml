@@ -41,28 +41,9 @@
     </a>
 </div>
 
-<!-- Filter and Search Section -->
-<div class="question-filter-section">
-    <div class="filter-group">
-        <label for="subjectFilter">Môn học:</label>
-        <select id="subjectFilter" class="filter-select">
-            <option value="">Tất cả môn học</option>
-            <option value="xstk">Xác suất thống kê</option>
-            <option value="dstt">Đại số tuyến tính</option>
-            <option value="giai-tich">Giải tích 1</option>
-            <option value="toan-roi-rac">Toán rời rạc</option>
-        </select>
-    </div>
-
-    <div class="filter-search">
-        <input type="text" id="questionSearch" placeholder="Tìm kiếm câu hỏi..." />
-        <i class="fas fa-search"></i>
-    </div>
-</div>
-
 <!-- Content Sections -->
 <div class="dashboard-content-sections">
-    <!-- Statistics Section -->
+    <!-- Statistics Section - Modern & Simplified -->
     <div class="dashboard-section">
         <div class="dashboard-section-header">
             <h3 class="dashboard-section-title">
@@ -71,75 +52,48 @@
             </h3>
         </div>
 
-        <div class="exam-stats-grid">
-            <!-- Total Questions Card -->
-            <div class="exam-stat-card stat-card-primary">
-                <div class="stat-card-background">
+        <div class="stats-grid-modern">
+            <!-- Total Questions -->
+            <div class="stat-card-modern">
+                <div class="stat-icon-modern stat-primary">
                     <i class="fas fa-question-circle"></i>
                 </div>
-                <div class="exam-stat-icon">
-                    <i class="fas fa-question-circle"></i>
-                </div>
-                <div class="exam-stat-content">
-                    <h4 class="exam-stat-number" data-target="145">0</h4>
-                    <p class="exam-stat-label">Tổng câu hỏi</p>
-                    <div class="stat-trend stat-trend-up">
-                        <i class="fas fa-arrow-up"></i>
-                        <span>+23% so với tháng trước</span>
-                    </div>
+                <div class="stat-info-modern">
+                    <div class="stat-number-modern">145</div>
+                    <div class="stat-label-modern">Tổng câu hỏi</div>
                 </div>
             </div>
 
-            <!-- Total Subjects Card -->
-            <div class="exam-stat-card stat-card-success">
-                <div class="stat-card-background">
+            <!-- Total Subjects -->
+            <div class="stat-card-modern">
+                <div class="stat-icon-modern stat-success">
                     <i class="fas fa-book"></i>
                 </div>
-                <div class="exam-stat-icon">
-                    <i class="fas fa-book"></i>
-                </div>
-                <div class="exam-stat-content">
-                    <h4 class="exam-stat-number" data-target="4">0</h4>
-                    <p class="exam-stat-label">Môn học</p>
-                    <div class="stat-trend stat-trend-neutral">
-                        <i class="fas fa-minus"></i>
-                        <span>Không thay đổi</span>
-                    </div>
+                <div class="stat-info-modern">
+                    <div class="stat-number-modern">4</div>
+                    <div class="stat-label-modern">Môn học</div>
                 </div>
             </div>
 
-            <!-- Weekly Added Card -->
-            <div class="exam-stat-card stat-card-warning">
-                <div class="stat-card-background">
+            <!-- Weekly Added -->
+            <div class="stat-card-modern">
+                <div class="stat-icon-modern stat-warning">
                     <i class="fas fa-clock"></i>
                 </div>
-                <div class="exam-stat-icon">
-                    <i class="fas fa-clock"></i>
-                </div>
-                <div class="exam-stat-content">
-                    <h4 class="exam-stat-number" data-target="12">0</h4>
-                    <p class="exam-stat-label">Thêm tuần này</p>
-                    <div class="stat-trend stat-trend-up">
-                        <i class="fas fa-arrow-up"></i>
-                        <span>+4 câu so với tuần trước</span>
-                    </div>
+                <div class="stat-info-modern">
+                    <div class="stat-number-modern">12</div>
+                    <div class="stat-label-modern">Thêm tuần này</div>
                 </div>
             </div>
 
-            <!-- Usage Rate Card -->
-            <div class="exam-stat-card stat-card-info">
-                <div class="stat-card-background">
+            <!-- Usage Rate -->
+            <div class="stat-card-modern">
+                <div class="stat-icon-modern stat-info">
                     <i class="fas fa-chart-line"></i>
                 </div>
-                <div class="exam-stat-icon">
-                    <i class="fas fa-chart-line"></i>
-                </div>
-                <div class="exam-stat-content">
-                    <h4 class="exam-stat-number" data-target="89">0</h4>
-                    <p class="exam-stat-label">Đã sử dụng</p>
-                    <div class="stat-progress-bar">
-                        <div class="stat-progress-fill" style="width: 89%"></div>
-                    </div>
+                <div class="stat-info-modern">
+                    <div class="stat-number-modern">89%</div>
+                    <div class="stat-label-modern">Tỷ lệ sử dụng</div>
                 </div>
             </div>
         </div>
@@ -195,456 +149,464 @@
     </div>
 </div>
 
-<!-- All Questions Section -->
+<!-- Questions Section with Tabs & Pagination -->
 <div id="all-questions" class="dashboard-section" style="margin-top: 50px;">
     <div class="dashboard-section-header">
         <h3 class="dashboard-section-title">Danh sách câu hỏi</h3>
     </div>
 
-    <div class="question-list-container">
-        <!-- Demo Question 1 -->
-        <div class="question-card" data-subject="xstk">
-            <div class="question-card-header">
-                <div class="question-card-badge">
-                    <i class="fas fa-book"></i>
-                    <span>Xác suất thống kê</span>
-                </div>
-                <div class="question-card-actions">
-                    <button class="question-action-btn" title="Xem chi tiết" onclick="viewQuestion(1)">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                    <button class="question-action-btn" title="Chỉnh sửa" onclick="editQuestion(1)">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="question-action-btn btn-delete" title="Xóa" onclick="deleteQuestion(1)">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="question-card-body">
-                <h4 class="question-title">Cho biến ngẫu nhiên X có phân phối chuẩn N(5, 4). Tính P(3 < X < 7)?</h4>
-                <div class="question-options">
-                    <div class="question-option">A. 0.6826</div>
-                    <div class="question-option correct">B. 0.6827</div>
-                    <div class="question-option">C. 0.6828</div>
-                    <div class="question-option">D. 0.6829</div>
-                </div>
-            </div>
-            <div class="question-card-footer">
-                <span class="question-meta"><i class="fas fa-calendar"></i> 15/09/2025</span>
-                <span class="question-meta"><i class="fas fa-check-circle"></i> Đã dùng 3 lần</span>
-            </div>
+    <!-- Subject Tabs Navigation -->
+    <div class="subject-tabs-container">
+        <div class="subject-tabs">
+            <button class="subject-tab active" data-subject="all" onclick="switchSubjectTab('all')">
+                <i class="fas fa-th"></i>
+                <span>Tất cả</span>
+                <span class="tab-count">145</span>
+            </button>
+            <button class="subject-tab" data-subject="xstk" onclick="switchSubjectTab('xstk')">
+                <i class="fas fa-chart-line"></i>
+                <span>Xác suất thống kê</span>
+                <span class="tab-count">60</span>
+            </button>
+            <button class="subject-tab" data-subject="dstt" onclick="switchSubjectTab('dstt')">
+                <i class="fas fa-table"></i>
+                <span>Đại số tuyến tính</span>
+                <span class="tab-count">40</span>
+            </button>
+            <button class="subject-tab" data-subject="giai-tich" onclick="switchSubjectTab('giai-tich')">
+                <i class="fas fa-function"></i>
+                <span>Giải tích 1</span>
+                <span class="tab-count">30</span>
+            </button>
+            <button class="subject-tab" data-subject="toan-roi-rac" onclick="switchSubjectTab('toan-roi-rac')">
+                <i class="fas fa-project-diagram"></i>
+                <span>Toán rời rạc</span>
+                <span class="tab-count">15</span>
+            </button>
         </div>
 
-        <!-- Demo Question 2 -->
-        <div class="question-card" data-subject="dstt">
-            <div class="question-card-header">
-                <div class="question-card-badge">
-                    <i class="fas fa-book"></i>
-                    <span>Đại số tuyến tính</span>
-                </div>
-                <div class="question-card-actions">
-                    <button class="question-action-btn" title="Xem chi tiết" onclick="viewQuestion(2)">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                    <button class="question-action-btn" title="Chỉnh sửa" onclick="editQuestion(2)">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="question-action-btn btn-delete" title="Xóa" onclick="deleteQuestion(2)">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="question-card-body">
-                <h4 class="question-title">Cho ma trận A = [[1, 2], [3, 4]]. Tính định thức của ma trận A?</h4>
-                <div class="question-options">
-                    <div class="question-option">A. -1</div>
-                    <div class="question-option correct">B. -2</div>
-                    <div class="question-option">C. 2</div>
-                    <div class="question-option">D. 1</div>
-                </div>
-            </div>
-            <div class="question-card-footer">
-                <span class="question-meta"><i class="fas fa-calendar"></i> 10/09/2025</span>
-                <span class="question-meta"><i class="fas fa-check-circle"></i> Đã dùng 5 lần</span>
-            </div>
+        <!-- Pagination Controls (Top) -->
+        <div class="pagination-controls-top">
+            <select id="itemsPerPage" class="items-per-page-select" onchange="changeItemsPerPage()">
+                <option value="10" selected>10 câu/trang</option>
+                <option value="20">20 câu/trang</option>
+                <option value="50">50 câu/trang</option>
+            </select>
         </div>
+    </div>
 
-        <!-- Demo Question 3 -->
-        <div class="question-card" data-subject="giai-tich">
-            <div class="question-card-header">
-                <div class="question-card-badge">
-                    <i class="fas fa-book"></i>
-                    <span>Giải tích 1</span>
-                </div>
-                <div class="question-card-actions">
-                    <button class="question-action-btn" title="Xem chi tiết" onclick="viewQuestion(3)">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                    <button class="question-action-btn" title="Chỉnh sửa" onclick="editQuestion(3)">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="question-action-btn btn-delete" title="Xóa" onclick="deleteQuestion(3)">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="question-card-body">
-                <h4 class="question-title">Tính đạo hàm của hàm số f(x) = x² + 3x - 2 tại điểm x = 2?</h4>
-                <div class="question-options">
-                    <div class="question-option">A. 5</div>
-                    <div class="question-option correct">B. 7</div>
-                    <div class="question-option">C. 9</div>
-                    <div class="question-option">D. 11</div>
-                </div>
-            </div>
-            <div class="question-card-footer">
-                <span class="question-meta"><i class="fas fa-calendar"></i> 05/09/2025</span>
-                <span class="question-meta"><i class="fas fa-check-circle"></i> Đã dùng 8 lần</span>
-            </div>
-        </div>
+    <!-- Questions List Container -->
+    <div id="questionListContainer" class="question-list-container">
+        <!-- Questions will be dynamically loaded here -->
+    </div>
 
-        <!-- Demo Question 4 -->
-        <div class="question-card" data-subject="toan-roi-rac">
-            <div class="question-card-header">
-                <div class="question-card-badge">
-                    <i class="fas fa-book"></i>
-                    <span>Toán rời rạc</span>
-                </div>
-                <div class="question-card-actions">
-                    <button class="question-action-btn" title="Xem chi tiết" onclick="viewQuestion(4)">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                    <button class="question-action-btn" title="Chỉnh sửa" onclick="editQuestion(4)">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="question-action-btn btn-delete" title="Xóa" onclick="deleteQuestion(4)">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="question-card-body">
-                <h4 class="question-title">Có bao nhiêu cách sắp xếp 5 người ngồi vào một bàn tròn?</h4>
-                <div class="question-options">
-                    <div class="question-option">A. 120</div>
-                    <div class="question-option correct">B. 24</div>
-                    <div class="question-option">C. 60</div>
-                    <div class="question-option">D. 12</div>
-                </div>
-            </div>
-            <div class="question-card-footer">
-                <span class="question-meta"><i class="fas fa-calendar"></i> 01/09/2025</span>
-                <span class="question-meta"><i class="fas fa-check-circle"></i> Đã dùng 2 lần</span>
-            </div>
+    <!-- Pagination Footer -->
+    <div class="pagination-footer">
+        <div class="pagination-info">
+            Hiển thị <span id="showingFrom">1</span>-<span id="showingTo">10</span> trong <span id="totalQuestions">145</span> câu hỏi
         </div>
+        <div class="pagination-buttons" id="paginationButtons">
+            <!-- Pagination buttons will be generated here -->
+        </div>
+    </div>
+
+    <!-- Empty State (when no questions) -->
+    <div id="emptyState" class="empty-state" style="display: none;">
+        <i class="fas fa-inbox"></i>
+        <h3>Chưa có câu hỏi nào</h3>
+        <p>Nhấn nút "Thêm câu hỏi" để bắt đầu tạo câu hỏi cho môn học này</p>
     </div>
 </div>
 
 <!-- Add Question Modal -->
 <div id="addQuestionModal" class="question-modal" style="display: none;">
-    <div class="question-modal-content">
+    <div class="question-modal-content question-modal-content-large">
         <div class="question-modal-header">
-            <h3><i class="fas fa-plus-circle"></i> Thêm câu hỏi mới</h3>
+            <h3><i class="fas fa-plus-circle"></i> Thêm câu hỏi</h3>
             <button onclick="closeAddQuestionModal()" class="modal-close-btn">
                 <i class="fas fa-times"></i>
             </button>
         </div>
         <div class="question-modal-body">
-            <form id="addQuestionForm" onsubmit="submitQuestion(event)">
-                <!-- Subject Selection -->
-                <div class="form-group">
-                    <label for="questionSubject" class="form-label">
-                        <i class="fas fa-book"></i> Môn học <span class="required">*</span>
-                    </label>
-                    <select id="questionSubject" class="form-control" required>
-                        <option value="">-- Chọn môn học --</option>
-                        <option value="xstk">Xác suất thống kê</option>
-                        <option value="dstt">Đại số tuyến tính</option>
-                        <option value="giai-tich">Giải tích 1</option>
-                        <option value="toan-roi-rac">Toán rời rạc</option>
-                    </select>
-                </div>
-
-                <!-- Question Content -->
-                <div class="form-group">
-                    <label for="questionContent" class="form-label">
-                        <i class="fas fa-question-circle"></i> Nội dung câu hỏi <span class="required">*</span>
-                    </label>
-                    <textarea 
-                        id="questionContent" 
-                        class="form-control" 
-                        rows="4" 
-                        placeholder="Nhập nội dung câu hỏi..."
-                        required
-                    ></textarea>
-                    <small class="form-hint">
-                        <i class="fas fa-info-circle"></i> Gợi ý: Viết câu hỏi rõ ràng, ngắn gọn và dễ hiểu
-                    </small>
-                </div>
-
-                <!-- Options Section -->
-                <div class="form-group">
-                    <label class="form-label">
-                        <i class="fas fa-list"></i> Các đáp án <span class="required">*</span>
-                    </label>
-                    
-                    <!-- Option A -->
-                    <div class="option-input-group">
-                        <div class="option-radio">
-                            <input type="radio" id="correctA" name="correctAnswer" value="A" required>
-                            <label for="correctA" class="radio-label" title="Đánh dấu đây là đáp án đúng">
-                                <i class="fas fa-check-circle"></i>
-                            </label>
-                        </div>
-                        <div class="option-input">
-                            <span class="option-label">A.</span>
-                            <input 
-                                type="text" 
-                                id="optionA" 
-                                class="form-control-inline" 
-                                placeholder="Nhập đáp án A"
-                                required
-                            >
-                        </div>
+            <!-- Batch Mode Container -->
+            <div id="batchModeContainer">
+                <!-- Batch Controls -->
+                <div class="batch-controls">
+                    <div class="batch-info">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Đã thêm <strong id="batchCount">0</strong> câu hỏi</span>
                     </div>
-
-                    <!-- Option B -->
-                    <div class="option-input-group">
-                        <div class="option-radio">
-                            <input type="radio" id="correctB" name="correctAnswer" value="B">
-                            <label for="correctB" class="radio-label" title="Đánh dấu đây là đáp án đúng">
-                                <i class="fas fa-check-circle"></i>
-                            </label>
-                        </div>
-                        <div class="option-input">
-                            <span class="option-label">B.</span>
-                            <input 
-                                type="text" 
-                                id="optionB" 
-                                class="form-control-inline" 
-                                placeholder="Nhập đáp án B"
-                                required
-                            >
-                        </div>
-                    </div>
-
-                    <!-- Option C -->
-                    <div class="option-input-group">
-                        <div class="option-radio">
-                            <input type="radio" id="correctC" name="correctAnswer" value="C">
-                            <label for="correctC" class="radio-label" title="Đánh dấu đây là đáp án đúng">
-                                <i class="fas fa-check-circle"></i>
-                            </label>
-                        </div>
-                        <div class="option-input">
-                            <span class="option-label">C.</span>
-                            <input 
-                                type="text" 
-                                id="optionC" 
-                                class="form-control-inline" 
-                                placeholder="Nhập đáp án C"
-                                required
-                            >
-                        </div>
-                    </div>
-
-                    <!-- Option D -->
-                    <div class="option-input-group">
-                        <div class="option-radio">
-                            <input type="radio" id="correctD" name="correctAnswer" value="D">
-                            <label for="correctD" class="radio-label" title="Đánh dấu đây là đáp án đúng">
-                                <i class="fas fa-check-circle"></i>
-                            </label>
-                        </div>
-                        <div class="option-input">
-                            <span class="option-label">D.</span>
-                            <input 
-                                type="text" 
-                                id="optionD" 
-                                class="form-control-inline" 
-                                placeholder="Nhập đáp án D"
-                                required
-                            >
-                        </div>
-                    </div>
-
-                    <small class="form-hint">
-                        <i class="fas fa-info-circle"></i> Chọn biểu tượng <i class="fas fa-check-circle" style="color: #28a745;"></i> bên trái để đánh dấu đáp án đúng
-                    </small>
-                </div>
-
-                <!-- Preview Section -->
-                <div id="previewSection" class="preview-section" style="display: none;">
-                    <div class="preview-header">
-                        <h4><i class="fas fa-eye"></i> Xem trước câu hỏi</h4>
-                    </div>
-                    <div id="previewContent" class="preview-content">
-                        <!-- Preview will be inserted here -->
-                    </div>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" onclick="previewQuestion()">
-                        <i class="fas fa-eye"></i> Xem trước
-                    </button>
-                    <button type="button" class="btn btn-outline" onclick="resetForm()">
-                        <i class="fas fa-redo"></i> Làm mới
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Lưu câu hỏi
+                    <button type="button" class="btn btn-secondary" onclick="addNewQuestionToBatch()">
+                        <i class="fas fa-plus"></i> Thêm câu hỏi tiếp
                     </button>
                 </div>
-            </form>
+
+                <!-- Batch Questions List -->
+                <div id="batchQuestionsList" class="batch-questions-list">
+                    <!-- Questions will be added here -->
+                </div>
+
+                <!-- Current Question Form (for batch) -->
+                <div id="batchCurrentForm" class="batch-current-form">
+                    <div class="batch-form-header">
+                        <h4><i class="fas fa-edit"></i> Câu hỏi số <span id="currentBatchNumber">1</span></h4>
+                    </div>
+
+                    <form id="batchQuestionForm" onsubmit="addQuestionToBatch(event)">
+                        <!-- Subject Selection -->
+                        <div class="form-group">
+                            <label for="batchQuestionSubject" class="form-label">
+                                <i class="fas fa-book"></i> Môn học <span class="required">*</span>
+                            </label>
+                            <select id="batchQuestionSubject" class="form-control" required>
+                                <option value="">-- Chọn môn học --</option>
+                                <option value="xstk">Xác suất thống kê</option>
+                                <option value="dstt">Đại số tuyến tính</option>
+                                <option value="giai-tich">Giải tích 1</option>
+                                <option value="toan-roi-rac">Toán rời rạc</option>
+                            </select>
+                        </div>
+
+                        <!-- Question Content -->
+                        <div class="form-group">
+                            <label for="batchQuestionContent" class="form-label">
+                                <i class="fas fa-question-circle"></i> Nội dung câu hỏi <span class="required">*</span>
+                            </label>
+                            <textarea 
+                                id="batchQuestionContent" 
+                                class="form-control" 
+                                rows="3" 
+                                placeholder="Nhập nội dung câu hỏi..."
+                                required
+                            ></textarea>
+                        </div>
+
+                        <!-- Options -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-list"></i> Các đáp án <span class="required">*</span>
+                            </label>
+                            
+                            <!-- Option A -->
+                            <div class="option-input-group">
+                                <div class="option-radio">
+                                    <input type="radio" id="batchCorrectA" name="batchCorrectAnswer" value="A">
+                                    <label for="batchCorrectA" class="radio-label">
+                                        <i class="fas fa-check-circle"></i>
+                                    </label>
+                                </div>
+                                <div class="option-input">
+                                    <span class="option-label">A.</span>
+                                    <input type="text" id="batchOptionA" class="form-control-inline" placeholder="Đáp án A" required>
+                                </div>
+                            </div>
+
+                            <!-- Option B -->
+                            <div class="option-input-group">
+                                <div class="option-radio">
+                                    <input type="radio" id="batchCorrectB" name="batchCorrectAnswer" value="B">
+                                    <label for="batchCorrectB" class="radio-label">
+                                        <i class="fas fa-check-circle"></i>
+                                    </label>
+                                </div>
+                                <div class="option-input">
+                                    <span class="option-label">B.</span>
+                                    <input type="text" id="batchOptionB" class="form-control-inline" placeholder="Đáp án B" required>
+                                </div>
+                            </div>
+
+                            <!-- Option C -->
+                            <div class="option-input-group">
+                                <div class="option-radio">
+                                    <input type="radio" id="batchCorrectC" name="batchCorrectAnswer" value="C">
+                                    <label for="batchCorrectC" class="radio-label">
+                                        <i class="fas fa-check-circle"></i>
+                                    </label>
+                                </div>
+                                <div class="option-input">
+                                    <span class="option-label">C.</span>
+                                    <input type="text" id="batchOptionC" class="form-control-inline" placeholder="Đáp án C" required>
+                                </div>
+                            </div>
+
+                            <!-- Option D -->
+                            <div class="option-input-group">
+                                <div class="option-radio">
+                                    <input type="radio" id="batchCorrectD" name="batchCorrectAnswer" value="D">
+                                    <label for="batchCorrectD" class="radio-label">
+                                        <i class="fas fa-check-circle"></i>
+                                    </label>
+                                </div>
+                                <div class="option-input">
+                                    <span class="option-label">D.</span>
+                                    <input type="text" id="batchOptionD" class="form-control-inline" placeholder="Đáp án D" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Batch Form Actions -->
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-check"></i> Thêm vào danh sách
+                            </button>
+                            <button type="button" class="btn btn-outline" onclick="resetBatchForm()">
+                                <i class="fas fa-redo"></i> Làm mới
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Batch Save Actions -->
+                <div class="batch-save-actions" id="batchSaveActions" style="display: none;">
+                    <button type="button" class="btn btn-outline" onclick="clearBatch()">
+                        <i class="fas fa-trash"></i> Xóa tất cả
+                    </button>
+                    <button type="button" class="btn btn-success" onclick="saveAllBatchQuestions()">
+                        <i class="fas fa-save"></i> Lưu tất cả (<span id="batchSaveCount">0</span> câu)
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
     <script>
-        // Filter by subject
-        document.getElementById('subjectFilter').addEventListener('change', function(e) {
-            const subject = e.target.value.toLowerCase();
-            const questionCards = document.querySelectorAll('.question-card');
-            
-            questionCards.forEach(card => {
-                if (subject === '' || card.dataset.subject === subject) {
-                    card.style.display = '';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        });
-
-        // Search questions
-        document.getElementById('questionSearch').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            const questionCards = document.querySelectorAll('.question-card');
-            
-            questionCards.forEach(card => {
-                const title = card.querySelector('.question-title').textContent.toLowerCase();
-                if (title.includes(searchTerm)) {
-                    card.style.display = '';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        });
+        // Batch mode state
+        let batchQuestions = [];
 
         // Modal functions
         function openAddQuestionModal() {
             document.getElementById('addQuestionModal').style.display = 'flex';
-            resetForm();
+            clearBatch(); // Reset batch state when opening modal
+            updateBatchCount();
+            console.log('✅ Modal opened');
         }
 
         function closeAddQuestionModal() {
+            // Warn if there are unsaved questions
+            if (batchQuestions.length > 0) {
+                if (!confirm(`⚠️ Bạn có ${batchQuestions.length} câu hỏi chưa lưu!\n\nĐóng modal sẽ mất toàn bộ dữ liệu. Bạn chắc chắn muốn đóng?`)) {
+                    console.log('⚠️ User cancelled close action');
+                    return;
+                }
+            }
+            
             document.getElementById('addQuestionModal').style.display = 'none';
-            resetForm();
+            clearBatch();
+            console.log('✅ Modal closed');
         }
 
-        // Reset form
-        function resetForm() {
-            document.getElementById('addQuestionForm').reset();
-            document.getElementById('previewSection').style.display = 'none';
+        // Reset batch form
+        function resetBatchForm() {
+            document.getElementById('batchQuestionForm').reset();
         }
 
-        // Preview question
-        function previewQuestion() {
-            const subject = document.getElementById('questionSubject');
-            const content = document.getElementById('questionContent').value.trim();
-            const optionA = document.getElementById('optionA').value.trim();
-            const optionB = document.getElementById('optionB').value.trim();
-            const optionC = document.getElementById('optionC').value.trim();
-            const optionD = document.getElementById('optionD').value.trim();
-            const correctAnswer = document.querySelector('input[name="correctAnswer"]:checked');
+        // Add question to batch
+        function addQuestionToBatch(event) {
+            event.preventDefault();
+            
+            try {
+                console.log('🔵 Starting addQuestionToBatch...');
+                
+                const subject = document.getElementById('batchQuestionSubject');
+                const content = document.getElementById('batchQuestionContent').value.trim();
+                const optionA = document.getElementById('batchOptionA').value.trim();
+                const optionB = document.getElementById('batchOptionB').value.trim();
+                const optionC = document.getElementById('batchOptionC').value.trim();
+                const optionD = document.getElementById('batchOptionD').value.trim();
+                const correctAnswer = document.querySelector('input[name="batchCorrectAnswer"]:checked');
 
-            // Validation
-            if (!subject.value || !content || !optionA || !optionB || !optionC || !optionD || !correctAnswer) {
-                alert('Vui lòng điền đầy đủ thông tin và chọn đáp án đúng!');
+                console.log('📝 Form data:', { 
+                    subject: subject?.value, 
+                    content, 
+                    optionA, 
+                    optionB, 
+                    optionC, 
+                    optionD, 
+                    correctAnswer: correctAnswer?.value 
+                });
+
+                // Validation
+                if (!subject.value) {
+                    alert('⚠️ Vui lòng chọn môn học!');
+                    subject.focus();
+                    return;
+                }
+                
+                if (!content) {
+                    alert('⚠️ Vui lòng nhập nội dung câu hỏi!');
+                    document.getElementById('batchQuestionContent').focus();
+                    return;
+                }
+                
+                if (!optionA || !optionB || !optionC || !optionD) {
+                    alert('⚠️ Vui lòng điền đầy đủ 4 đáp án!');
+                    return;
+                }
+                
+                if (!correctAnswer) {
+                    alert('⚠️ Vui lòng chọn đáp án đúng (click vào icon ✓)!');
+                    return;
+                }
+
+                // Create question object
+                const question = {
+                    id: Date.now(),
+                    subject: subject.value,
+                    subjectName: subject.options[subject.selectedIndex].text,
+                    title: content,
+                    options: {
+                        A: optionA,
+                        B: optionB,
+                        C: optionC,
+                        D: optionD
+                    },
+                    correct: correctAnswer.value
+                };
+
+                console.log('✅ Question object created:', question);
+
+                // Add to batch
+                batchQuestions.push(question);
+                console.log('✅ Added to batch. Total:', batchQuestions.length);
+                
+                // Update UI
+                renderBatchQuestions();
+                updateBatchCount();
+                resetBatchForm();
+                
+                // Show success message
+                showToast(`✓ Đã thêm câu hỏi số ${batchQuestions.length}`, 'success');
+                
+                console.log('✅ addQuestionToBatch completed successfully!');
+            } catch (error) {
+                console.error('❌ Error in addQuestionToBatch:', error);
+                alert('❌ Có lỗi xảy ra: ' + error.message + '\n\nVui lòng mở Console (F12) để xem chi tiết.');
+            }
+        }
+
+        // Render batch questions list
+        function renderBatchQuestions() {
+            const container = document.getElementById('batchQuestionsList');
+            
+            if (batchQuestions.length === 0) {
+                container.innerHTML = '<div class="batch-empty">Chưa có câu hỏi nào. Điền form bên dưới để thêm câu hỏi đầu tiên.</div>';
+                document.getElementById('batchSaveActions').style.display = 'none';
                 return;
             }
-
-            // Get subject name
-            const subjectName = subject.options[subject.selectedIndex].text;
-
-            // Build preview HTML
-            const previewHTML = `
-                <div class="preview-question-card">
-                    <div class="preview-badge">
-                        <i class="fas fa-book"></i>
-                        <span>${subjectName}</span>
-                    </div>
-                    <h4 class="preview-title">${content}</h4>
-                    <div class="preview-options">
-                        <div class="preview-option ${correctAnswer.value === 'A' ? 'preview-correct' : ''}">
-                            A. ${optionA}
+            
+            container.innerHTML = batchQuestions.map((q, index) => `
+                <div class="batch-question-item" data-id="${q.id}">
+                    <div class="batch-question-number">#${index + 1}</div>
+                    <div class="batch-question-content">
+                        <div class="batch-question-header">
+                            <span class="batch-subject-badge">${q.subjectName}</span>
+                            <button type="button" class="batch-remove-btn" onclick="removeBatchQuestion(${q.id})" title="Xóa câu hỏi này">
+                                <i class="fas fa-times"></i>
+                            </button>
                         </div>
-                        <div class="preview-option ${correctAnswer.value === 'B' ? 'preview-correct' : ''}">
-                            B. ${optionB}
+                        <div class="batch-question-title">${q.title}</div>
+                        <div class="batch-question-options">
+                            ${Object.entries(q.options).map(([key, value]) => `
+                                <div class="batch-option ${key === q.correct ? 'batch-option-correct' : ''}">
+                                    ${key}. ${value}
+                                </div>
+                            `).join('')}
                         </div>
-                        <div class="preview-option ${correctAnswer.value === 'C' ? 'preview-correct' : ''}">
-                            C. ${optionC}
-                        </div>
-                        <div class="preview-option ${correctAnswer.value === 'D' ? 'preview-correct' : ''}">
-                            D. ${optionD}
-                        </div>
-                    </div>
-                    <div class="preview-footer">
-                        <span><i class="fas fa-check-circle"></i> Đáp án đúng: ${correctAnswer.value}</span>
                     </div>
                 </div>
-            `;
-
-            document.getElementById('previewContent').innerHTML = previewHTML;
-            document.getElementById('previewSection').style.display = 'block';
-
-            // Scroll to preview
-            document.getElementById('previewSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            `).join('');
+            
+            document.getElementById('batchSaveActions').style.display = 'flex';
         }
 
-        // Submit question
-        function submitQuestion(event) {
-            event.preventDefault();
+        // Remove question from batch
+        function removeBatchQuestion(id) {
+            if (confirm('Xóa câu hỏi này khỏi danh sách?')) {
+                batchQuestions = batchQuestions.filter(q => q.id !== id);
+                renderBatchQuestions();
+                updateBatchCount();
+                showToast('Đã xóa câu hỏi', 'info');
+            }
+        }
 
-            const subject = document.getElementById('questionSubject');
-            const content = document.getElementById('questionContent').value.trim();
-            const optionA = document.getElementById('optionA').value.trim();
-            const optionB = document.getElementById('optionB').value.trim();
-            const optionC = document.getElementById('optionC').value.trim();
-            const optionD = document.getElementById('optionD').value.trim();
-            const correctAnswer = document.querySelector('input[name="correctAnswer"]:checked');
+        // Update batch count
+        function updateBatchCount() {
+            const count = batchQuestions.length;
+            document.getElementById('batchCount').textContent = count;
+            document.getElementById('batchSaveCount').textContent = count;
+            document.getElementById('currentBatchNumber').textContent = count + 1;
+        }
 
-            // Validation
-            if (!subject.value || !content || !optionA || !optionB || !optionC || !optionD || !correctAnswer) {
-                alert('Vui lòng điền đầy đủ thông tin!');
+        // Add new question to batch (scroll to form)
+        function addNewQuestionToBatch() {
+            document.getElementById('batchCurrentForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            document.getElementById('batchQuestionContent').focus();
+        }
+
+        // Clear batch
+        function clearBatch() {
+            if (batchQuestions.length > 0) {
+                if (!confirm(`Xóa tất cả ${batchQuestions.length} câu hỏi đã thêm?`)) {
+                    return;
+                }
+            }
+            batchQuestions = [];
+            renderBatchQuestions();
+            updateBatchCount();
+            resetBatchForm();
+        }
+
+        // Save all batch questions
+        function saveAllBatchQuestions() {
+            if (batchQuestions.length === 0) {
+                alert('Chưa có câu hỏi nào để lưu!');
                 return;
             }
 
-            // Create question object
-            const newQuestion = {
-                subject: subject.value,
-                subjectName: subject.options[subject.selectedIndex].text,
-                content: content,
-                options: {
-                    A: optionA,
-                    B: optionB,
-                    C: optionC,
-                    D: optionD
-                },
-                correctAnswer: correctAnswer.value,
-                createdDate: new Date().toLocaleDateString('vi-VN')
-            };
+            if (!confirm(`Lưu ${batchQuestions.length} câu hỏi vào ngân hàng?`)) {
+                return;
+            }
 
-            // Demo: Show success message and log data
-            console.log('Câu hỏi mới:', newQuestion);
+            // In production: send to API
+            console.log('Saving batch questions:', batchQuestions);
+
+            // Simulate success
+            alert(`✅ Đã lưu thành công ${batchQuestions.length} câu hỏi!\n\nTrong production, dữ liệu sẽ được gửi đến server.`);
             
-            alert(`✅ Đã thêm câu hỏi thành công!\n\nMôn: ${newQuestion.subjectName}\nCâu hỏi: ${newQuestion.content}\nĐáp án đúng: ${newQuestion.correctAnswer}`);
-
-            // Close modal and reset form
+            // Close modal and refresh
             closeAddQuestionModal();
+            
+            // In production: reload questions from server
+            // loadQuestions();
+        }
 
-            // In production, this would send data to the server
-            // Example: await fetch('/Teacher/AddQuestion', { method: 'POST', body: JSON.stringify(newQuestion) });
+        // Toast notification helper
+        function showToast(message, type = 'success') {
+            // Simple toast implementation
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 12px 20px;
+                background: ${type === 'success' ? '#28a745' : '#17a2b8'};
+                color: white;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
         }
 
         // Question actions
@@ -667,16 +629,6 @@
             if (e.target === this) {
                 closeAddQuestionModal();
             }
-        });
-
-        // Visual feedback for correct answer selection
-        document.querySelectorAll('input[name="correctAnswer"]').forEach(radio => {
-            radio.addEventListener('change', function() {
-                document.querySelectorAll('.option-input-group').forEach(group => {
-                    group.classList.remove('selected');
-                });
-                this.closest('.option-input-group').classList.add('selected');
-            });
         });
     </script>
 
