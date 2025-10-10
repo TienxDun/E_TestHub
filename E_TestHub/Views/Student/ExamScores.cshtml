@@ -1,0 +1,161 @@
+@{
+    ViewData["Title"] = "Điểm thi của tôi";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@section Styles {
+    <link href="~/css/shared/dashboard.css" rel="stylesheet">
+    <link href="~/css/student/exam-scores.css" rel="stylesheet">
+}
+
+<div class="exam-scores-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="header-content">
+            <h1 class="page-title">
+                <i class="fas fa-chart-bar"></i>
+                Điểm thi của tôi
+            </h1>
+            <p class="page-subtitle">Xem tổng hợp điểm số các bài thi đã hoàn thành</p>
+        </div>
+        <div class="header-actions">
+            <button class="btn-export" onclick="exportScores()">
+                <i class="fas fa-file-export"></i>
+                Xuất báo cáo
+            </button>
+        </div>
+    </div>
+
+    <!-- Filter and Search -->
+    <div class="filter-section">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Tìm kiếm bài thi theo tên, môn học..." onkeyup="filterExams()">
+        </div>
+        <div class="filter-controls">
+            <select id="statusFilter" onchange="filterExams()">
+                <option value="all">Tất cả trạng thái</option>
+                <option value="graded">Đã chấm</option>
+                <option value="pending">Chờ chấm</option>
+            </select>
+            <select id="subjectFilter" onchange="filterExams()">
+                <option value="all">Tất cả môn học</option>
+                <option value="Lập trình Web">Lập trình Web</option>
+                <option value="Cơ sở dữ liệu">Cơ sở dữ liệu</option>
+                <option value="Toán cao cấp">Toán cao cấp</option>
+                <option value="Xác suất thống kê">Xác suất thống kê</option>
+                <option value="Hệ điều hành">Hệ điều hành</option>
+            </select>
+            <select id="sortBy" onchange="sortExams()">
+                <option value="date-desc">Mới nhất</option>
+                <option value="date-asc">Cũ nhất</option>
+                <option value="score-desc">Điểm cao nhất</option>
+                <option value="score-asc">Điểm thấp nhất</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Scores Table -->
+    <div class="scores-table-container">
+        <table class="scores-table" id="scoresTable">
+            <thead>
+                <tr>
+                    <th>Tên bài thi</th>
+                    <th>Môn học</th>
+                    <th>Ngày thi</th>
+                    <th>Điểm số</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var score in ViewBag.ExamScores)
+                {
+                    <tr class="score-row" 
+                        data-subject="@score.Subject" 
+                        data-status="@(score.Status == "Đã chấm" ? "graded" : "pending")"
+                        data-date="@score.ExamDate.Ticks"
+                        data-score="@score.Score">
+                        <td>
+                            <div class="exam-name">
+                                <i class="fas fa-file-alt"></i>
+                                <span>@score.ExamName</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="subject-badge">@score.Subject</span>
+                        </td>
+                        <td>
+                            <span class="exam-date">
+                                <i class="far fa-calendar"></i>
+                                @score.ExamDate.ToString("dd/MM/yyyy")
+                            </span>
+                        </td>
+                        <td>
+                            @if (score.Status == "Đã chấm")
+                            {
+                                <div class="score-display">
+                                    <span class="score-value">
+                                        @score.Score.ToString("F1")
+                                    </span>
+                                    <span class="score-max">/@score.MaxScore</span>
+                                </div>
+                            }
+                            else
+                            {
+                                <span class="score-pending">-</span>
+                            }
+                        </td>
+                        <td>
+                            @if (score.Status == "Đã chấm")
+                            {
+                                <span class="status-badge graded">
+                                    <i class="fas fa-check"></i>
+                                    Đã chấm
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="status-badge pending">
+                                    <i class="fas fa-hourglass-half"></i>
+                                    Chờ chấm
+                                </span>
+                            }
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                @if (score.Status == "Đã chấm")
+                                {
+                                    <a href="@Url.Action("ViewResults", "Student", new { examId = score.ExamId })" 
+                                       class="btn-action view"
+                                       title="Xem chi tiết">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <button class="btn-action disabled" 
+                                            title="Đang chờ chấm điểm" 
+                                            disabled>
+                                        <i class="fas fa-lock"></i>
+                                    </button>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="emptyState" style="display: none;">
+        <i class="fas fa-search"></i>
+        <h3>Không tìm thấy kết quả</h3>
+        <p>Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/student/exam-scores.js"></script>
+}

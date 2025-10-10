@@ -78,6 +78,93 @@ namespace E_TestHub.Controllers
             return View();
         }
 
+        public IActionResult ExamScores()
+        {
+            // Demo data: Exam scores for student
+            var examScores = new List<dynamic>
+            {
+                new {
+                    ExamId = 1,
+                    ExamName = "Kiểm tra giữa kỳ - Lập trình Web",
+                    Subject = "Lập trình Web",
+                    ExamDate = new DateTime(2025, 9, 15),
+                    Score = 8.5,
+                    MaxScore = 10.0,
+                    Status = "Đã chấm",
+                    Passed = true,
+                    SubmittedAt = new DateTime(2025, 9, 15, 10, 30, 0)
+                },
+                new {
+                    ExamId = 2,
+                    ExamName = "Bài thi cuối kỳ - Cơ sở dữ liệu",
+                    Subject = "Cơ sở dữ liệu",
+                    ExamDate = new DateTime(2025, 9, 20),
+                    Score = 9.0,
+                    MaxScore = 10.0,
+                    Status = "Đã chấm",
+                    Passed = true,
+                    SubmittedAt = new DateTime(2025, 9, 20, 14, 45, 0)
+                },
+                new {
+                    ExamId = 3,
+                    ExamName = "Kiểm tra thường xuyên - Toán cao cấp",
+                    Subject = "Toán cao cấp",
+                    ExamDate = new DateTime(2025, 9, 25),
+                    Score = 6.5,
+                    MaxScore = 10.0,
+                    Status = "Đã chấm",
+                    Passed = true,
+                    SubmittedAt = new DateTime(2025, 9, 25, 9, 15, 0)
+                },
+                new {
+                    ExamId = 4,
+                    ExamName = "Bài thi ReactJS Framework",
+                    Subject = "Lập trình Web",
+                    ExamDate = new DateTime(2025, 9, 28),
+                    Score = 0.0,
+                    MaxScore = 10.0,
+                    Status = "Đang chờ chấm",
+                    Passed = false,
+                    SubmittedAt = new DateTime(2025, 9, 28, 11, 0, 0)
+                },
+                new {
+                    ExamId = 5,
+                    ExamName = "Kiểm tra giữa kỳ - Xác suất thống kê",
+                    Subject = "Xác suất thống kê",
+                    ExamDate = new DateTime(2025, 8, 10),
+                    Score = 7.0,
+                    MaxScore = 10.0,
+                    Status = "Đã chấm",
+                    Passed = true,
+                    SubmittedAt = new DateTime(2025, 8, 10, 15, 20, 0)
+                },
+                new {
+                    ExamId = 6,
+                    ExamName = "Bài thi cuối kỳ - Hệ điều hành",
+                    Subject = "Hệ điều hành",
+                    ExamDate = new DateTime(2025, 8, 25),
+                    Score = 5.5,
+                    MaxScore = 10.0,
+                    Status = "Đã chấm",
+                    Passed = false,
+                    SubmittedAt = new DateTime(2025, 8, 25, 16, 30, 0)
+                }
+            };
+
+            ViewBag.ExamScores = examScores;
+            
+            // Calculate statistics
+            var gradedExams = examScores.Where(e => e.Status == "Đã chấm").ToList();
+            ViewBag.TotalExams = examScores.Count;
+            ViewBag.GradedCount = gradedExams.Count;
+            ViewBag.PendingCount = examScores.Count - gradedExams.Count;
+            ViewBag.AverageScore = gradedExams.Any() ? (double)gradedExams.Average(e => (double)e.Score) : 0.0;
+            ViewBag.PassedCount = gradedExams.Count(e => e.Passed);
+            ViewBag.FailedCount = gradedExams.Count(e => !e.Passed);
+
+            return View();
+        }
+
         public IActionResult Profile()
         {
             return View();

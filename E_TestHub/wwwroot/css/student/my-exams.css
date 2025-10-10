@@ -471,7 +471,7 @@
     }
 }
 
-.sidebar-header {
+.calendar-sidebar-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -483,7 +483,7 @@
     z-index: 10;
 }
 
-.sidebar-header h3 {
+.calendar-sidebar-header h3 {
     font-size: 24px;
     font-weight: 700;
     color: #2E8BE9;

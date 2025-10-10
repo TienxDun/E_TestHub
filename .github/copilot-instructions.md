@@ -363,3 +363,39 @@ Khi AI Agent bắt đầu làm việc với E_TestHub:
 * [ ] Xác nhận demo credentials - 3 test accounts
 * [ ] Chờ task cụ thể từ developer
 * [ ] Phân tích → Plan → Confirm → Execute → Explain → Optimize
+
+## ✅ Todo List Management
+
+Để dễ dàng theo dõi tiến độ và quản lý công việc, bạn có thể sử dụng **Todo List**. Dưới đây là cách tôi sẽ hỗ trợ bạn:
+
+1. **Tạo Todo List**:
+   - Khi nhận task, tôi sẽ chia nhỏ thành các bước cụ thể.
+   - Ví dụ: "Tạo chức năng Tạo đề thi" → Todo list:
+     - [ ] Thiết kế form nhập liệu.
+     - [ ] Xử lý logic lưu dữ liệu.
+     - [ ] Thêm validate cho các trường.
+     - [ ] Test chức năng.
+
+2. **Cập nhật trạng thái**:
+   - Tôi sẽ cập nhật trạng thái từng bước:
+     - `not-started`: Chưa bắt đầu.
+     - `in-progress`: Đang thực hiện.
+     - `completed`: Hoàn thành.
+
+3. **Báo cáo tiến độ**:
+   - Sau mỗi bước, tôi sẽ báo cáo lại và hỏi bạn có cần chỉnh sửa gì không.
+
+4. **Tổng kết**:
+   - Sau khi hoàn thành, tôi sẽ tổng hợp lại:
+     - Những gì đã làm.
+     - Những gì còn lại.
+     - Đề xuất cải tiến.
+
+### 📋 Ví dụ Todo List:
+
+- [ ] Tạo giao diện trang Dashboard cho Teacher.
+- [ ] Thêm chức năng tạo đề thi (CreateExam).
+- [ ] Hoàn thiện trang quản lý câu hỏi (QuestionBank).
+- [ ] Test toàn bộ module Teacher.
+
+Bạn có thể yêu cầu tôi cập nhật Todo List bất kỳ lúc nào! 😊
