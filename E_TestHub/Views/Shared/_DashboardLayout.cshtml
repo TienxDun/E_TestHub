@@ -42,6 +42,9 @@
                     }
                     else if (userRole == "Teacher")
                     {
+                        <a href="@Url.Action("ManageClasses", "Teacher")" class="dashboard-nav-item" title="Lớp đang giảng dạy">
+                            <i class="fas fa-users"></i>
+                        </a>
                         <a href="@Url.Action("QuestionBank", "Teacher")" class="dashboard-nav-item" title="Ngân hàng câu hỏi">
                             <i class="fas fa-folder"></i>
                         </a>
@@ -69,6 +72,18 @@
                     @if (userRole == "Student")
                     {
                         <a href="@Url.Action("Profile", "Student")" class="dashboard-nav-item" title="Quản lý tài khoản">
+                            <i class="fas fa-user"></i>
+                        </a>
+                    }
+                    else if (userRole == "Teacher")
+                    {
+                        <a href="@Url.Action("Profile", "Teacher")" class="dashboard-nav-item" title="Quản lý tài khoản">
+                            <i class="fas fa-user"></i>
+                        </a>
+                    }
+                    else if (userRole == "Admin")
+                    {
+                        <a href="@Url.Action("Profile", "Admin")" class="dashboard-nav-item" title="Quản lý tài khoản">
                             <i class="fas fa-user"></i>
                         </a>
                     }

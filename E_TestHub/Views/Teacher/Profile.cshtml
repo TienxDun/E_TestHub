@@ -1,0 +1,87 @@
+@{
+    ViewData["Title"] = "Quản lý tài khoản - Giáo Viên";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@section Styles {
+    <link href="~/css/shared/dashboard.css" rel="stylesheet">
+    <link href="~/css/teacher/profile.css" rel="stylesheet">
+}
+
+<!-- Profile Content -->
+<div class="profile-container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <h1 class="profile-title">Quản lý tài khoản</h1>
+        
+        <!-- Avatar Section -->
+        <div class="profile-avatar-section">
+            <div class="profile-avatar">
+                <i class="fas fa-user-tie"></i>
+            </div>
+            <button class="upload-btn">
+                <i class="fas fa-upload me-2"></i>Tải lên
+            </button>
+        </div>
+    </div>
+    
+    <!-- Profile Form -->
+    <div class="profile-form">
+        <form>
+            <!-- First Row -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Họ và tên</label>
+                    <input type="text" class="form-control" value="TS. Nguyễn Văn Minh" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mã giáo viên</label>
+                    <input type="text" class="form-control" value="GV2024001" readonly>
+                </div>
+            </div>
+            
+            <!-- Second Row -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Bộ môn</label>
+                    <input type="text" class="form-control" value="Công nghệ phần mềm" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Khoa</label>
+                    <input type="text" class="form-control" value="Khoa Công nghệ thông tin" readonly>
+                </div>
+            </div>
+            
+            <!-- Third Row -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" value="nguyenvanminh@uit.edu.vn">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Số điện thoại</label>
+                    <input type="tel" class="form-control" value="0912345678">
+                </div>
+            </div>
+            
+            <!-- Password Row -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Mật khẩu hiện tại</label>
+                    <input type="password" class="form-control" placeholder="Nhập mật khẩu hiện tại">
+                    <a href="#" class="forgot-password-link">Quên mật khẩu?</a>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mật khẩu mới</label>
+                    <input type="password" class="form-control" placeholder="Nhập mật khẩu mới">
+                </div>
+            </div>
+            
+            <!-- Save Button -->
+            <div class="form-group">
+                <button type="submit" class="save-btn">Lưu thông tin</button>
+                <div class="clearfix"></div>
+            </div>
+        </form>
+    </div>
+</div>

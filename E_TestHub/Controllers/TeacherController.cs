@@ -83,6 +83,11 @@ namespace E_TestHub.Controllers
             return View();
         }
 
+        public IActionResult Profile()
+        {
+            return View();
+        }
+
         public IActionResult ExamDetails(int examId)
         {
             // Placeholder for exam details page
