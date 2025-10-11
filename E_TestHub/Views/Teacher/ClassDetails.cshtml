@@ -9,6 +9,14 @@
 }
 
 <div>
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-nav">
+        <a href="@Url.Action("ManageClasses", "Teacher")" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            Quay lại
+        </a>
+    </div>
+
     <!-- Page Header -->
     <div class="class-details-header">
         <div class="header-content">
@@ -128,12 +136,10 @@
                                 </td>
                                 <td>
                                     <div class="action-buttons-group">
-                                        <a href="@Url.Action("StudentExamResult", "Teacher", new { studentId = student.Id, examId = 1 })" 
-                                           class="action-btn view-btn" 
-                                           title="Xem kết quả thi">
+                                        <button class="action-btn view-btn" title="Xem kết quả thi" disabled>
                                             <i class="fas fa-chart-bar"></i>
                                             Kết quả
-                                        </a>
+                                        </button>
                                         <button class="action-btn message-btn" title="Nhắn tin">
                                             <i class="fas fa-envelope"></i>
                                         </button>

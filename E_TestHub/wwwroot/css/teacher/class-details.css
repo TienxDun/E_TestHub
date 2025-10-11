@@ -1,5 +1,32 @@
 /* Class Details Page Styles */
 
+/* Breadcrumb Navigation */
+.breadcrumb-nav {
+    margin-bottom: 20px;
+}
+
+.breadcrumb-nav .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #4A90E2;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    background: white;
+    border: 2px solid #4A90E2;
+    padding: 10px 20px;
+    border-radius: 8px;
+}
+
+.breadcrumb-nav .back-btn:hover {
+    background: #4A90E2;
+    color: white;
+    text-decoration: none;
+    transform: translateX(-3px);
+}
+
 .class-details-header {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;

@@ -18,16 +18,22 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    color: #0d6efd;
+    color: #4A90E2;
     text-decoration: none;
     font-size: 14px;
     font-weight: 500;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
+    background: white;
+    border: 2px solid #4A90E2;
+    padding: 10px 20px;
+    border-radius: 8px;
 }
 
 .breadcrumb-link:hover {
-    color: #0a58ca;
-    transform: translateX(-5px);
+    background: #4A90E2;
+    color: white;
+    text-decoration: none;
+    transform: translateX(-3px);
 }
 
 /* Subject Header */
@@ -369,6 +375,8 @@
     border-color: #0a58ca;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3);
+    color: white;
+    text-decoration: none;
 }
 
 /* Responsive Design */

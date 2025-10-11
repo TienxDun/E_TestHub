@@ -238,25 +238,35 @@ namespace E_TestHub.Controllers
             return View();
         }
 
-        public IActionResult StudentExamResult(string studentId, int examId)
+        public IActionResult ViewStudentExam(string studentId, int examId)
         {
-            // Demo data for student information
+            // Demo data for student info
             var studentInfo = new
             {
-                Id = studentId ?? "2151012001",
-                Name = "Võ Nguyễn Thanh Hiếu",
-                Email = "2151012001@student.hcmus.edu.vn"
+                StudentId = studentId,
+                StudentName = studentId switch
+                {
+                    "2151012001" => "Nguyễn Văn A",
+                    "2151012002" => "Trần Thị B",
+                    "2151012003" => "Lê Văn C",
+                    "2151012004" => "Phạm Thị D",
+                    "2151012005" => "Hoàng Văn E",
+                    "2151012006" => "Đỗ Thị F",
+                    "2151012007" => "Vũ Văn G",
+                    "2151012008" => "Bùi Thị H",
+                    _ => "Unknown Student"
+                }
             };
 
-            // Demo data for exam information
+            // Demo data for exam info
             var examInfo = new
             {
-                Id = examId,
-                Name = "Bài thi ReactJS Framework",
-                Subject = "Lập trình Web",
-                ExamDate = new DateTime(2025, 9, 28, 9, 0, 0), // Exam start time
-                SubmittedAt = new DateTime(2025, 9, 28, 9, 35, 0), // Student submitted at
-                Duration = 45, // Total duration in minutes
+                ExamId = examId,
+                Name = "Công nghệ phần mềm - Kiểm tra giữa kỳ",
+                Subject = "Công nghệ phần mềm",
+                ExamDate = new DateTime(2025, 9, 28, 14, 0, 0),
+                SubmittedAt = new DateTime(2025, 9, 28, 15, 45, 0),
+                Duration = 120, // minutes
                 TotalQuestions = 12,
                 CorrectAnswers = 8,
                 IncorrectAnswers = 4,
@@ -264,117 +274,14 @@ namespace E_TestHub.Controllers
                 MaxScore = 10.0
             };
 
-            // Calculate additional metrics
+            // Calculate statistics
             var timeSpent = (examInfo.SubmittedAt - examInfo.ExamDate).TotalMinutes;
-            var accuracy = (double)examInfo.CorrectAnswers / examInfo.TotalQuestions * 100;
+            var accuracy = Math.Round((double)examInfo.CorrectAnswers / examInfo.TotalQuestions * 100, 1);
 
-            // Demo data for questions and answers
-            var questions = new List<dynamic>
-            {
-                new { 
-                    Id = 1, 
-                    Text = "Mô hình phát triển phần mềm nào phù hợp nhất cho dự án có yêu cầu thay đổi liên tục?",
-                    Options = new[] { "Waterfall", "Agile", "V-Model", "Spiral" },
-                    CorrectAnswer = "B",
-                    StudentAnswer = "B",
-                    IsCorrect = true
-                },
-                new { 
-                    Id = 2, 
-                    Text = "Nguyên tắc SOLID trong lập trình hướng đối tượng bao gồm mấy nguyên tắc?",
-                    Options = new[] { "3", "4", "5", "6" },
-                    CorrectAnswer = "C",
-                    StudentAnswer = "A",
-                    IsCorrect = false
-                },
-                new { 
-                    Id = 3, 
-                    Text = "Design Pattern nào được sử dụng để đảm bảo một class chỉ có duy nhất một instance?",
-                    Options = new[] { "Factory", "Singleton", "Observer", "Strategy" },
-                    CorrectAnswer = "B",
-                    StudentAnswer = "B",
-                    IsCorrect = true
-                },
-                new { 
-                    Id = 4, 
-                    Text = "Git command nào được sử dụng để hoàn tác commit cuối cùng?",
-                    Options = new[] { "git undo", "git revert", "git reset", "git rollback" },
-                    CorrectAnswer = "C",
-                    StudentAnswer = "C",
-                    IsCorrect = true
-                },
-                new { 
-                    Id = 5, 
-                    Text = "Trong React, Hook nào được sử dụng để quản lý side effects?",
-                    Options = new[] { "useState", "useEffect", "useContext", "useReducer" },
-                    CorrectAnswer = "B",
-                    StudentAnswer = "A",
-                    IsCorrect = false
-                },
-                new { 
-                    Id = 6, 
-                    Text = "HTTP status code 404 có ý nghĩa gì?",
-                    Options = new[] { "Server Error", "Not Found", "Forbidden", "Unauthorized" },
-                    CorrectAnswer = "B",
-                    StudentAnswer = "B",
-                    IsCorrect = true
-                },
-                new { 
-                    Id = 7, 
-                    Text = "Trong SQL, câu lệnh nào được sử dụng để lấy dữ liệu duy nhất (không trùng lặp)?",
-                    Options = new[] { "UNIQUE", "DISTINCT", "DIFFERENT", "SINGLE" },
-                    CorrectAnswer = "B",
-                    StudentAnswer = "B",
-                    IsCorrect = true
-                },
-                new { 
-                    Id = 8, 
-                    Text = "RESTful API sử dụng HTTP method nào để cập nhật một phần resource?",
-                    Options = new[] { "PUT", "POST", "PATCH", "UPDATE" },
-                    CorrectAnswer = "C",
-                    StudentAnswer = "A",
-                    IsCorrect = false
-                },
-                new { 
-                    Id = 9, 
-                    Text = "Trong CSS, thuộc tính nào dùng để tạo flexbox layout?",
-                    Options = new[] { "display: flex", "layout: flex", "flex: true", "flexbox: on" },
-                    CorrectAnswer = "A",
-                    StudentAnswer = "A",
-                    IsCorrect = true
-                },
-                new { 
-                    Id = 10, 
-                    Text = "Async/Await trong JavaScript được xây dựng dựa trên cơ chế nào?",
-                    Options = new[] { "Callbacks", "Promises", "Generators", "Events" },
-                    CorrectAnswer = "B",
-                    StudentAnswer = "B",
-                    IsCorrect = true
-                },
-                new { 
-                    Id = 11, 
-                    Text = "Trong MVC pattern, component nào chịu trách nhiệm xử lý business logic?",
-                    Options = new[] { "Model", "View", "Controller", "Router" },
-                    CorrectAnswer = "C",
-                    StudentAnswer = "C",
-                    IsCorrect = true
-                },
-                new { 
-                    Id = 12, 
-                    Text = "JWT (JSON Web Token) được sử dụng chủ yếu cho mục đích gì?",
-                    Options = new[] { "Data Storage", "Authentication", "Encryption", "Compression" },
-                    CorrectAnswer = "B",
-                    StudentAnswer = "D",
-                    IsCorrect = false
-                }
-            };
-
-            // Pass data to view
             ViewBag.StudentInfo = studentInfo;
             ViewBag.ExamInfo = examInfo;
-            ViewBag.Questions = questions;
-            ViewBag.TimeSpent = Math.Round(timeSpent, 2);
-            ViewBag.Accuracy = Math.Round(accuracy, 1);
+            ViewBag.TimeSpent = Math.Round(timeSpent, 0);
+            ViewBag.Accuracy = accuracy;
 
             return View();
         }
