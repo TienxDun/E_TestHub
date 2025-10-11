@@ -19,6 +19,98 @@ namespace E_TestHub.Controllers
             return View();
         }
 
+        public IActionResult Notifications()
+        {
+            // Demo notifications data
+            var notifications = new List<dynamic>
+            {
+                new 
+                { 
+                    Id = 1, 
+                    Type = "exam", 
+                    Title = "Bài thi ReactJS sắp diễn ra", 
+                    Message = "Bài thi ReactJS của lớp SE114.O11 sẽ diễn ra vào lúc 14:00 ngày 28/09/2025. Thời gian làm bài: 90 phút.",
+                    Time = "2 giờ trước",
+                    Date = new DateTime(2025, 9, 28, 12, 0, 0),
+                    IsRead = false,
+                    Icon = "fa-file-alt",
+                    Link = "/Student/ExamInfo?examId=1",
+                    LinkText = "Xem chi tiết"
+                },
+                new 
+                { 
+                    Id = 2, 
+                    Type = "result", 
+                    Title = "Kết quả thi đã được công bố", 
+                    Message = "Kết quả bài thi Lịch sử Việt Nam của bạn đã được chấm. Điểm số: 8.5/10. Xem chi tiết tại trang Kết quả thi.",
+                    Time = "1 ngày trước",
+                    Date = new DateTime(2025, 9, 27, 16, 30, 0),
+                    IsRead = true,
+                    Icon = "fa-check-circle",
+                    Link = "/Student/ViewResults?studentId=2151012001&examId=3",
+                    LinkText = "Xem chi tiết"
+                },
+                new 
+                { 
+                    Id = 3, 
+                    Type = "schedule", 
+                    Title = "Lịch thi mới được cập nhật", 
+                    Message = "Lịch thi môn Toán cao cấp đã được cập nhật. Thời gian thi: 10:00 ngày 05/10/2025. Vui lòng kiểm tra lại lịch thi của bạn.",
+                    Time = "2 ngày trước",
+                    Date = new DateTime(2025, 9, 26, 9, 0, 0),
+                    IsRead = true,
+                    Icon = "fa-calendar-alt",
+                    Link = "/Student/MyExams",
+                    LinkText = "Xem chi tiết"
+                },
+                new 
+                { 
+                    Id = 4, 
+                    Type = "system", 
+                    Title = "Hệ thống bảo trì", 
+                    Message = "Hệ thống sẽ bảo trì từ 22:00 - 02:00 đêm nay. Trong thời gian này, bạn sẽ không thể truy cập hệ thống. Vui lòng hoàn thành bài thi trước thời gian bảo trì.",
+                    Time = "3 ngày trước",
+                    Date = new DateTime(2025, 9, 25, 18, 0, 0),
+                    IsRead = true,
+                    Icon = "fa-exclamation-triangle",
+                    Link = "/Student/Dashboard",
+                    LinkText = "Xem chi tiết"
+                },
+                new 
+                { 
+                    Id = 5, 
+                    Type = "exam", 
+                    Title = "Nhắc nhở: Bài thi Cơ sở dữ liệu", 
+                    Message = "Bài thi Cơ sở dữ liệu sẽ diễn ra vào 08:00 ngày 10/10/2025. Đây là môn thi quan trọng, vui lòng chuẩn bị kỹ càng.",
+                    Time = "5 ngày trước",
+                    Date = new DateTime(2025, 9, 23, 14, 0, 0),
+                    IsRead = true,
+                    Icon = "fa-file-alt",
+                    Link = "/Student/ExamInfo?examId=2",
+                    LinkText = "Xem chi tiết"
+                },
+                new 
+                { 
+                    Id = 6, 
+                    Type = "announcement", 
+                    Title = "Thông báo từ giáo vụ", 
+                    Message = "Lịch thi học kỳ 1 năm học 2025-2026 đã được công bố. Sinh viên vui lòng truy cập trang web để xem lịch thi chi tiết và chuẩn bị ôn tập.",
+                    Time = "1 tuần trước",
+                    Date = new DateTime(2025, 9, 21, 10, 0, 0),
+                    IsRead = true,
+                    Icon = "fa-bullhorn",
+                    Link = "/Student/MyExams",
+                    LinkText = "Xem chi tiết"
+                }
+            };
+
+            ViewBag.Notifications = notifications;
+            ViewBag.UnreadCount = notifications.Count(n => !n.IsRead);
+            ViewBag.TotalCount = notifications.Count;
+
+            return View();
+        }
+
         public IActionResult ExamInfo(int examId)
         {
             ViewBag.ExamId = examId;
