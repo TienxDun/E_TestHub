@@ -155,42 +155,36 @@
         <h3 class="dashboard-section-title">Danh sách câu hỏi</h3>
     </div>
 
-    <!-- Subject Tabs Navigation -->
-    <div class="subject-tabs-container">
-        <div class="subject-tabs">
-            <button class="subject-tab active" data-subject="all" onclick="switchSubjectTab('all')">
-                <i class="fas fa-th"></i>
-                <span>Tất cả</span>
-                <span class="tab-count">145</span>
+    <!-- Subject Filter Section - Modern Chip Design -->
+    <div class="subject-filter-section">
+        <div class="subject-chips">
+            <button class="subject-chip active" data-subject="all" onclick="switchSubjectTab('all')">
+                <span class="chip-label">Tất cả</span>
+                <span class="chip-badge">145</span>
             </button>
-            <button class="subject-tab" data-subject="xstk" onclick="switchSubjectTab('xstk')">
-                <i class="fas fa-chart-line"></i>
-                <span>Xác suất thống kê</span>
-                <span class="tab-count">60</span>
+            <button class="subject-chip" data-subject="xstk" onclick="switchSubjectTab('xstk')">
+                <span class="chip-label">Xác suất thống kê</span>
+                <span class="chip-badge">60</span>
             </button>
-            <button class="subject-tab" data-subject="dstt" onclick="switchSubjectTab('dstt')">
-                <i class="fas fa-table"></i>
-                <span>Đại số tuyến tính</span>
-                <span class="tab-count">40</span>
+            <button class="subject-chip" data-subject="dstt" onclick="switchSubjectTab('dstt')">
+                <span class="chip-label">Đại số tuyến tính</span>
+                <span class="chip-badge">40</span>
             </button>
-            <button class="subject-tab" data-subject="giai-tich" onclick="switchSubjectTab('giai-tich')">
-                <i class="fas fa-function"></i>
-                <span>Giải tích 1</span>
-                <span class="tab-count">30</span>
+            <button class="subject-chip" data-subject="giai-tich" onclick="switchSubjectTab('giai-tich')">
+                <span class="chip-label">Giải tích 1</span>
+                <span class="chip-badge">30</span>
             </button>
-            <button class="subject-tab" data-subject="toan-roi-rac" onclick="switchSubjectTab('toan-roi-rac')">
-                <i class="fas fa-project-diagram"></i>
-                <span>Toán rời rạc</span>
-                <span class="tab-count">15</span>
+            <button class="subject-chip" data-subject="toan-roi-rac" onclick="switchSubjectTab('toan-roi-rac')">
+                <span class="chip-label">Toán rời rạc</span>
+                <span class="chip-badge">15</span>
             </button>
         </div>
 
-        <!-- Pagination Controls (Top) -->
-        <div class="pagination-controls-top">
-            <select id="itemsPerPage" class="items-per-page-select" onchange="changeItemsPerPage()">
-                <option value="10" selected>10 câu/trang</option>
-                <option value="20">20 câu/trang</option>
-                <option value="50">50 câu/trang</option>
+        <div class="filter-actions">
+            <select id="itemsPerPage" class="per-page-select" onchange="changeItemsPerPage()">
+                <option value="10" selected>10 / trang</option>
+                <option value="20">20 / trang</option>
+                <option value="50">50 / trang</option>
             </select>
         </div>
     </div>

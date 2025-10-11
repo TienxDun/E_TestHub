@@ -19,11 +19,6 @@ namespace E_TestHub.Controllers
             return View();
         }
 
-        public IActionResult TestCalendar()
-        {
-            return View();
-        }
-
         public IActionResult ExamInfo(int examId)
         {
             ViewBag.ExamId = examId;
@@ -75,6 +70,29 @@ namespace E_TestHub.Controllers
 
         public IActionResult ViewResults()
         {
+            // Demo data for exam information
+            var examInfo = new
+            {
+                Name = "Bài thi ReactJS Framework",
+                Subject = "Lập trình Web",
+                ExamDate = new DateTime(2025, 9, 28, 9, 0, 0),
+                SubmittedAt = new DateTime(2025, 9, 28, 9, 35, 0),
+                Duration = 45,
+                TotalQuestions = 12,
+                CorrectAnswers = 8,
+                IncorrectAnswers = 4,
+                Score = 8.0,
+                MaxScore = 10.0
+            };
+
+            // Calculate metrics
+            var timeSpent = (examInfo.SubmittedAt - examInfo.ExamDate).TotalMinutes;
+            var accuracy = (double)examInfo.CorrectAnswers / examInfo.TotalQuestions * 100;
+
+            ViewBag.ExamInfo = examInfo;
+            ViewBag.TimeSpent = Math.Round(timeSpent, 2);
+            ViewBag.Accuracy = Math.Round(accuracy, 1);
+
             return View();
         }
 

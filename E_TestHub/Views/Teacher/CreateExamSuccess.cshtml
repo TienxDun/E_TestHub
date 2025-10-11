@@ -117,50 +117,6 @@
         </a>
     </div>
 
-    <!-- Tips Section -->
-    <div class="success-tips">
-        <div class="tips-header">
-            <i class="fas fa-lightbulb"></i>
-            <h3>Bước tiếp theo</h3>
-        </div>
-        <ul class="tips-list">
-            @if (ViewBag.Status == "published")
-            {
-                <li>
-                    <i class="fas fa-users"></i>
-                    Đề thi đã được giao cho các lớp học đã chọn
-                </li>
-                <li>
-                    <i class="fas fa-bell"></i>
-                    Sinh viên sẽ nhận được thông báo về đề thi mới
-                </li>
-                <li>
-                    <i class="fas fa-chart-line"></i>
-                    Bạn có thể theo dõi kết quả thi trong mục "Xem kết quả thi"
-                </li>
-                <li>
-                    <i class="fas fa-edit"></i>
-                    Đề thi vẫn có thể chỉnh sửa nếu chưa có sinh viên nào làm
-                </li>
-            }
-            else
-            {
-                <li>
-                    <i class="fas fa-edit"></i>
-                    Bạn có thể tiếp tục chỉnh sửa đề thi bất cứ lúc nào
-                </li>
-                <li>
-                    <i class="fas fa-rocket"></i>
-                    Nhớ xuất bản đề thi khi đã sẵn sàng
-                </li>
-                <li>
-                    <i class="fas fa-folder"></i>
-                    Đề thi nháp được lưu trong "Quản lý đề thi"
-                </li>
-            }
-        </ul>
-    </div>
-
     <!-- Share Options (Optional) -->
     <div class="success-share">
         <p class="share-text">Chia sẻ với đồng nghiệp</p>

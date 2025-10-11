@@ -80,6 +80,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxWaWV3UmVzdWx0cy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/ADMIN/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Teacher/ClassDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVhY2hlclxDbGFzc0RldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/ADMIN/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Teacher/CreateExam.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVhY2hlclxDcmVhdGVFeGFtLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -110,6 +114,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/ADMIN/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Teacher/QuestionBank.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVhY2hlclxRdWVzdGlvbkJhbmsuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ADMIN/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Teacher/StudentExamResult.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVhY2hlclxTdHVkZW50RXhhbVJlc3VsdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/ADMIN/Desktop/ASP.NET Core/E_TestHub/E_TestHub/Views/Teacher/SubjectExamDetails.cshtml]

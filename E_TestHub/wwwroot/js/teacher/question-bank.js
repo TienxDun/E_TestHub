@@ -44,14 +44,34 @@ document.addEventListener('DOMContentLoaded', function() {
  * Switch subject tab
  */
 function switchSubjectTab(subject) {
+    const clickedChip = document.querySelector(`[data-subject="${subject}"]`);
+    
+    // If clicking the active chip, deactivate it and show all
+    if (clickedChip.classList.contains('active') && subject !== 'all') {
+        currentSubject = 'all';
+        currentPage = 1;
+        
+        // Remove all active states
+        document.querySelectorAll('.subject-chip').forEach(chip => {
+            chip.classList.remove('active');
+        });
+        
+        // Activate "Tất cả" chip
+        document.querySelector('[data-subject="all"]').classList.add('active');
+        
+        loadQuestions();
+        return;
+    }
+    
+    // Normal behavior: switch to clicked subject
     currentSubject = subject;
     currentPage = 1;
     
-    // Update active tab
-    document.querySelectorAll('.subject-tab').forEach(tab => {
-        tab.classList.remove('active');
+    // Update active chip
+    document.querySelectorAll('.subject-chip').forEach(chip => {
+        chip.classList.remove('active');
     });
-    document.querySelector(`[data-subject="${subject}"]`).classList.add('active');
+    clickedChip.classList.add('active');
     
     loadQuestions();
 }

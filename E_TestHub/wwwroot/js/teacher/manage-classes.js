@@ -206,6 +206,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function createListItem(classItem) {
         const div = document.createElement('div');
         div.className = 'list-item';
+        div.dataset.classId = classItem.name;
         div.innerHTML = `
             <div class="list-item-content">
                 <div class="class-icon">
@@ -226,12 +227,27 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 </div>
                 <div class="list-item-actions">
-                    <button class="list-action-btn" onclick="manageClassDetail('${classItem.name}')">
-                        <i class="fas fa-cog"></i> Quản lý
+                    <button class="list-action-btn view-detail-btn" data-class-id="${classItem.name}">
+                        <i class="fas fa-eye"></i> Xem chi tiết
                     </button>
                 </div>
             </div>
         `;
+        
+        // Add click event for the button
+        const button = div.querySelector('.view-detail-btn');
+        button.addEventListener('click', function(e) {
+            e.stopPropagation();
+            manageClassDetail(this.dataset.classId);
+        });
+        
+        // Add click event for the whole item
+        div.addEventListener('click', function(e) {
+            if (!e.target.closest('.list-action-btn')) {
+                manageClassDetail(this.dataset.classId);
+            }
+        });
+        
         return div;
     }
 
@@ -258,31 +274,50 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function createTableRow(classItem) {
         const tr = document.createElement('tr');
+        tr.dataset.classId = classItem.name;
         tr.innerHTML = `
             <td>${classItem.name}</td>
             <td>${classItem.students} sinh viên</td>
             <td>${classItem.year}</td>
             <td>
                 <div class="table-actions">
-                    <button class="table-action-btn" onclick="manageClassDetail('${classItem.name}')">
-                        <i class="fas fa-cog"></i> Quản lý
-                    </button>
-                    <button class="table-action-btn" onclick="viewClassStudents('${classItem.name}')">
-                        <i class="fas fa-users"></i> Sinh viên
+                    <button class="table-action-btn view-detail-btn" data-class-id="${classItem.name}">
+                        <i class="fas fa-eye"></i> Chi tiết
                     </button>
                 </div>
             </td>
         `;
+        
+        // Add click events for buttons
+        const viewDetailBtn = tr.querySelector('.view-detail-btn');
+        
+        viewDetailBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            viewClassStudents(this.dataset.classId);
+        });
+        
+        // Add click event for the whole row
+        tr.addEventListener('click', function(e) {
+            if (!e.target.closest('.table-action-btn')) {
+                viewClassStudents(this.dataset.classId);
+            }
+        });
+        
         return tr;
     }
 
     /**
-     * Handle class card click - Navigate to class management detail
+     * Handle class card click - Navigate to class detail page
+     * Only trigger if not clicking on action button
      */
     classCards.forEach(card => {
-        card.addEventListener('click', function() {
-            const className = this.getAttribute('data-class-name');
-            manageClassDetail(className);
+        card.addEventListener('click', function(e) {
+            // Don't navigate if clicking on action button
+            if (e.target.closest('.class-action-btn')) {
+                return;
+            }
+            const classId = this.getAttribute('data-class-name');
+            manageClassDetail(classId);
         });
     });
 
@@ -327,31 +362,19 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 /**
- * Global function to manage class detail
- * @param {string} className - The class name
+ * Global function to navigate to class detail page (opens exams tab)
+ * @param {string} classId - The class ID
  */
-function manageClassDetail(className) {
-    console.log(`Managing class: ${className}`);
-    
-    // TODO: Implement navigation to class management detail page
-    // window.location.href = `/Teacher/ClassDetail?className=${className}`;
-    
-    // Placeholder: Show alert
-    alert(`Chức năng quản lý chi tiết lớp "${className}" sẽ được phát triển trong version tiếp theo.`);
+function manageClassDetail(classId) {
+    window.location.href = `/Teacher/ClassDetails?classId=${classId}#exams`;
 }
 
 /**
- * Global function to view class students
- * @param {string} className - The class name
+ * Global function to view class students (opens students tab)
+ * @param {string} classId - The class ID
  */
-function viewClassStudents(className) {
-    console.log(`Viewing students of class: ${className}`);
-    
-    // TODO: Implement navigation to class students list page
-    // window.location.href = `/Teacher/ClassStudents?className=${className}`;
-    
-    // Placeholder: Show alert
-    alert(`Chức năng xem danh sách sinh viên lớp "${className}" sẽ được phát triển trong version tiếp theo.`);
+function viewClassStudents(classId) {
+    window.location.href = `/Teacher/ClassDetails?classId=${classId}#students`;
 }
 
 /**

@@ -153,6 +153,62 @@ namespace E_TestHub.Controllers
             return View();
         }
 
+        public IActionResult ClassDetails(string classId)
+        {
+            // Demo data for class information
+            var classInfo = classId switch
+            {
+                "PM233H" => new { Id = "PM233H", Name = "PM233H - Xác suất thống kê", StudentCount = 360, Year = "2023 - 2027", Subject = "Xác suất thống kê" },
+                "TM231H" => new { Id = "TM231H", Name = "TM231H - Toán cao cấp", StudentCount = 36, Year = "2023 - 2027", Subject = "Toán cao cấp" },
+                "SE214H" => new { Id = "SE214H", Name = "SE214H - Kỹ thuật phần mềm", StudentCount = 120, Year = "2023 - 2027", Subject = "Kỹ thuật phần mềm" },
+                "IT001" => new { Id = "IT001", Name = "IT001 - Tin học đại cương", StudentCount = 180, Year = "2023 - 2027", Subject = "Tin học đại cương" },
+                "CS101" => new { Id = "CS101", Name = "CS101 - Nhập môn lập trình", StudentCount = 95, Year = "2023 - 2027", Subject = "Lập trình" },
+                "DB234" => new { Id = "DB234", Name = "DB234 - Cơ sở dữ liệu", StudentCount = 150, Year = "2023 - 2027", Subject = "Cơ sở dữ liệu" },
+                "AI202" => new { Id = "AI202", Name = "AI202 - Trí tuệ nhân tạo", StudentCount = 80, Year = "2024 - 2028", Subject = "Trí tuệ nhân tạo" },
+                "DS101" => new { Id = "DS101", Name = "DS101 - Khoa học dữ liệu", StudentCount = 110, Year = "2024 - 2028", Subject = "Khoa học dữ liệu" },
+                _ => new { Id = classId, Name = $"Lớp {classId}", StudentCount = 0, Year = "Unknown", Subject = "Unknown" }
+            };
+
+            // Demo data for students in this class
+            var students = new List<dynamic>
+            {
+                new { Id = "2151012001", Name = "Nguyễn Văn A", Email = "2151012001@student.hcmus.edu.vn", Status = "Active" },
+                new { Id = "2151012002", Name = "Trần Thị B", Email = "2151012002@student.hcmus.edu.vn", Status = "Active" },
+                new { Id = "2151012003", Name = "Lê Văn C", Email = "2151012003@student.hcmus.edu.vn", Status = "Active" },
+                new { Id = "2151012004", Name = "Phạm Thị D", Email = "2151012004@student.hcmus.edu.vn", Status = "Active" },
+                new { Id = "2151012005", Name = "Hoàng Văn E", Email = "2151012005@student.hcmus.edu.vn", Status = "Active" },
+                new { Id = "2151012006", Name = "Đỗ Thị F", Email = "2151012006@student.hcmus.edu.vn", Status = "Active" },
+                new { Id = "2151012007", Name = "Vũ Văn G", Email = "2151012007@student.hcmus.edu.vn", Status = "Active" },
+                new { Id = "2151012008", Name = "Bùi Thị H", Email = "2151012008@student.hcmus.edu.vn", Status = "Active" },
+                new { Id = "2151012009", Name = "Đinh Văn I", Email = "2151012009@student.hcmus.edu.vn", Status = "Active" },
+                new { Id = "2151012010", Name = "Cao Thị J", Email = "2151012010@student.hcmus.edu.vn", Status = "Active" }
+            };
+
+            // Demo data for exams assigned to this class
+            var exams = new List<dynamic>
+            {
+                new { Id = 1, Name = $"{classInfo.Subject} - Giữa kỳ", Date = new DateTime(2025, 10, 15), Status = "upcoming", SubmittedCount = 0, TotalStudents = classInfo.StudentCount },
+                new { Id = 2, Name = $"{classInfo.Subject} - Cuối kỳ", Date = new DateTime(2025, 12, 20), Status = "upcoming", SubmittedCount = 0, TotalStudents = classInfo.StudentCount },
+                new { Id = 3, Name = $"{classInfo.Subject} - Bài tập 1", Date = new DateTime(2025, 9, 10), Status = "completed", SubmittedCount = classInfo.StudentCount, TotalStudents = classInfo.StudentCount },
+                new { Id = 4, Name = $"{classInfo.Subject} - Bài tập 2", Date = new DateTime(2025, 9, 25), Status = "completed", SubmittedCount = classInfo.StudentCount - 5, TotalStudents = classInfo.StudentCount }
+            };
+
+            // Calculate statistics
+            var completedExams = exams.Where(e => e.Status == "completed").ToList();
+            var totalSubmissions = completedExams.Sum(e => (int)e.SubmittedCount);
+            var averageSubmissionRate = completedExams.Any() ? (double)totalSubmissions / (completedExams.Count * classInfo.StudentCount) * 100 : 0;
+
+            ViewBag.ClassId = classId;
+            ViewBag.ClassInfo = classInfo;
+            ViewBag.Students = students;
+            ViewBag.Exams = exams;
+            ViewBag.TotalExams = exams.Count;
+            ViewBag.CompletedExams = completedExams.Count;
+            ViewBag.AverageSubmissionRate = Math.Round(averageSubmissionRate, 1);
+
+            return View();
+        }
+
         public IActionResult GradeExams()
         {
             return View();
@@ -179,6 +235,147 @@ namespace E_TestHub.Controllers
             ViewBag.TotalPoints = totalPoints;
             ViewBag.CreatedDate = DateTime.Now;
             
+            return View();
+        }
+
+        public IActionResult StudentExamResult(string studentId, int examId)
+        {
+            // Demo data for student information
+            var studentInfo = new
+            {
+                Id = studentId ?? "2151012001",
+                Name = "Võ Nguyễn Thanh Hiếu",
+                Email = "2151012001@student.hcmus.edu.vn"
+            };
+
+            // Demo data for exam information
+            var examInfo = new
+            {
+                Id = examId,
+                Name = "Bài thi ReactJS Framework",
+                Subject = "Lập trình Web",
+                ExamDate = new DateTime(2025, 9, 28, 9, 0, 0), // Exam start time
+                SubmittedAt = new DateTime(2025, 9, 28, 9, 35, 0), // Student submitted at
+                Duration = 45, // Total duration in minutes
+                TotalQuestions = 12,
+                CorrectAnswers = 8,
+                IncorrectAnswers = 4,
+                Score = 8.0,
+                MaxScore = 10.0
+            };
+
+            // Calculate additional metrics
+            var timeSpent = (examInfo.SubmittedAt - examInfo.ExamDate).TotalMinutes;
+            var accuracy = (double)examInfo.CorrectAnswers / examInfo.TotalQuestions * 100;
+
+            // Demo data for questions and answers
+            var questions = new List<dynamic>
+            {
+                new { 
+                    Id = 1, 
+                    Text = "Mô hình phát triển phần mềm nào phù hợp nhất cho dự án có yêu cầu thay đổi liên tục?",
+                    Options = new[] { "Waterfall", "Agile", "V-Model", "Spiral" },
+                    CorrectAnswer = "B",
+                    StudentAnswer = "B",
+                    IsCorrect = true
+                },
+                new { 
+                    Id = 2, 
+                    Text = "Nguyên tắc SOLID trong lập trình hướng đối tượng bao gồm mấy nguyên tắc?",
+                    Options = new[] { "3", "4", "5", "6" },
+                    CorrectAnswer = "C",
+                    StudentAnswer = "A",
+                    IsCorrect = false
+                },
+                new { 
+                    Id = 3, 
+                    Text = "Design Pattern nào được sử dụng để đảm bảo một class chỉ có duy nhất một instance?",
+                    Options = new[] { "Factory", "Singleton", "Observer", "Strategy" },
+                    CorrectAnswer = "B",
+                    StudentAnswer = "B",
+                    IsCorrect = true
+                },
+                new { 
+                    Id = 4, 
+                    Text = "Git command nào được sử dụng để hoàn tác commit cuối cùng?",
+                    Options = new[] { "git undo", "git revert", "git reset", "git rollback" },
+                    CorrectAnswer = "C",
+                    StudentAnswer = "C",
+                    IsCorrect = true
+                },
+                new { 
+                    Id = 5, 
+                    Text = "Trong React, Hook nào được sử dụng để quản lý side effects?",
+                    Options = new[] { "useState", "useEffect", "useContext", "useReducer" },
+                    CorrectAnswer = "B",
+                    StudentAnswer = "A",
+                    IsCorrect = false
+                },
+                new { 
+                    Id = 6, 
+                    Text = "HTTP status code 404 có ý nghĩa gì?",
+                    Options = new[] { "Server Error", "Not Found", "Forbidden", "Unauthorized" },
+                    CorrectAnswer = "B",
+                    StudentAnswer = "B",
+                    IsCorrect = true
+                },
+                new { 
+                    Id = 7, 
+                    Text = "Trong SQL, câu lệnh nào được sử dụng để lấy dữ liệu duy nhất (không trùng lặp)?",
+                    Options = new[] { "UNIQUE", "DISTINCT", "DIFFERENT", "SINGLE" },
+                    CorrectAnswer = "B",
+                    StudentAnswer = "B",
+                    IsCorrect = true
+                },
+                new { 
+                    Id = 8, 
+                    Text = "RESTful API sử dụng HTTP method nào để cập nhật một phần resource?",
+                    Options = new[] { "PUT", "POST", "PATCH", "UPDATE" },
+                    CorrectAnswer = "C",
+                    StudentAnswer = "A",
+                    IsCorrect = false
+                },
+                new { 
+                    Id = 9, 
+                    Text = "Trong CSS, thuộc tính nào dùng để tạo flexbox layout?",
+                    Options = new[] { "display: flex", "layout: flex", "flex: true", "flexbox: on" },
+                    CorrectAnswer = "A",
+                    StudentAnswer = "A",
+                    IsCorrect = true
+                },
+                new { 
+                    Id = 10, 
+                    Text = "Async/Await trong JavaScript được xây dựng dựa trên cơ chế nào?",
+                    Options = new[] { "Callbacks", "Promises", "Generators", "Events" },
+                    CorrectAnswer = "B",
+                    StudentAnswer = "B",
+                    IsCorrect = true
+                },
+                new { 
+                    Id = 11, 
+                    Text = "Trong MVC pattern, component nào chịu trách nhiệm xử lý business logic?",
+                    Options = new[] { "Model", "View", "Controller", "Router" },
+                    CorrectAnswer = "C",
+                    StudentAnswer = "C",
+                    IsCorrect = true
+                },
+                new { 
+                    Id = 12, 
+                    Text = "JWT (JSON Web Token) được sử dụng chủ yếu cho mục đích gì?",
+                    Options = new[] { "Data Storage", "Authentication", "Encryption", "Compression" },
+                    CorrectAnswer = "B",
+                    StudentAnswer = "D",
+                    IsCorrect = false
+                }
+            };
+
+            // Pass data to view
+            ViewBag.StudentInfo = studentInfo;
+            ViewBag.ExamInfo = examInfo;
+            ViewBag.Questions = questions;
+            ViewBag.TimeSpent = Math.Round(timeSpent, 2);
+            ViewBag.Accuracy = Math.Round(accuracy, 1);
+
             return View();
         }
     }

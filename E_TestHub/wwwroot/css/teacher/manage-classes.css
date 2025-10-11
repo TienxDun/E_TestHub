@@ -215,6 +215,33 @@
     gap: 5px;
 }
 
+.class-actions {
+    flex-shrink: 0;
+    display: flex;
+    gap: 8px;
+}
+
+.class-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    background: white;
+    color: #6c757d;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.class-action-btn:hover {
+    background: #2e8be9;
+    color: white;
+    border-color: #2e8be9;
+    transform: scale(1.05);
+}
+
 .class-name {
     font-family: 'Inter', sans-serif;
     font-size: 20px;
@@ -227,7 +254,6 @@
 .class-students,
 .class-year {
     font-family: 'Inter', sans-serif;
-    font-size: 20px;
     font-weight: 400;
     color: #2f3542;
     margin: 0;
@@ -433,11 +459,15 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .list-action-btn:hover {
     background-color: #2e8be9;
     color: #fafaff;
+    transform: translateY(-2px);
 }
 
 /* ============================================
@@ -497,6 +527,7 @@
 .classes-table tbody tr {
     border-bottom: 1px solid #e9ecef;
     transition: background-color 0.3s ease;
+    cursor: pointer;
 }
 
 .classes-table tbody tr:hover {
@@ -536,11 +567,15 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .table-action-btn:hover {
     background-color: #2e8be9;
     color: #fafaff;
+    transform: translateY(-2px);
 }
 
 /* Table Responsive */
