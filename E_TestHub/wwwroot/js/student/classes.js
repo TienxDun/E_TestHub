@@ -226,9 +226,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 </div>
                 <div class="list-item-actions">
-                    <button class="list-action-btn" onclick="viewClassDetail('${classItem.name}')">
+                    <a href="/Student/ClassDetails?classId=${classItem.name}" class="list-action-btn">
                         <i class="fas fa-eye"></i> Chi tiết
-                    </button>
+                    </a>
                 </div>
             </div>
         `;
@@ -264,9 +264,9 @@ document.addEventListener('DOMContentLoaded', function() {
             <td>${classItem.year}</td>
             <td>
                 <div class="table-actions">
-                    <button class="table-action-btn" onclick="viewClassDetail('${classItem.name}')">
+                    <a href="/Student/ClassDetails?classId=${classItem.name}" class="table-action-btn">
                         <i class="fas fa-eye"></i> Xem
-                    </button>
+                    </a>
                 </div>
             </td>
         `;
@@ -274,14 +274,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     /**
-     * Handle class card click - Navigate to class detail (placeholder)
+     * Handle class card click - Navigate to class detail
+     * Note: Cards are now anchor tags, so click event is handled by href
      */
-    classCards.forEach(card => {
-        card.addEventListener('click', function() {
-            const className = this.getAttribute('data-class-name');
-            viewClassDetail(className);
-        });
-    });
+    // Removed click event listener as cards are now <a> tags with href
 
     /**
      * Add keyboard navigation support
@@ -330,11 +326,8 @@ document.addEventListener('DOMContentLoaded', function() {
 function viewClassDetail(className) {
     console.log(`Viewing class detail: ${className}`);
     
-    // TODO: Implement navigation to class detail page
-    // window.location.href = `/Student/ClassDetail?className=${className}`;
-    
-    // Placeholder: Show alert
-    alert(`Chức năng xem chi tiết lớp "${className}" sẽ được phát triển trong version tiếp theo.`);
+    // Navigate to class detail page
+    window.location.href = `/Student/ClassDetails?classId=${className}`;
 }
 
 /**

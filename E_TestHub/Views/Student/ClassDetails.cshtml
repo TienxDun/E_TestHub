@@ -1,0 +1,366 @@
+@{
+    ViewData["Title"] = $"Chi tiết lớp học - {ViewBag.ClassInfo.Name}";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@section Styles {
+    <link href="~/css/shared/dashboard.css" rel="stylesheet">
+    <link href="~/css/student/class-details.css" rel="stylesheet">
+}
+
+<div class="class-details-container">
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-nav">
+        <a href="@Url.Action("Classes", "Student")" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            Quay lại danh sách lớp
+        </a>
+    </div>
+
+    <!-- Class Header -->
+    <div class="class-header">
+        <div class="header-content">
+            <div class="class-icon-large">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="class-info">
+                <h1 class="class-title">@ViewBag.ClassInfo.Name</h1>
+                <div class="class-meta">
+                    <span class="meta-item">
+                        <i class="fas fa-user-tie"></i>
+                        Giảng viên: @ViewBag.ClassInfo.Instructor
+                    </span>
+                    <span class="meta-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        Khóa: @ViewBag.ClassInfo.Year
+                    </span>
+                    <span class="meta-item">
+                        <i class="fas fa-book"></i>
+                        Môn học: @ViewBag.ClassInfo.Subject
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="stats-section">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-content">
+                <div class="stat-number">@ViewBag.ClassInfo.StudentCount</div>
+                <div class="stat-label">Tổng sinh viên</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-user-check"></i>
+            </div>
+            <div class="stat-content">
+                <div class="stat-number">@ViewBag.TotalStudents</div>
+                <div class="stat-label">Đang hiển thị</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-chalkboard-teacher"></i>
+            </div>
+            <div class="stat-content">
+                <div class="stat-number">1</div>
+                <div class="stat-label">Giảng viên</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Students List Section -->
+    <div class="students-section">
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="fas fa-list"></i>
+                Danh sách sinh viên
+            </h2>
+            
+            <div class="header-controls">
+                <!-- Items Per Page Selector -->
+                <div class="items-per-page">
+                    <label for="itemsPerPage">
+                        <i class="fas fa-th-list"></i>
+                        Hiển thị:
+                    </label>
+                    <select id="itemsPerPage" class="items-select">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="all">Tất cả</option>
+                    </select>
+                </div>
+
+                <!-- Search Box -->
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="studentSearch" placeholder="Tìm kiếm theo MSSV hoặc tên...">
+                </div>
+            </div>
+        </div>
+
+        <!-- Students Table -->
+        <div class="students-table-container">
+            <table class="students-table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>MSSV</th>
+                        <th>Họ và tên</th>
+                        <th>Email</th>
+                        <th class="text-center">Liên hệ</th>
+                    </tr>
+                </thead>
+                <tbody id="studentsTableBody">
+                    @{
+                        int index = 1;
+                        foreach (var student in ViewBag.Students)
+                        {
+                            <tr data-student-id="@student.Id" data-student-name="@student.Name">
+                                <td class="text-center">@index</td>
+                                <td>
+                                    <div class="student-id">@student.Id</div>
+                                </td>
+                                <td>
+                                    <div class="student-name">
+                                        <i class="fas fa-user-circle student-avatar"></i>
+                                        @student.Name
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="student-email">
+                                        <i class="fas fa-envelope"></i>
+                                        @student.Email
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <a href="mailto:@student.Email" class="contact-btn" title="Gửi email cho @student.Name">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            index++;
+                        }
+                    }
+                </tbody>
+            </table>
+
+            <!-- No Results Message -->
+            <div id="noResultsMessage" class="no-results" style="display: none;">
+                <i class="fas fa-search"></i>
+                <p>Không tìm thấy sinh viên nào</p>
+            </div>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="pagination-container">
+            <div class="pagination-info">
+                <span>Hiển thị <strong id="displayFrom">1</strong> - <strong id="displayTo">10</strong> trong tổng số <strong id="totalCount">@ViewBag.TotalStudents</strong> sinh viên</span>
+            </div>
+
+            <div class="pagination-controls" id="paginationControls">
+                <button class="pagination-btn" id="prevBtn" disabled>
+                    <i class="fas fa-chevron-left"></i>
+                    Trước
+                </button>
+                <div class="pagination-numbers" id="paginationNumbers"></div>
+                <button class="pagination-btn" id="nextBtn">
+                    Sau
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('studentSearch');
+            const itemsPerPageSelect = document.getElementById('itemsPerPage');
+            const tableBody = document.getElementById('studentsTableBody');
+            const noResultsMessage = document.getElementById('noResultsMessage');
+            const displayFrom = document.getElementById('displayFrom');
+            const displayTo = document.getElementById('displayTo');
+            const totalCount = document.getElementById('totalCount');
+            const paginationNumbers = document.getElementById('paginationNumbers');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const paginationControls = document.getElementById('paginationControls');
+            
+            const allRows = Array.from(tableBody.querySelectorAll('tr'));
+            let filteredRows = [...allRows];
+            let currentPage = 1;
+            let itemsPerPage = 10;
+
+            function updatePagination() {
+                const totalItems = filteredRows.length;
+                const totalPages = itemsPerPage === 'all' ? 1 : Math.ceil(totalItems / itemsPerPage);
+
+                // Reset to page 1 if current page exceeds total pages
+                if (currentPage > totalPages) {
+                    currentPage = 1;
+                }
+
+                // Hide/show all rows first
+                allRows.forEach(row => row.style.display = 'none');
+
+                // Calculate range
+                let startIndex, endIndex;
+                if (itemsPerPage === 'all') {
+                    startIndex = 0;
+                    endIndex = totalItems;
+                    paginationControls.style.display = 'none';
+                } else {
+                    startIndex = (currentPage - 1) * itemsPerPage;
+                    endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+                    paginationControls.style.display = totalPages > 1 ? 'flex' : 'none';
+                }
+
+                // Show only rows in current page
+                for (let i = startIndex; i < endIndex; i++) {
+                    filteredRows[i].style.display = '';
+                }
+
+                // Update info
+                if (totalItems === 0) {
+                    displayFrom.textContent = '0';
+                    displayTo.textContent = '0';
+                    tableBody.style.display = 'none';
+                    noResultsMessage.style.display = 'flex';
+                } else {
+                    displayFrom.textContent = startIndex + 1;
+                    displayTo.textContent = endIndex;
+                    tableBody.style.display = '';
+                    noResultsMessage.style.display = 'none';
+                }
+                totalCount.textContent = totalItems;
+
+                // Update pagination buttons
+                updatePaginationButtons(totalPages);
+            }
+
+            function updatePaginationButtons(totalPages) {
+                if (itemsPerPage === 'all') return;
+
+                // Update prev/next buttons
+                prevBtn.disabled = currentPage === 1;
+                nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+
+                // Generate page numbers
+                paginationNumbers.innerHTML = '';
+                
+                // Show max 5 page numbers at a time
+                let startPage = Math.max(1, currentPage - 2);
+                let endPage = Math.min(totalPages, startPage + 4);
+                
+                if (endPage - startPage < 4) {
+                    startPage = Math.max(1, endPage - 4);
+                }
+
+                // First page button
+                if (startPage > 1) {
+                    const firstBtn = createPageButton(1, '1');
+                    paginationNumbers.appendChild(firstBtn);
+                    
+                    if (startPage > 2) {
+                        const dots = document.createElement('span');
+                        dots.className = 'pagination-dots';
+                        dots.textContent = '...';
+                        paginationNumbers.appendChild(dots);
+                    }
+                }
+
+                // Page number buttons
+                for (let i = startPage; i <= endPage; i++) {
+                    const pageBtn = createPageButton(i, i.toString());
+                    paginationNumbers.appendChild(pageBtn);
+                }
+
+                // Last page button
+                if (endPage < totalPages) {
+                    if (endPage < totalPages - 1) {
+                        const dots = document.createElement('span');
+                        dots.className = 'pagination-dots';
+                        dots.textContent = '...';
+                        paginationNumbers.appendChild(dots);
+                    }
+                    
+                    const lastBtn = createPageButton(totalPages, totalPages.toString());
+                    paginationNumbers.appendChild(lastBtn);
+                }
+            }
+
+            function createPageButton(pageNumber, text) {
+                const btn = document.createElement('button');
+                btn.className = 'pagination-number';
+                btn.textContent = text;
+                
+                if (pageNumber === currentPage) {
+                    btn.classList.add('active');
+                }
+                
+                btn.addEventListener('click', () => {
+                    currentPage = pageNumber;
+                    updatePagination();
+                });
+                
+                return btn;
+            }
+
+            function filterStudents() {
+                const searchValue = searchInput.value.toLowerCase().trim();
+                
+                if (searchValue === '') {
+                    filteredRows = [...allRows];
+                } else {
+                    filteredRows = allRows.filter(row => {
+                        const studentId = row.dataset.studentId.toLowerCase();
+                        const studentName = row.dataset.studentName.toLowerCase();
+                        return studentId.includes(searchValue) || studentName.includes(searchValue);
+                    });
+                }
+
+                currentPage = 1; // Reset to first page when filtering
+                updatePagination();
+            }
+
+            // Event listeners
+            searchInput.addEventListener('input', filterStudents);
+
+            itemsPerPageSelect.addEventListener('change', function() {
+                const value = this.value;
+                itemsPerPage = value === 'all' ? 'all' : parseInt(value);
+                currentPage = 1;
+                updatePagination();
+            });
+
+            prevBtn.addEventListener('click', function() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    updatePagination();
+                }
+            });
+
+            nextBtn.addEventListener('click', function() {
+                const totalPages = Math.ceil(filteredRows.length / itemsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    updatePagination();
+                }
+            });
+
+            // Initial pagination
+            updatePagination();
+        });
+    </script>
+}

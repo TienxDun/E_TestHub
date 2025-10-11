@@ -177,11 +177,16 @@
     transition: all 0.3s ease;
     cursor: pointer;
     overflow: hidden;
+    text-decoration: none;
+    display: block;
+    color: inherit;
 }
 
 .class-card:hover {
     transform: translateY(-5px);
     box-shadow: 0px 8px 50px -7px rgba(46, 139, 233, 0.25);
+    text-decoration: none;
+    color: inherit;
 }
 
 .class-card-content {
@@ -432,11 +437,16 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .list-action-btn:hover {
     background-color: #2e8be9;
     color: #fafaff;
+    text-decoration: none;
 }
 
 /* ============================================
@@ -535,11 +545,16 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .table-action-btn:hover {
     background-color: #2e8be9;
     color: #fafaff;
+    text-decoration: none;
 }
 
 /* Table Responsive */
