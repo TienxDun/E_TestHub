@@ -30,7 +30,7 @@
 }
 
 .filter-group.search-filter {
-    flex: 0 1 350px;
+    flex: 0 1;
 }
 
 .filter-group.view-toggle {

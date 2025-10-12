@@ -113,11 +113,14 @@ body.exam-mode {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    text-decoration: none;
 }
 
 .exam-logout-btn:hover {
     background: rgba(255, 255, 255, 0.3);
+    color: white;
     transform: translateY(-2px);
+    text-decoration: none;
 }
 
 .exam-logout-btn i {

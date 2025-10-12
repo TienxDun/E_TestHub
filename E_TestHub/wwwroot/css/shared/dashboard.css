@@ -241,6 +241,11 @@ body {
     margin: 0 auto;
 }
 
+/* Hide mobile header on desktop */
+.mobile-header {
+    display: none;
+}
+
 /* Common header/welcome section styles */
 .header-section,
 .dashboard-welcome-section {
@@ -528,6 +533,23 @@ body {
         display: flex;
         align-items: center;
         justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .mobile-toggle-btn:hover {
+        background: #E2E8F0;
+        transform: scale(1.05);
+    }
+
+    .mobile-toggle-btn:active {
+        transform: scale(0.95);
+    }
+
+    .mobile-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
     }
 
     /* Overlay when sidebar open on mobile */

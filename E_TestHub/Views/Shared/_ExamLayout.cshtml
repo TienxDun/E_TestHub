@@ -37,11 +37,13 @@
                 <i class="fas fa-user-circle"></i>
                 <span>@userName</span>
             </div>
-            <button class="exam-logout-btn" onclick="return confirm('Bạn có chắc muốn thoát? Bài thi sẽ không được lưu!');" 
-                    title="Thoát khỏi bài thi">
+            <a href="@Url.Action("Dashboard", "Student")" 
+               class="exam-logout-btn" 
+               onclick="return confirm('Bạn có chắc muốn thoát? Bài thi sẽ không được lưu!');" 
+               title="Thoát khỏi bài thi">
                 <i class="fas fa-sign-out-alt"></i>
                 <span>Thoát</span>
-            </button>
+            </a>
         </div>
     </header>
 

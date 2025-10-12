@@ -8,11 +8,20 @@
 }
 
 <div class="exam-container">
+    <!-- Toggle Button for Mobile -->
+    <button class="question-nav-toggle" id="questionNavToggle" onclick="toggleQuestionNav()">
+        <i class="fas fa-list"></i>
+        <span>Danh sách câu hỏi</span>
+    </button>
+
     <!-- Left Sidebar - Question Navigation -->
-    <div class="question-nav-sidebar">
+    <div class="question-nav-sidebar" id="questionNavSidebar">
         <div class="nav-header">
             <div class="nav-title">Danh sách câu hỏi</div>
             <div class="nav-subtitle">Đã hoàn thành: <span id="completedCount">1</span>/12 câu hỏi</div>
+            <button class="nav-close-btn" onclick="toggleQuestionNav()">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
         
         <div class="question-grid">
@@ -627,5 +636,65 @@
             e.preventDefault();
             e.returnValue = 'Bạn có chắc chắn muốn rời khỏi trang? Bài thi của bạn sẽ không được lưu.';
         });
+
+        // Toggle Question Navigation Sidebar (for mobile/tablet)
+        function toggleQuestionNav() {
+            const sidebar = document.getElementById('questionNavSidebar');
+            let overlay = document.getElementById('questionNavOverlay');
+            
+            sidebar.classList.toggle('active');
+            
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.id = 'questionNavOverlay';
+                overlay.className = 'question-nav-overlay';
+                overlay.onclick = function(e) {
+                    // Only close if clicking on overlay, not on elements beneath
+                    if (e.target === overlay) {
+                        toggleQuestionNav();
+                    }
+                };
+                document.body.appendChild(overlay);
+                setTimeout(() => overlay.classList.add('active'), 10);
+            } else {
+                overlay.classList.toggle('active');
+                
+                // Remove overlay after transition if not active
+                if (!overlay.classList.contains('active')) {
+                    setTimeout(() => {
+                        if (!overlay.classList.contains('active')) {
+                            overlay.remove();
+                        }
+                    }, 300);
+                }
+            }
+        }
+
+        // Close sidebar when clicking on a question number (mobile)
+        document.querySelectorAll('.question-number').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (window.innerWidth <= 768) {
+                    const sidebar = document.getElementById('questionNavSidebar');
+                    if (sidebar && sidebar.classList.contains('active')) {
+                        toggleQuestionNav();
+                    }
+                }
+            });
+        });
+
+        // Prevent body scroll when sidebar is open on mobile
+        const sidebar = document.getElementById('questionNavSidebar');
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'class') {
+                    if (sidebar.classList.contains('active') && window.innerWidth <= 768) {
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        document.body.style.overflow = '';
+                    }
+                }
+            });
+        });
+        observer.observe(sidebar, { attributes: true });
     </script>
 }
