@@ -18,12 +18,8 @@
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
 }
 
-/* Student Info Card */
-.sidebar-header {
-    margin-bottom: 20px;
-}
-
 .student-info-card {
+    margin-bottom: 20px;
     background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
     padding: 20px;
     border-radius: 12px;

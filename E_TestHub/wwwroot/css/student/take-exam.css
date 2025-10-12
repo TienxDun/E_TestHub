@@ -1,31 +1,13 @@
-/* Ensure dashboard sidebar remains visible */
-.dashboard-container {
-    height: 100vh;
-}
-
-.dashboard-main-content {
-    padding: 0 !important;
-    height: 100vh;
-    overflow: hidden;
-}
-
-.container-fluid {
-    padding: 0 !important;
-    height: 100%;
-}
-
-.dashboard-content-wrapper {
-    padding: 0 !important;
-    height: 100%;
-    max-width: none !important;
-}
-
+/* ===================================
+   EXAM CONTAINER - Full Width Layout
+   =================================== */
 .exam-container {
     display: flex;
-    height: 100%;
+    min-height: calc(100vh - 60px);
     gap: 0;
     margin: 0;
     width: 100%;
+    background: #F8FAFC;
 }
 
 /* Left Sidebar - Question Navigation */
@@ -100,14 +82,15 @@
     background: white;
 }
 
-/* Exam Header */
+/* Exam Header - Inside Main Content */
 .exam-header {
     background: white;
-    padding: 15px 30px;
-    border-bottom: 1px solid #e0e0e0;
+    padding: 20px 30px;
+    border-bottom: 2px solid #e0e0e0;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .exam-info {

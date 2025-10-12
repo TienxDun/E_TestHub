@@ -127,7 +127,8 @@
                 <div class="nav-section">
                     <p class="nav-section-title">Thao tác nhanh</p>
                     
-                    <a href="#" class="nav-item" onclick="alert('Tính năng đang phát triển'); return false;">
+                    <a href="@Url.Action("Notifications", "Student")" 
+                       class="nav-item @(currentAction == "Notifications" ? "active" : "")">
                         <i class="fas fa-bell"></i>
                         <span>Thông báo</span>
                         <span class="badge">3</span>
