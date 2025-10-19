@@ -1,0 +1,438 @@
+@{
+    ViewData["Title"] = "Quản Lý Người Dùng - Quản Trị Viên";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@section Styles {
+    <link href="~/css/admin/user-management.css" rel="stylesheet">
+}
+
+<div class="user-management-container">
+    <div class="user-management-header">
+        <h1 class="user-management-title">Quản Lý Người Dùng</h1>
+        <p class="user-management-subtitle">Quản lý tất cả người dùng trong hệ thống E-TestHub</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-overview">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-content">
+                <h3 class="stat-number">@ViewBag.TotalUsers</h3>
+                <p class="stat-label">Tổng Người Dùng</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-user-check"></i>
+            </div>
+            <div class="stat-content">
+                <h3 class="stat-number">@ViewBag.ActiveUsers</h3>
+                <p class="stat-label">Đang Hoạt Động</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-user-times"></i>
+            </div>
+            <div class="stat-content">
+                <h3 class="stat-number">@ViewBag.InactiveUsers</h3>
+                <p class="stat-label">Không Hoạt Động</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <div class="stat-content">
+                <h3 class="stat-number">@(ViewBag.TotalUsers - ViewBag.ActiveUsers - ViewBag.InactiveUsers)</h3>
+                <p class="stat-label">Mới Trong Tuần</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <a href="@Url.Action("CreateUser", "Admin")" class="btn btn-primary">
+            <i class="fas fa-user-plus"></i> Thêm Người Dùng
+        </a>
+        <button id="bulkActivate" class="btn btn-success" disabled>
+            <i class="fas fa-check"></i> Kích Hoạt
+        </button>
+        <button id="bulkDeactivate" class="btn btn-warning" disabled>
+            <i class="fas fa-pause"></i> Vô Hiệu Hóa
+        </button>
+        <button id="bulkDelete" class="btn btn-danger" disabled>
+            <i class="fas fa-trash"></i> Xóa
+        </button>
+        <button id="exportUsers" class="btn btn-secondary">
+            <i class="fas fa-download"></i> Xuất Danh Sách
+        </button>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="filters-section">
+        <div class="search-group">
+            <input type="text" id="searchInput" class="search-input" placeholder="Tìm kiếm theo tên, email..." />
+            <button id="clearSearch" class="btn btn-outline">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="filter-group">
+            <select id="roleFilter" class="filter-select">
+                <option value="">Tất Cả Vai Trò</option>
+                <option value="Student">Sinh Viên</option>
+                <option value="Teacher">Giáo Viên</option>
+                <option value="Admin">Quản Trị Viên</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <select id="statusFilter" class="filter-select">
+                <option value="">Tất Cả Trạng Thái</option>
+                <option value="true">Hoạt Động</option>
+                <option value="false">Không Hoạt Động</option>
+            </select>
+        </div>
+
+        <div class="filter-actions">
+            <button id="applyFilters" class="btn btn-primary">
+                <i class="fas fa-filter"></i> Lọc
+            </button>
+            <button id="resetFilters" class="btn btn-secondary">
+                <i class="fas fa-undo"></i> Đặt Lại
+            </button>
+        </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="users-table-container">
+        <div class="table-header">
+            <div class="table-info">
+                <span id="tableInfo">Hiển thị 0 / 0 người dùng</span>
+            </div>
+            <div class="table-actions">
+                <select id="pageSize" class="page-size-select">
+                    <option value="10">10 dòng</option>
+                    <option value="25" selected>25 dòng</option>
+                    <option value="50">50 dòng</option>
+                    <option value="100">100 dòng</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="users-table" id="usersTable">
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="selectAll" />
+                        </th>
+                        <th>Họ và Tên</th>
+                        <th>Email</th>
+                        <th>Vai Trò</th>
+                        <th>Trạng Thái</th>
+                        <th>Ngày Tạo</th>
+                        <th>Đăng Nhập Cuối</th>
+                        <th>Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ViewBag.Users != null)
+                    {
+                        foreach (var user in ViewBag.Users)
+                        {
+                            <tr data-user-id="@user.Id">
+                                <td>
+                                    <input type="checkbox" class="user-checkbox" value="@user.Id" />
+                                </td>
+                                <td>
+                                    <div class="user-info">
+                                        <div class="user-avatar">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        <div class="user-details">
+                                            <div class="user-name">@user.FullName</div>
+                                            <div class="user-id">@(user.StudentId ?? user.EmployeeId ?? "N/A")</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>@user.Email</td>
+                                <td>
+                                    <span class="role-badge role-@user.Role.ToString().ToLower()">
+                                        @switch (user.Role)
+                                        {
+                                            case UserRole.Student:
+                                                @:Sinh Viên
+                                                break;
+                                            case UserRole.Teacher:
+                                                @:Giáo Viên
+                                                break;
+                                            case UserRole.Admin:
+                                                @:Quản Trị Viên
+                                                break;
+                                            default:
+                                                @:Không Xác Định
+                                                break;
+                                        }
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="status-badge @(user.IsActive ? "status-active" : "status-inactive")">
+                                        @(user.IsActive ? "Hoạt Động" : "Không Hoạt Động")
+                                    </span>
+                                </td>
+                                <td>@user.CreatedDate.ToString("dd/MM/yyyy")</td>
+                                <td>@(user.LastLoginDate?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa đăng nhập")</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-action btn-view" title="Xem chi tiết" data-user-id="@user.Id">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn-action btn-edit" title="Chỉnh sửa" data-user-id="@user.Id">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        @if (user.IsActive)
+                                        {
+                                            <button class="btn-action btn-deactivate" title="Vô hiệu hóa" data-user-id="@user.Id">
+                                                <i class="fas fa-pause"></i>
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn-action btn-activate" title="Kích hoạt" data-user-id="@user.Id">
+                                                <i class="fas fa-play"></i>
+                                            </button>
+                                        }
+                                        <button class="btn-action btn-delete" title="Xóa" data-user-id="@user.Id">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination-container">
+            <div class="pagination-info">
+                <span id="paginationInfo">Trang 1 / 1</span>
+            </div>
+            <div class="pagination-controls">
+                <button id="prevPage" class="btn btn-outline" disabled>
+                    <i class="fas fa-chevron-left"></i> Trước
+                </button>
+                <div class="page-numbers">
+                    <button class="page-number active">1</button>
+                </div>
+                <button id="nextPage" class="btn btn-outline" disabled>
+                    Sau <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Details Modal -->
+    <div class="modal fade" id="userDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Chi Tiết Người Dùng</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="user-details-grid">
+                        <div class="detail-item">
+                            <label class="detail-label">ID:</label>
+                            <span class="detail-value" id="detailId"></span>
+                        </div>
+                        <div class="detail-item">
+                            <label class="detail-label">Họ và Tên:</label>
+                            <span class="detail-value" id="detailFullName"></span>
+                        </div>
+                        <div class="detail-item">
+                            <label class="detail-label">Email:</label>
+                            <span class="detail-value" id="detailEmail"></span>
+                        </div>
+                        <div class="detail-item">
+                            <label class="detail-label">Vai Trò:</label>
+                            <span class="detail-value" id="detailRole"></span>
+                        </div>
+                        <div class="detail-item">
+                            <label class="detail-label">Trạng Thái:</label>
+                            <span class="detail-value" id="detailStatus"></span>
+                        </div>
+                        <div class="detail-item">
+                            <label class="detail-label">Ngày Tạo:</label>
+                            <span class="detail-value" id="detailCreatedDate"></span>
+                        </div>
+                        <div class="detail-item">
+                            <label class="detail-label">Đăng Nhập Cuối:</label>
+                            <span class="detail-value" id="detailLastLogin"></span>
+                        </div>
+                        <div class="detail-item full-width">
+                            <label class="detail-label">Thông Tin Thêm:</label>
+                            <div class="additional-info" id="additionalInfo"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" id="editUserBtn">Chỉnh Sửa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Update table info
+            function updateTableInfo() {
+                var totalRows = $('#usersTable tbody tr').length;
+                var visibleRows = $('#usersTable tbody tr:visible').length;
+                $('#tableInfo').text('Hiển thị ' + visibleRows + ' / ' + totalRows + ' người dùng');
+            }
+
+            updateTableInfo();
+
+            // Select all checkbox
+            $('#selectAll').change(function () {
+                $('.user-checkbox').prop('checked', $(this).prop('checked'));
+                updateBulkActions();
+            });
+
+            $('.user-checkbox').change(function () {
+                var allChecked = $('.user-checkbox:checked').length === $('.user-checkbox').length;
+                $('#selectAll').prop('checked', allChecked);
+                updateBulkActions();
+            });
+
+            function updateBulkActions() {
+                var selectedCount = $('.user-checkbox:checked').length;
+                $('#bulkActivate, #bulkDeactivate, #bulkDelete').prop('disabled', selectedCount === 0);
+            }
+
+            // Search functionality
+            $('#searchInput').on('keyup', function () {
+                var value = $(this).val().toLowerCase();
+                $('#usersTable tbody tr').filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+                updateTableInfo();
+            });
+
+            $('#clearSearch').click(function () {
+                $('#searchInput').val('');
+                $('#usersTable tbody tr').show();
+                updateTableInfo();
+            });
+
+            // Filters
+            $('#applyFilters').click(function () {
+                var roleFilter = $('#roleFilter').val();
+                var statusFilter = $('#statusFilter').val();
+
+                $('#usersTable tbody tr').each(function () {
+                    var show = true;
+                    var row = $(this);
+
+                    if (roleFilter) {
+                        var roleText = row.find('.role-badge').text().trim();
+                        if (roleText !== roleFilter) show = false;
+                    }
+
+                    if (statusFilter !== '') {
+                        var isActive = row.find('.status-badge').hasClass('status-active');
+                        var filterActive = statusFilter === 'true';
+                        if (isActive !== filterActive) show = false;
+                    }
+
+                    row.toggle(show);
+                });
+
+                updateTableInfo();
+            });
+
+            $('#resetFilters').click(function () {
+                $('#roleFilter, #statusFilter').val('');
+                $('#usersTable tbody tr').show();
+                updateTableInfo();
+            });
+
+            // View user details
+            $('.btn-view').click(function () {
+                var userId = $(this).data('user-id');
+                // In a real implementation, fetch user details via AJAX
+                alert('Xem chi tiết người dùng ID: ' + userId + ' (Tính năng sẽ được triển khai sau)');
+            });
+
+            // Edit user
+            $('.btn-edit').click(function () {
+                var userId = $(this).data('user-id');
+                // In a real implementation, open edit modal or redirect
+                alert('Chỉnh sửa người dùng ID: ' + userId + ' (Tính năng sẽ được triển khai sau)');
+            });
+
+            // Activate/Deactivate user
+            $('.btn-activate, .btn-deactivate').click(function () {
+                var userId = $(this).data('user-id');
+                var action = $(this).hasClass('btn-activate') ? 'kích hoạt' : 'vô hiệu hóa';
+                if (confirm('Bạn có chắc muốn ' + action + ' người dùng này?')) {
+                    // In a real implementation, make AJAX call
+                    alert('Đang ' + action + ' người dùng... (Tính năng sẽ được triển khai sau)');
+                    location.reload();
+                }
+            });
+
+            // Delete user
+            $('.btn-delete').click(function () {
+                var userId = $(this).data('user-id');
+                if (confirm('Bạn có chắc muốn xóa người dùng này? Hành động này không thể hoàn tác.')) {
+                    // In a real implementation, make AJAX call
+                    alert('Đang xóa người dùng... (Tính năng sẽ được triển khai sau)');
+                    location.reload();
+                }
+            });
+
+            // Bulk actions
+            $('#bulkActivate').click(function () {
+                var selectedIds = $('.user-checkbox:checked').map(function () { return $(this).val(); }).get();
+                if (selectedIds.length > 0 && confirm('Kích hoạt ' + selectedIds.length + ' người dùng đã chọn?')) {
+                    alert('Đang kích hoạt người dùng... (Tính năng sẽ được triển khai sau)');
+                }
+            });
+
+            $('#bulkDeactivate').click(function () {
+                var selectedIds = $('.user-checkbox:checked').map(function () { return $(this).val(); }).get();
+                if (selectedIds.length > 0 && confirm('Vô hiệu hóa ' + selectedIds.length + ' người dùng đã chọn?')) {
+                    alert('Đang vô hiệu hóa người dùng... (Tính năng sẽ được triển khai sau)');
+                }
+            });
+
+            $('#bulkDelete').click(function () {
+                var selectedIds = $('.user-checkbox:checked').map(function () { return $(this).val(); }).get();
+                if (selectedIds.length > 0 && confirm('Xóa ' + selectedIds.length + ' người dùng đã chọn? Hành động này không thể hoàn tác.')) {
+                    alert('Đang xóa người dùng... (Tính năng sẽ được triển khai sau)');
+                }
+            });
+
+            // Export users
+            $('#exportUsers').click(function () {
+                alert('Đang xuất danh sách người dùng... (Tính năng sẽ được triển khai sau)');
+            });
+        });
+    </script>
+}
