@@ -100,14 +100,6 @@ dotnet run
 ### 5. Truy cập
 Mở trình duyệt và truy cập: `http://localhost:5230`
 
-## 🔐 Tài khoản demo
-
-| Vai trò | Email | Mật khẩu |
-|---------|-------|----------|
-| **Admin** | admin@e-testhub.edu.vn | admin123 |
-| **Teacher** | nguyenvana@e-testhub.edu.vn | teacher123 |
-| **Student** | 2151012001@student.hcmus.edu.vn | student123 |
-
 ## 📁 Cấu trúc dự án
 
 ```
@@ -200,13 +192,6 @@ Chúng tôi hoan nghênh mọi đóng góp! Vui lòng:
 - Validate input data
 - Handle errors gracefully
 
-## 📚 Tài liệu
-
-- [Admin User Management](./docs/ADMIN_USER_MANAGEMENT.md)
-- [Testing Guide](./docs/TESTING_GUIDE.md)
-- [UI Design Guidelines](./docs/UI_GUIDELINES.md)
-- [API Documentation](./docs/API_DOCS.md)
-
 ## 📝 License
 
 Dự án này được phân phối dưới giấy phép MIT. Xem file [LICENSE](LICENSE) để biết thêm chi tiết.
@@ -215,7 +200,6 @@ Dự án này được phân phối dưới giấy phép MIT. Xem file [LICENSE]
 
 **TienxDun**
 - GitHub: [@TienxDun](https://github.com/TienxDun)
-- Email: [contact@example.com]
 
 ## 📞 Liên hệ
 
