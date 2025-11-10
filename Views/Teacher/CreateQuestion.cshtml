@@ -1,0 +1,184 @@
+@model E_TestHub.Models.CreateQuestionViewModel
+
+@{
+    ViewData["Title"] = "Tạo câu hỏi mới";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    var subjects = ViewBag.Subjects as List<E_TestHub.Models.Subject> ?? new List<E_TestHub.Models.Subject>();
+}
+
+@section Styles {
+    <link href="~/css/shared/dashboard.css" rel="stylesheet">
+    <link href="~/css/teacher/question-bank.css" rel="stylesheet">
+}
+
+<!-- Welcome Section -->
+<div class="dashboard-welcome-section">
+    <h1 class="dashboard-welcome-title" style="font-weight: 700; color: #1a73e8;">
+        <a href="@Url.Action("QuestionBank", "Teacher")" class="btn btn-outline-secondary btn-sm me-3">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+        Tạo câu hỏi mới
+    </h1>
+    <p class="dashboard-welcome-subtitle">Thêm câu hỏi vào ngân hàng câu hỏi</p>
+</div>
+
+<!-- Create Question Form -->
+<div class="dashboard-content-sections">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="fas fa-plus-circle"></i> Thông tin câu hỏi</h5>
+        </div>
+        <div class="card-body">
+            <form asp-action="CreateQuestion" method="post">
+                @Html.AntiForgeryToken()
+                
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <!-- Subject -->
+                <div class="mb-3">
+                    <label asp-for="SubjectId" class="form-label">
+                        <i class="fas fa-book"></i> Môn học <span class="text-danger">*</span>
+                    </label>
+                    <select asp-for="SubjectId" class="form-select" id="subjectSelect">
+                        <option value="">-- Chọn môn học --</option>
+                        @foreach (var subject in subjects)
+                        {
+                            <option value="@subject.Id">@subject.Name (@subject.Code)</option>
+                        }
+                    </select>
+                    <span asp-validation-for="SubjectId" class="text-danger"></span>
+                </div>
+
+                <!-- Question Content -->
+                <div class="mb-3">
+                    <label asp-for="Content" class="form-label">
+                        <i class="fas fa-question-circle"></i> Nội dung câu hỏi <span class="text-danger">*</span>
+                    </label>
+                    <textarea asp-for="Content" class="form-control" rows="4" 
+                              placeholder="Nhập nội dung câu hỏi..."></textarea>
+                    <span asp-validation-for="Content" class="text-danger"></span>
+                </div>
+
+                <!-- Question Type -->
+                <div class="mb-3">
+                    <label asp-for="Type" class="form-label">
+                        <i class="fas fa-list-alt"></i> Loại câu hỏi <span class="text-danger">*</span>
+                    </label>
+                    <select asp-for="Type" class="form-select" id="questionType" onchange="toggleOptions()">
+                        <option value="1">Trắc nghiệm (Multiple Choice)</option>
+                        <option value="2">Tự luận (Essay)</option>
+                        <option value="3">Đúng/Sai (True/False)</option>
+                    </select>
+                    <span asp-validation-for="Type" class="text-danger"></span>
+                </div>
+
+                <!-- Options (for Multiple Choice) -->
+                <div id="optionsSection" class="mb-3">
+                    <label class="form-label">
+                        <i class="fas fa-check-circle"></i> Các đáp án <span class="text-danger">*</span>
+                    </label>
+                    
+                    @for (int i = 0; i < 4; i++)
+                    {
+                        var optionLabel = ((char)('A' + i)).ToString();
+                        <div class="input-group mb-2">
+                            <span class="input-group-text fw-bold">@optionLabel.</span>
+                            <input asp-for="Options[i]" class="form-control" 
+                                   placeholder="Nhập đáp án @optionLabel" />
+                        </div>
+                    }
+                </div>
+
+                <!-- Correct Answer -->
+                <div id="correctAnswerSection" class="mb-3">
+                    <label asp-for="CorrectAnswer" class="form-label">
+                        <i class="fas fa-check"></i> Đáp án đúng <span class="text-danger">*</span>
+                    </label>
+                    <select asp-for="CorrectAnswer" class="form-select" id="correctAnswerSelect">
+                        <option value="">-- Chọn đáp án đúng --</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                    </select>
+                    <span asp-validation-for="CorrectAnswer" class="text-danger"></span>
+                </div>
+
+                <!-- Score -->
+                <div class="mb-3">
+                    <label asp-for="Score" class="form-label">
+                        <i class="fas fa-star"></i> Điểm <span class="text-danger">*</span>
+                    </label>
+                    <input asp-for="Score" type="number" class="form-control" step="0.5" min="0.5" max="100" 
+                           value="1.0" placeholder="Nhập điểm (0.5 - 100)" />
+                    <span asp-validation-for="Score" class="text-danger"></span>
+                </div>
+
+                <!-- Difficulty Level -->
+                <div class="mb-3">
+                    <label asp-for="DifficultyLevel" class="form-label">
+                        <i class="fas fa-signal"></i> Độ khó <span class="text-danger">*</span>
+                    </label>
+                    <select asp-for="DifficultyLevel" class="form-select">
+                        <option value="1">Dễ (Easy)</option>
+                        <option value="2" selected>Trung bình (Medium)</option>
+                        <option value="3">Khó (Hard)</option>
+                    </select>
+                    <span asp-validation-for="DifficultyLevel" class="text-danger"></span>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="d-flex justify-content-end gap-2">
+                    <a href="@Url.Action("QuestionBank", "Teacher")" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Hủy
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Lưu câu hỏi
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        // Toggle options section based on question type
+        function toggleOptions() {
+            var type = $('#questionType').val();
+            var optionsSection = $('#optionsSection');
+            var correctAnswerSection = $('#correctAnswerSection');
+
+            if (type === '1') { // Multiple Choice
+                optionsSection.show();
+                correctAnswerSection.show();
+                $('#correctAnswerSelect').html(`
+                    <option value="">-- Chọn đáp án đúng --</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                `);
+            } else if (type === '3') { // True/False
+                optionsSection.hide();
+                correctAnswerSection.show();
+                $('#correctAnswerSelect').html(`
+                    <option value="">-- Chọn đáp án đúng --</option>
+                    <option value="True">Đúng</option>
+                    <option value="False">Sai</option>
+                `);
+            } else { // Essay
+                optionsSection.hide();
+                correctAnswerSection.hide();
+            }
+        }
+
+        // Initialize on page load
+        $(document).ready(function() {
+            toggleOptions();
+        });
+    </script>
+}

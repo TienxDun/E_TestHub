@@ -1,23 +1,305 @@
 using Microsoft.AspNetCore.Mvc;
+using E_TestHub.Models;
+using E_TestHub.Services;
 
 namespace E_TestHub.Controllers
 {
     public class TeacherController : BaseController
     {
+        private readonly IQuestionApiService _questionApiService;
+        private readonly IExamApiService _examApiService;
+        private readonly ISubjectApiService _subjectApiService;
+        private readonly ILogger<TeacherController> _logger;
+
+        public TeacherController(
+            IQuestionApiService questionApiService,
+            IExamApiService examApiService,
+            ISubjectApiService subjectApiService,
+            ILogger<TeacherController> logger)
+        {
+            _questionApiService = questionApiService;
+            _examApiService = examApiService;
+            _subjectApiService = subjectApiService;
+            _logger = logger;
+        }
+
         public IActionResult Dashboard()
         {
             return View();
         }
 
-        public IActionResult QuestionBank()
+        #region Question Bank Management - Phase 2
+
+        /// <summary>
+        /// GET: Hiển thị danh sách câu hỏi với filters
+        /// </summary>
+        public async Task<IActionResult> QuestionBank(string? subjectId = null, int? difficulty = null, int? type = null)
         {
-            return View();
+            try
+            {
+                var questions = await _questionApiService.GetAllQuestionsAsync();
+                var subjects = await _subjectApiService.GetAllSubjectsAsync();
+
+                // Apply filters
+                if (!string.IsNullOrEmpty(subjectId))
+                {
+                    questions = questions.Where(q => q.SubjectId == subjectId).ToList();
+                }
+                if (difficulty.HasValue)
+                {
+                    questions = questions.Where(q => (int)q.DifficultyLevel == difficulty.Value).ToList();
+                }
+                if (type.HasValue)
+                {
+                    questions = questions.Where(q => (int)q.Type == type.Value).ToList();
+                }
+
+                // Populate SubjectName for display
+                foreach (var question in questions)
+                {
+                    var subject = subjects.FirstOrDefault(s => s.Id == question.SubjectId);
+                    question.SubjectName = subject?.Name ?? "N/A";
+                }
+
+                ViewBag.Questions = questions;
+                ViewBag.Subjects = subjects;
+                ViewBag.SelectedSubjectId = subjectId;
+                ViewBag.SelectedDifficulty = difficulty;
+                ViewBag.SelectedType = type;
+
+                return View();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error loading questions: {ex.Message}");
+                ViewBag.Questions = new List<Question>();
+                ViewBag.Subjects = new List<Subject>();
+                TempData["ErrorMessage"] = "Không thể tải danh sách câu hỏi.";
+                return View();
+            }
         }
 
-        public IActionResult CreateQuestion()
+        /// <summary>
+        /// GET: Hiển thị form tạo câu hỏi mới
+        /// </summary>
+        public async Task<IActionResult> CreateQuestion()
         {
-            return View();
+            try
+            {
+                var subjects = await _subjectApiService.GetAllSubjectsAsync();
+                ViewBag.Subjects = subjects;
+                return View();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error loading create question form: {ex.Message}");
+                TempData["ErrorMessage"] = "Không thể tải form tạo câu hỏi.";
+                return RedirectToAction("QuestionBank");
+            }
         }
+
+        /// <summary>
+        /// POST: Tạo câu hỏi mới
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateQuestion(CreateQuestionViewModel model)
+        {
+            try
+            {
+                // Custom validation for CorrectAnswer
+                if (model.Type == QuestionType.MultipleChoice && 
+                    (model.Options == null || !model.Options.Contains(model.CorrectAnswer ?? "")))
+                {
+                    ModelState.AddModelError("CorrectAnswer", "Đáp án đúng phải là một trong các lựa chọn.");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    var subjects = await _subjectApiService.GetAllSubjectsAsync();
+                    ViewBag.Subjects = subjects;
+                    return View(model);
+                }
+
+                // Convert ViewModel to Question
+                var question = new Question
+                {
+                    SubjectId = model.SubjectId,
+                    Content = model.Content,
+                    Type = model.Type,
+                    Options = model.Options ?? new List<string>(),
+                    CorrectAnswer = model.CorrectAnswer,
+                    Score = model.Score,
+                    DifficultyLevel = model.DifficultyLevel
+                };
+
+                var result = await _questionApiService.CreateQuestionAsync(question);
+
+                if (result != null)
+                {
+                    TempData["SuccessMessage"] = "Tạo câu hỏi thành công!";
+                    return RedirectToAction("QuestionBank");
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Không thể tạo câu hỏi. Vui lòng thử lại.";
+                    var subjects = await _subjectApiService.GetAllSubjectsAsync();
+                    ViewBag.Subjects = subjects;
+                    return View(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error creating question: {ex.Message}");
+                TempData["ErrorMessage"] = "Có lỗi xảy ra khi tạo câu hỏi.";
+                var subjects = await _subjectApiService.GetAllSubjectsAsync();
+                ViewBag.Subjects = subjects;
+                return View(model);
+            }
+        }
+
+        /// <summary>
+        /// GET: Hiển thị form chỉnh sửa câu hỏi
+        /// </summary>
+        public async Task<IActionResult> EditQuestion(string id)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(id))
+                {
+                    TempData["ErrorMessage"] = "ID câu hỏi không hợp lệ.";
+                    return RedirectToAction("QuestionBank");
+                }
+
+                var question = await _questionApiService.GetQuestionByIdAsync(id);
+
+                if (question == null)
+                {
+                    TempData["ErrorMessage"] = "Không tìm thấy câu hỏi.";
+                    return RedirectToAction("QuestionBank");
+                }
+
+                var model = new EditQuestionViewModel
+                {
+                    Id = question.Id,
+                    ApiId = question.ApiId,
+                    SubjectId = question.SubjectId,
+                    Content = question.Content,
+                    Type = question.Type,
+                    Options = question.Options,
+                    CorrectAnswer = question.CorrectAnswer,
+                    Score = question.Score,
+                    DifficultyLevel = question.DifficultyLevel
+                };
+
+                var subjects = await _subjectApiService.GetAllSubjectsAsync();
+                ViewBag.Subjects = subjects;
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error loading edit question form: {ex.Message}");
+                TempData["ErrorMessage"] = "Không thể tải form chỉnh sửa câu hỏi.";
+                return RedirectToAction("QuestionBank");
+            }
+        }
+
+        /// <summary>
+        /// POST: Cập nhật câu hỏi
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditQuestion(EditQuestionViewModel model)
+        {
+            try
+            {
+                ModelState.Remove("Id");
+
+                if (model.Type == QuestionType.MultipleChoice && 
+                    (model.Options == null || !model.Options.Contains(model.CorrectAnswer ?? "")))
+                {
+                    ModelState.AddModelError("CorrectAnswer", "Đáp án đúng phải là một trong các lựa chọn.");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    var subjects = await _subjectApiService.GetAllSubjectsAsync();
+                    ViewBag.Subjects = subjects;
+                    return View(model);
+                }
+
+                // Convert ViewModel to Question
+                var question = new Question
+                {
+                    ApiId = model.ApiId,
+                    SubjectId = model.SubjectId,
+                    Content = model.Content,
+                    Type = model.Type,
+                    Options = model.Options ?? new List<string>(),
+                    CorrectAnswer = model.CorrectAnswer,
+                    Score = model.Score,
+                    DifficultyLevel = model.DifficultyLevel
+                };
+
+                var result = await _questionApiService.UpdateQuestionAsync(question);
+
+                if (result)
+                {
+                    TempData["SuccessMessage"] = "Cập nhật câu hỏi thành công!";
+                    return RedirectToAction("QuestionBank");
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Không thể cập nhật câu hỏi.";
+                    var subjects = await _subjectApiService.GetAllSubjectsAsync();
+                    ViewBag.Subjects = subjects;
+                    return View(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error updating question: {ex.Message}");
+                TempData["ErrorMessage"] = "Có lỗi xảy ra khi cập nhật câu hỏi.";
+                var subjects = await _subjectApiService.GetAllSubjectsAsync();
+                ViewBag.Subjects = subjects;
+                return View(model);
+            }
+        }
+
+        /// <summary>
+        /// POST: Xóa câu hỏi
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteQuestion(string id)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(id))
+                {
+                    return Json(new { success = false, message = "ID câu hỏi không hợp lệ." });
+                }
+
+                var success = await _questionApiService.DeleteQuestionAsync(id);
+
+                if (success)
+                {
+                    return Json(new { success = true, message = "Câu hỏi đã được xóa thành công!" });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Không thể xóa câu hỏi. Vui lòng thử lại." });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error deleting question {id}: {ex.Message}");
+                return Json(new { success = false, message = "Có lỗi xảy ra khi xóa câu hỏi." });
+            }
+        }
+
+        #endregion
 
         public IActionResult ExamManagement()
         {

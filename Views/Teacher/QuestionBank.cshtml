@@ -1,6 +1,10 @@
+@model E_TestHub.Models.Question
+
 @{
     ViewData["Title"] = "Ngân hàng câu hỏi";
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    var questions = ViewBag.Questions as List<E_TestHub.Models.Question> ?? new List<E_TestHub.Models.Question>();
+    var subjects = ViewBag.Subjects as List<E_TestHub.Models.Subject> ?? new List<E_TestHub.Models.Subject>();
 }
 
 @section Styles {
@@ -8,15 +12,37 @@
     <link href="~/css/teacher/question-bank.css" rel="stylesheet">
 }
 
+<!-- Hidden form for AJAX CSRF token -->
+<form id="antiForgeryForm">
+    @Html.AntiForgeryToken()
+</form>
+
 <!-- Welcome Section -->
 <div class="dashboard-welcome-section">
     <h1 class="dashboard-welcome-title" style="font-weight: 700; color: #1a73e8;">Ngân hàng câu hỏi</h1>
     <p class="dashboard-welcome-subtitle">Quản lý và tổ chức kho câu hỏi trắc nghiệm</p>
 </div>
 
+<!-- Success/Error Messages -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle"></i> @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
 <!-- Action Cards -->
 <div class="dashboard-action-cards">
-    <a href="#" class="dashboard-action-card" onclick="openAddQuestionModal(); return false;">
+    <a href="@Url.Action("CreateQuestion", "Teacher")" class="dashboard-action-card">
         <div class="dashboard-action-icon">
             <i class="fas fa-plus-circle"></i>
         </div>
@@ -43,7 +69,7 @@
 
 <!-- Content Sections -->
 <div class="dashboard-content-sections">
-    <!-- Statistics Section - Modern & Simplified -->
+    <!-- Statistics Section -->
     <div class="dashboard-section">
         <div class="dashboard-section-header">
             <h3 class="dashboard-section-title">
@@ -59,7 +85,7 @@
                     <i class="fas fa-question-circle"></i>
                 </div>
                 <div class="stat-info-modern">
-                    <div class="stat-number-modern">145</div>
+                    <div class="stat-number-modern">@questions.Count</div>
                     <div class="stat-label-modern">Tổng câu hỏi</div>
                 </div>
             </div>
@@ -70,562 +96,209 @@
                     <i class="fas fa-book"></i>
                 </div>
                 <div class="stat-info-modern">
-                    <div class="stat-number-modern">4</div>
+                    <div class="stat-number-modern">@subjects.Count</div>
                     <div class="stat-label-modern">Môn học</div>
                 </div>
             </div>
 
-            <!-- Weekly Added -->
+            <!-- Easy Questions -->
             <div class="stat-card-modern">
                 <div class="stat-icon-modern stat-warning">
-                    <i class="fas fa-clock"></i>
+                    <i class="fas fa-smile"></i>
                 </div>
                 <div class="stat-info-modern">
-                    <div class="stat-number-modern">12</div>
-                    <div class="stat-label-modern">Thêm tuần này</div>
+                    <div class="stat-number-modern">@questions.Count(q => q.DifficultyLevel == E_TestHub.Models.DifficultyLevel.Easy)</div>
+                    <div class="stat-label-modern">Câu hỏi dễ</div>
                 </div>
             </div>
 
-            <!-- Usage Rate -->
+            <!-- Hard Questions -->
             <div class="stat-card-modern">
-                <div class="stat-icon-modern stat-info">
-                    <i class="fas fa-chart-line"></i>
+                <div class="stat-icon-modern stat-danger">
+                    <i class="fas fa-brain"></i>
                 </div>
                 <div class="stat-info-modern">
-                    <div class="stat-number-modern">89%</div>
-                    <div class="stat-label-modern">Tỷ lệ sử dụng</div>
+                    <div class="stat-number-modern">@questions.Count(q => q.DifficultyLevel == E_TestHub.Models.DifficultyLevel.Hard)</div>
+                    <div class="stat-label-modern">Câu hỏi khó</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Questions by Subject Section -->
+    <!-- Questions List Section -->
     <div class="dashboard-section">
         <div class="dashboard-section-header">
-            <h3 class="dashboard-section-title">Phân bổ theo môn học</h3>
+            <h3 class="dashboard-section-title">
+                <i class="fas fa-list" style="margin-right: 8px; color: #1a73e8;"></i>
+                Danh sách câu hỏi
+            </h3>
         </div>
 
-        <div class="subject-distribution">
-            <div class="subject-bar-item">
-                <div class="subject-bar-info">
-                    <span class="subject-name">Xác suất thống kê</span>
-                    <span class="subject-count">60 câu hỏi</span>
-                </div>
-                <div class="subject-bar-progress">
-                    <div class="subject-bar-fill" style="width: 41%"></div>
-                </div>
-            </div>
-
-            <div class="subject-bar-item">
-                <div class="subject-bar-info">
-                    <span class="subject-name">Đại số tuyến tính</span>
-                    <span class="subject-count">40 câu hỏi</span>
-                </div>
-                <div class="subject-bar-progress">
-                    <div class="subject-bar-fill" style="width: 28%"></div>
-                </div>
-            </div>
-
-            <div class="subject-bar-item">
-                <div class="subject-bar-info">
-                    <span class="subject-name">Giải tích 1</span>
-                    <span class="subject-count">30 câu hỏi</span>
-                </div>
-                <div class="subject-bar-progress">
-                    <div class="subject-bar-fill" style="width: 21%"></div>
-                </div>
-            </div>
-
-            <div class="subject-bar-item">
-                <div class="subject-bar-info">
-                    <span class="subject-name">Toán rời rạc</span>
-                    <span class="subject-count">15 câu hỏi</span>
-                </div>
-                <div class="subject-bar-progress">
-                    <div class="subject-bar-fill" style="width: 10%"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Questions Section with Tabs & Pagination -->
-<div id="all-questions" class="dashboard-section" style="margin-top: 50px;">
-    <div class="dashboard-section-header">
-        <h3 class="dashboard-section-title">Danh sách câu hỏi</h3>
-    </div>
-
-    <!-- Subject Filter Section - Modern Chip Design -->
-    <div class="subject-filter-section">
-        <div class="subject-chips">
-            <button class="subject-chip active" data-subject="all" onclick="switchSubjectTab('all')">
-                <span class="chip-label">Tất cả</span>
-                <span class="chip-badge">145</span>
-            </button>
-            <button class="subject-chip" data-subject="xstk" onclick="switchSubjectTab('xstk')">
-                <span class="chip-label">Xác suất thống kê</span>
-                <span class="chip-badge">60</span>
-            </button>
-            <button class="subject-chip" data-subject="dstt" onclick="switchSubjectTab('dstt')">
-                <span class="chip-label">Đại số tuyến tính</span>
-                <span class="chip-badge">40</span>
-            </button>
-            <button class="subject-chip" data-subject="giai-tich" onclick="switchSubjectTab('giai-tich')">
-                <span class="chip-label">Giải tích 1</span>
-                <span class="chip-badge">30</span>
-            </button>
-            <button class="subject-chip" data-subject="toan-roi-rac" onclick="switchSubjectTab('toan-roi-rac')">
-                <span class="chip-label">Toán rời rạc</span>
-                <span class="chip-badge">15</span>
-            </button>
-        </div>
-
-        <div class="filter-actions">
-            <select id="itemsPerPage" class="per-page-select" onchange="changeItemsPerPage()">
-                <option value="10" selected>10 / trang</option>
-                <option value="20">20 / trang</option>
-                <option value="50">50 / trang</option>
-            </select>
-        </div>
-    </div>
-
-    <!-- Questions List Container -->
-    <div id="questionListContainer" class="question-list-container">
-        <!-- Questions will be dynamically loaded here -->
-    </div>
-
-    <!-- Pagination Footer -->
-    <div class="pagination-footer">
-        <div class="pagination-info">
-            Hiển thị <span id="showingFrom">1</span>-<span id="showingTo">10</span> trong <span id="totalQuestions">145</span> câu hỏi
-        </div>
-        <div class="pagination-buttons" id="paginationButtons">
-            <!-- Pagination buttons will be generated here -->
-        </div>
-    </div>
-
-    <!-- Empty State (when no questions) -->
-    <div id="emptyState" class="empty-state" style="display: none;">
-        <i class="fas fa-inbox"></i>
-        <h3>Chưa có câu hỏi nào</h3>
-        <p>Nhấn nút "Thêm câu hỏi" để bắt đầu tạo câu hỏi cho môn học này</p>
-    </div>
-</div>
-
-<!-- Add Question Modal -->
-<div id="addQuestionModal" class="question-modal" style="display: none;">
-    <div class="question-modal-content question-modal-content-large">
-        <div class="question-modal-header">
-            <h3><i class="fas fa-plus-circle"></i> Thêm câu hỏi</h3>
-            <button onclick="closeAddQuestionModal()" class="modal-close-btn">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="question-modal-body">
-            <!-- Batch Mode Container -->
-            <div id="batchModeContainer">
-                <!-- Batch Controls -->
-                <div class="batch-controls">
-                    <div class="batch-info">
-                        <i class="fas fa-layer-group"></i>
-                        <span>Đã thêm <strong id="batchCount">0</strong> câu hỏi</span>
-                    </div>
-                    <button type="button" class="btn btn-secondary" onclick="addNewQuestionToBatch()">
-                        <i class="fas fa-plus"></i> Thêm câu hỏi tiếp
-                    </button>
-                </div>
-
-                <!-- Batch Questions List -->
-                <div id="batchQuestionsList" class="batch-questions-list">
-                    <!-- Questions will be added here -->
-                </div>
-
-                <!-- Current Question Form (for batch) -->
-                <div id="batchCurrentForm" class="batch-current-form">
-                    <div class="batch-form-header">
-                        <h4><i class="fas fa-edit"></i> Câu hỏi số <span id="currentBatchNumber">1</span></h4>
+        <!-- Filters -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form method="get" action="@Url.Action("QuestionBank", "Teacher")" class="row g-3">
+                    <div class="col-md-4">
+                        <label for="subjectFilter" class="form-label">Môn học</label>
+                        <select id="subjectFilter" name="subjectId" class="form-select">
+                            <option value="">-- Tất cả môn học --</option>
+                            @foreach (var subject in subjects)
+                            {
+                                <option value="@subject.Id" selected="@(subject.Id == ViewBag.SelectedSubjectId)">
+                                    @subject.Name
+                                </option>
+                            }
+                        </select>
                     </div>
 
-                    <form id="batchQuestionForm" onsubmit="addQuestionToBatch(event)">
-                        <!-- Subject Selection -->
-                        <div class="form-group">
-                            <label for="batchQuestionSubject" class="form-label">
-                                <i class="fas fa-book"></i> Môn học <span class="required">*</span>
-                            </label>
-                            <select id="batchQuestionSubject" class="form-control" required>
-                                <option value="">-- Chọn môn học --</option>
-                                <option value="xstk">Xác suất thống kê</option>
-                                <option value="dstt">Đại số tuyến tính</option>
-                                <option value="giai-tich">Giải tích 1</option>
-                                <option value="toan-roi-rac">Toán rời rạc</option>
-                            </select>
-                        </div>
+                    <div class="col-md-3">
+                        <label for="difficultyFilter" class="form-label">Độ khó</label>
+                        <select id="difficultyFilter" name="difficulty" class="form-select">
+                            <option value="">-- Tất cả độ khó --</option>
+                            <option value="Easy" selected="@(ViewBag.SelectedDifficulty == "Easy")">Dễ</option>
+                            <option value="Medium" selected="@(ViewBag.SelectedDifficulty == "Medium")">Trung bình</option>
+                            <option value="Hard" selected="@(ViewBag.SelectedDifficulty == "Hard")">Khó</option>
+                        </select>
+                    </div>
 
-                        <!-- Question Content -->
-                        <div class="form-group">
-                            <label for="batchQuestionContent" class="form-label">
-                                <i class="fas fa-question-circle"></i> Nội dung câu hỏi <span class="required">*</span>
-                            </label>
-                            <textarea 
-                                id="batchQuestionContent" 
-                                class="form-control" 
-                                rows="3" 
-                                placeholder="Nhập nội dung câu hỏi..."
-                                required
-                            ></textarea>
-                        </div>
+                    <div class="col-md-3">
+                        <label for="typeFilter" class="form-label">Loại câu hỏi</label>
+                        <select id="typeFilter" name="type" class="form-select">
+                            <option value="">-- Tất cả loại --</option>
+                            <option value="MultipleChoice" selected="@(ViewBag.SelectedType == "MultipleChoice")">Trắc nghiệm</option>
+                            <option value="Essay" selected="@(ViewBag.SelectedType == "Essay")">Tự luận</option>
+                            <option value="TrueFalse" selected="@(ViewBag.SelectedType == "TrueFalse")">Đúng/Sai</option>
+                        </select>
+                    </div>
 
-                        <!-- Options -->
-                        <div class="form-group">
-                            <label class="form-label">
-                                <i class="fas fa-list"></i> Các đáp án <span class="required">*</span>
-                            </label>
-                            
-                            <!-- Option A -->
-                            <div class="option-input-group">
-                                <div class="option-radio">
-                                    <input type="radio" id="batchCorrectA" name="batchCorrectAnswer" value="A">
-                                    <label for="batchCorrectA" class="radio-label">
-                                        <i class="fas fa-check-circle"></i>
-                                    </label>
-                                </div>
-                                <div class="option-input">
-                                    <span class="option-label">A.</span>
-                                    <input type="text" id="batchOptionA" class="form-control-inline" placeholder="Đáp án A" required>
-                                </div>
-                            </div>
-
-                            <!-- Option B -->
-                            <div class="option-input-group">
-                                <div class="option-radio">
-                                    <input type="radio" id="batchCorrectB" name="batchCorrectAnswer" value="B">
-                                    <label for="batchCorrectB" class="radio-label">
-                                        <i class="fas fa-check-circle"></i>
-                                    </label>
-                                </div>
-                                <div class="option-input">
-                                    <span class="option-label">B.</span>
-                                    <input type="text" id="batchOptionB" class="form-control-inline" placeholder="Đáp án B" required>
-                                </div>
-                            </div>
-
-                            <!-- Option C -->
-                            <div class="option-input-group">
-                                <div class="option-radio">
-                                    <input type="radio" id="batchCorrectC" name="batchCorrectAnswer" value="C">
-                                    <label for="batchCorrectC" class="radio-label">
-                                        <i class="fas fa-check-circle"></i>
-                                    </label>
-                                </div>
-                                <div class="option-input">
-                                    <span class="option-label">C.</span>
-                                    <input type="text" id="batchOptionC" class="form-control-inline" placeholder="Đáp án C" required>
-                                </div>
-                            </div>
-
-                            <!-- Option D -->
-                            <div class="option-input-group">
-                                <div class="option-radio">
-                                    <input type="radio" id="batchCorrectD" name="batchCorrectAnswer" value="D">
-                                    <label for="batchCorrectD" class="radio-label">
-                                        <i class="fas fa-check-circle"></i>
-                                    </label>
-                                </div>
-                                <div class="option-input">
-                                    <span class="option-label">D.</span>
-                                    <input type="text" id="batchOptionD" class="form-control-inline" placeholder="Đáp án D" required>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Batch Form Actions -->
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-check"></i> Thêm vào danh sách
-                            </button>
-                            <button type="button" class="btn btn-outline" onclick="resetBatchForm()">
-                                <i class="fas fa-redo"></i> Làm mới
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Batch Save Actions -->
-                <div class="batch-save-actions" id="batchSaveActions" style="display: none;">
-                    <button type="button" class="btn btn-outline" onclick="clearBatch()">
-                        <i class="fas fa-trash"></i> Xóa tất cả
-                    </button>
-                    <button type="button" class="btn btn-success" onclick="saveAllBatchQuestions()">
-                        <i class="fas fa-save"></i> Lưu tất cả (<span id="batchSaveCount">0</span> câu)
-                    </button>
-                </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-filter"></i> Lọc
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
+
+        <!-- Questions Table -->
+        @if (questions.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 5%;">#</th>
+                            <th style="width: 40%;">Nội dung câu hỏi</th>
+                            <th style="width: 15%;">Môn học</th>
+                            <th style="width: 10%;">Loại</th>
+                            <th style="width: 10%;">Độ khó</th>
+                            <th style="width: 8%;">Điểm</th>
+                            <th style="width: 12%;">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < questions.Count; i++)
+                        {
+                            var question = questions[i];
+                            var difficultyClass = question.DifficultyLevel switch
+                            {
+                                E_TestHub.Models.DifficultyLevel.Easy => "badge bg-success",
+                                E_TestHub.Models.DifficultyLevel.Medium => "badge bg-warning text-dark",
+                                E_TestHub.Models.DifficultyLevel.Hard => "badge bg-danger",
+                                _ => "badge bg-secondary"
+                            };
+
+                            var difficultyText = question.DifficultyLevel switch
+                            {
+                                E_TestHub.Models.DifficultyLevel.Easy => "Dễ",
+                                E_TestHub.Models.DifficultyLevel.Medium => "Trung bình",
+                                E_TestHub.Models.DifficultyLevel.Hard => "Khó",
+                                _ => "N/A"
+                            };
+
+                            var typeText = question.Type switch
+                            {
+                                E_TestHub.Models.QuestionType.MultipleChoice => "Trắc nghiệm",
+                                E_TestHub.Models.QuestionType.Essay => "Tự luận",
+                                E_TestHub.Models.QuestionType.TrueFalse => "Đúng/Sai",
+                                _ => "N/A"
+                            };
+
+                            <tr data-question-id="@question.ApiId">
+                                <td>@(i + 1)</td>
+                                <td>
+                                    <div style="max-width: 400px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" 
+                                         title="@question.Content">
+                                        @question.Content
+                                    </div>
+                                </td>
+                                <td>@(question.SubjectName ?? "N/A")</td>
+                                <td>@typeText</td>
+                                <td><span class="@difficultyClass">@difficultyText</span></td>
+                                <td>@question.Score</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="@Url.Action("EditQuestion", "Teacher", new { id = question.ApiId })" 
+                                           class="btn btn-sm btn-outline-primary" title="Chỉnh sửa">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" 
+                                                onclick="deleteQuestion('@question.ApiId')" title="Xóa">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <!-- Empty State -->
+            <div class="text-center py-5">
+                <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
+                <h4 class="text-muted">Chưa có câu hỏi nào</h4>
+                <p class="text-muted">Nhấn nút "Thêm câu hỏi" để bắt đầu tạo câu hỏi cho môn học này</p>
+                <a href="@Url.Action("CreateQuestion", "Teacher")" class="btn btn-primary mt-3">
+                    <i class="fas fa-plus"></i> Thêm câu hỏi đầu tiên
+                </a>
+            </div>
+        }
     </div>
 </div>
 
 @section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script>
-        // Batch mode state
-        let batchQuestions = [];
-
-        // Modal functions
-        function openAddQuestionModal() {
-            document.getElementById('addQuestionModal').style.display = 'flex';
-            clearBatch(); // Reset batch state when opening modal
-            updateBatchCount();
-            console.log('✅ Modal opened');
-        }
-
-        function closeAddQuestionModal() {
-            // Warn if there are unsaved questions
-            if (batchQuestions.length > 0) {
-                if (!confirm(`⚠️ Bạn có ${batchQuestions.length} câu hỏi chưa lưu!\n\nĐóng modal sẽ mất toàn bộ dữ liệu. Bạn chắc chắn muốn đóng?`)) {
-                    console.log('⚠️ User cancelled close action');
-                    return;
-                }
-            }
-            
-            document.getElementById('addQuestionModal').style.display = 'none';
-            clearBatch();
-            console.log('✅ Modal closed');
-        }
-
-        // Reset batch form
-        function resetBatchForm() {
-            document.getElementById('batchQuestionForm').reset();
-        }
-
-        // Add question to batch
-        function addQuestionToBatch(event) {
-            event.preventDefault();
-            
-            try {
-                console.log('🔵 Starting addQuestionToBatch...');
-                
-                const subject = document.getElementById('batchQuestionSubject');
-                const content = document.getElementById('batchQuestionContent').value.trim();
-                const optionA = document.getElementById('batchOptionA').value.trim();
-                const optionB = document.getElementById('batchOptionB').value.trim();
-                const optionC = document.getElementById('batchOptionC').value.trim();
-                const optionD = document.getElementById('batchOptionD').value.trim();
-                const correctAnswer = document.querySelector('input[name="batchCorrectAnswer"]:checked');
-
-                console.log('📝 Form data:', { 
-                    subject: subject?.value, 
-                    content, 
-                    optionA, 
-                    optionB, 
-                    optionC, 
-                    optionD, 
-                    correctAnswer: correctAnswer?.value 
-                });
-
-                // Validation
-                if (!subject.value) {
-                    alert('⚠️ Vui lòng chọn môn học!');
-                    subject.focus();
-                    return;
-                }
-                
-                if (!content) {
-                    alert('⚠️ Vui lòng nhập nội dung câu hỏi!');
-                    document.getElementById('batchQuestionContent').focus();
-                    return;
-                }
-                
-                if (!optionA || !optionB || !optionC || !optionD) {
-                    alert('⚠️ Vui lòng điền đầy đủ 4 đáp án!');
-                    return;
-                }
-                
-                if (!correctAnswer) {
-                    alert('⚠️ Vui lòng chọn đáp án đúng (click vào icon ✓)!');
-                    return;
-                }
-
-                // Create question object
-                const question = {
-                    id: Date.now(),
-                    subject: subject.value,
-                    subjectName: subject.options[subject.selectedIndex].text,
-                    title: content,
-                    options: {
-                        A: optionA,
-                        B: optionB,
-                        C: optionC,
-                        D: optionD
+        // Delete question function
+        function deleteQuestion(questionId) {
+            if (confirm('Bạn có chắc chắn muốn xóa câu hỏi này?')) {
+                $.ajax({
+                    url: '@Url.Action("DeleteQuestion", "Teacher")',
+                    type: 'POST',
+                    data: {
+                        id: questionId,
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
                     },
-                    correct: correctAnswer.value
-                };
-
-                console.log('✅ Question object created:', question);
-
-                // Add to batch
-                batchQuestions.push(question);
-                console.log('✅ Added to batch. Total:', batchQuestions.length);
-                
-                // Update UI
-                renderBatchQuestions();
-                updateBatchCount();
-                resetBatchForm();
-                
-                // Show success message
-                showToast(`✓ Đã thêm câu hỏi số ${batchQuestions.length}`, 'success');
-                
-                console.log('✅ addQuestionToBatch completed successfully!');
-            } catch (error) {
-                console.error('❌ Error in addQuestionToBatch:', error);
-                alert('❌ Có lỗi xảy ra: ' + error.message + '\n\nVui lòng mở Console (F12) để xem chi tiết.');
+                    success: function (response) {
+                        if (response.success) {
+                            // Remove row from table
+                            $('tr[data-question-id="' + questionId + '"]').fadeOut(300, function() {
+                                $(this).remove();
+                                // Reload page to update statistics
+                                location.reload();
+                            });
+                        } else {
+                            alert('Lỗi: ' + response.message);
+                        }
+                    },
+                    error: function () {
+                        alert('Có lỗi xảy ra khi xóa câu hỏi.');
+                    }
+                });
             }
         }
-
-        // Render batch questions list
-        function renderBatchQuestions() {
-            const container = document.getElementById('batchQuestionsList');
-            
-            if (batchQuestions.length === 0) {
-                container.innerHTML = '<div class="batch-empty">Chưa có câu hỏi nào. Điền form bên dưới để thêm câu hỏi đầu tiên.</div>';
-                document.getElementById('batchSaveActions').style.display = 'none';
-                return;
-            }
-            
-            container.innerHTML = batchQuestions.map((q, index) => `
-                <div class="batch-question-item" data-id="${q.id}">
-                    <div class="batch-question-number">#${index + 1}</div>
-                    <div class="batch-question-content">
-                        <div class="batch-question-header">
-                            <span class="batch-subject-badge">${q.subjectName}</span>
-                            <button type="button" class="batch-remove-btn" onclick="removeBatchQuestion(${q.id})" title="Xóa câu hỏi này">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                        <div class="batch-question-title">${q.title}</div>
-                        <div class="batch-question-options">
-                            ${Object.entries(q.options).map(([key, value]) => `
-                                <div class="batch-option ${key === q.correct ? 'batch-option-correct' : ''}">
-                                    ${key}. ${value}
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-            
-            document.getElementById('batchSaveActions').style.display = 'flex';
-        }
-
-        // Remove question from batch
-        function removeBatchQuestion(id) {
-            if (confirm('Xóa câu hỏi này khỏi danh sách?')) {
-                batchQuestions = batchQuestions.filter(q => q.id !== id);
-                renderBatchQuestions();
-                updateBatchCount();
-                showToast('Đã xóa câu hỏi', 'info');
-            }
-        }
-
-        // Update batch count
-        function updateBatchCount() {
-            const count = batchQuestions.length;
-            document.getElementById('batchCount').textContent = count;
-            document.getElementById('batchSaveCount').textContent = count;
-            document.getElementById('currentBatchNumber').textContent = count + 1;
-        }
-
-        // Add new question to batch (scroll to form)
-        function addNewQuestionToBatch() {
-            document.getElementById('batchCurrentForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
-            document.getElementById('batchQuestionContent').focus();
-        }
-
-        // Clear batch
-        function clearBatch() {
-            if (batchQuestions.length > 0) {
-                if (!confirm(`Xóa tất cả ${batchQuestions.length} câu hỏi đã thêm?`)) {
-                    return;
-                }
-            }
-            batchQuestions = [];
-            renderBatchQuestions();
-            updateBatchCount();
-            resetBatchForm();
-        }
-
-        // Save all batch questions
-        function saveAllBatchQuestions() {
-            if (batchQuestions.length === 0) {
-                alert('Chưa có câu hỏi nào để lưu!');
-                return;
-            }
-
-            if (!confirm(`Lưu ${batchQuestions.length} câu hỏi vào ngân hàng?`)) {
-                return;
-            }
-
-            // In production: send to API
-            console.log('Saving batch questions:', batchQuestions);
-
-            // Simulate success
-            alert(`✅ Đã lưu thành công ${batchQuestions.length} câu hỏi!\n\nTrong production, dữ liệu sẽ được gửi đến server.`);
-            
-            // Close modal and refresh
-            closeAddQuestionModal();
-            
-            // In production: reload questions from server
-            // loadQuestions();
-        }
-
-        // Toast notification helper
-        function showToast(message, type = 'success') {
-            // Simple toast implementation
-            const toast = document.createElement('div');
-            toast.className = `toast toast-${type}`;
-            toast.textContent = message;
-            toast.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                padding: 12px 20px;
-                background: ${type === 'success' ? '#28a745' : '#17a2b8'};
-                color: white;
-                border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-                z-index: 10000;
-                animation: slideIn 0.3s ease;
-            `;
-            
-            document.body.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => toast.remove(), 300);
-            }, 2000);
-        }
-
-        // Question actions
-        function viewQuestion(id) {
-            alert('Xem chi tiết câu hỏi #' + id + ' - Tính năng đang phát triển');
-        }
-
-        function editQuestion(id) {
-            alert('Chỉnh sửa câu hỏi #' + id + ' - Tính năng đang phát triển');
-        }
-
-        function deleteQuestion(id) {
-            if(confirm('Bạn có chắc chắn muốn xóa câu hỏi này?')) {
-                alert('Xóa câu hỏi #' + id + ' - Tính năng đang phát triển');
-            }
-        }
-
-        // Close modal on outside click
-        document.getElementById('addQuestionModal')?.addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeAddQuestionModal();
-            }
-        });
     </script>
-
-    <!-- Statistics Counter Animation -->
-    <script src="~/js/teacher/question-bank.js"></script>
 }
