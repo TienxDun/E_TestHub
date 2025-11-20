@@ -1,6 +1,8 @@
 @{
     ViewData["Title"] = "Danh sách lớp - Sinh Viên";
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    
+    var classes = (List<E_TestHub.Models.Class>)ViewBag.Classes ?? new List<E_TestHub.Models.Class>();
 }
 
 @section Styles {
@@ -10,131 +12,95 @@
 
 <!-- Page Header with View Toggle -->
 <div class="header-section">
-        <h1 class="page-title">Danh sách lớp</h1>
-        
-        <!-- View Mode Toggle -->
-        <div class="view-toggle">
-            <button class="view-btn" data-view="grid" title="Grid View">
-                <i class="fas fa-th"></i>
-            </button>
-            <button class="view-btn active" data-view="list" title="List View">
-                <i class="fas fa-list"></i>
-            </button>
-            <button class="view-btn" data-view="table" title="Table View">
-                <i class="fas fa-table"></i>
-            </button>
-        </div>
+    <h1 class="page-title">Danh sách lớp</h1>
+    
+    <!-- View Mode Toggle -->
+    <div class="view-toggle">
+        <button class="view-btn" data-view="grid" title="Grid View">
+            <i class="fas fa-th"></i>
+        </button>
+        <button class="view-btn active" data-view="list" title="List View">
+            <i class="fas fa-list"></i>
+        </button>
+        <button class="view-btn" data-view="table" title="Table View">
+            <i class="fas fa-table"></i>
+        </button>
     </div>
+</div>
 
-    <!-- Search and Filter Section -->
-    <div class="search-section">
-        <div class="search-box">
-            <input type="text" id="searchInput" class="search-input" placeholder="Tìm kiếm theo tên lớp, số sinh viên...">
-            <i class="fas fa-search search-icon"></i>
-        </div>
-        
-        <!-- Sort Options -->
-        <div class="sort-section">
-            <label for="sortSelect" class="sort-label">Sắp xếp:</label>
-            <select id="sortSelect" class="sort-select">
-                <option value="name-asc">Tên lớp (A-Z)</option>
-                <option value="name-desc">Tên lớp (Z-A)</option>
-                <option value="students-desc">Sinh viên (Nhiều nhất)</option>
-                <option value="students-asc">Sinh viên (Ít nhất)</option>
-            </select>
-        </div>
+<!-- Search and Filter Section -->
+<div class="search-section">
+    <div class="search-box">
+        <input type="text" id="searchInput" class="search-input" placeholder="Tìm kiếm theo tên lớp, mã lớp...">
+        <i class="fas fa-search search-icon"></i>
     </div>
+    
+    <!-- Sort Options -->
+    <div class="sort-section">
+        <label for="sortSelect" class="sort-label">Sắp xếp:</label>
+        <select id="sortSelect" class="sort-select">
+            <option value="name-asc">Tên lớp (A-Z)</option>
+            <option value="name-desc">Tên lớp (Z-A)</option>
+            <option value="students-desc">Sinh viên (Nhiều nhất)</option>
+            <option value="students-asc">Sinh viên (Ít nhất)</option>
+        </select>
+    </div>
+</div>
 
+@if (classes.Any())
+{
     <!-- Classes Grid -->
     <div class="classes-grid" id="classesGrid">
-        <!-- Class Card 1 -->
-        <a href="@Url.Action("ClassDetails", "Student", new { classId = "PM233H" })" class="class-card" data-class-name="PM233H" data-students="360" data-year="2023 - 2027">
-            <div class="class-card-content">
-                <div class="class-icon">
-                    <i class="fas fa-book-open"></i>
+        @foreach (var classItem in classes)
+        {
+            var studentCount = classItem.Students?.Count ?? 0;
+            var academicYear = !string.IsNullOrEmpty(classItem.AcademicYear) ? classItem.AcademicYear : "N/A";
+            var classCode = !string.IsNullOrEmpty(classItem.ClassCode) ? classItem.ClassCode : classItem.Name;
+            
+            <a href="@Url.Action("ClassDetails", "Student", new { classId = classItem.Id })" 
+               class="class-card" 
+               data-class-name="@classCode" 
+               data-students="@studentCount" 
+               data-year="@academicYear">
+                <div class="class-card-content">
+                    <div class="class-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="class-info">
+                        <h3 class="class-name">@classCode</h3>
+                        <p class="class-students">@studentCount sinh viên</p>
+                        <p class="class-year">Khoá: @academicYear</p>
+                    </div>
                 </div>
-                <div class="class-info">
-                    <h3 class="class-name">PM233H</h3>
-                    <p class="class-students">360 sinh viên</p>
-                    <p class="class-year">Khoá: 2023 - 2027</p>
-                </div>
-            </div>
-        </a>
-
-        <!-- Class Card 2 -->
-        <a href="@Url.Action("ClassDetails", "Student", new { classId = "TM231H" })" class="class-card" data-class-name="TM231H" data-students="36" data-year="2023 - 2027">
-            <div class="class-card-content">
-                <div class="class-icon">
-                    <i class="fas fa-book-open"></i>
-                </div>
-                <div class="class-info">
-                    <h3 class="class-name">TM231H</h3>
-                    <p class="class-students">36 sinh viên</p>
-                    <p class="class-year">Khoá: 2023 - 2027</p>
-                </div>
-            </div>
-        </a>
-
-        <!-- Class Card 3 -->
-        <a href="@Url.Action("ClassDetails", "Student", new { classId = "SE214H" })" class="class-card" data-class-name="SE214H" data-students="120" data-year="2023 - 2027">
-            <div class="class-card-content">
-                <div class="class-icon">
-                    <i class="fas fa-book-open"></i>
-                </div>
-                <div class="class-info">
-                    <h3 class="class-name">SE214H</h3>
-                    <p class="class-students">120 sinh viên</p>
-                    <p class="class-year">Khoá: 2023 - 2027</p>
-                </div>
-            </div>
-        </a>
-
-        <!-- Class Card 4 -->
-        <a href="@Url.Action("ClassDetails", "Student", new { classId = "IT001" })" class="class-card" data-class-name="IT001" data-students="180" data-year="2023 - 2027">
-            <div class="class-card-content">
-                <div class="class-icon">
-                    <i class="fas fa-book-open"></i>
-                </div>
-                <div class="class-info">
-                    <h3 class="class-name">IT001</h3>
-                    <p class="class-students">180 sinh viên</p>
-                    <p class="class-year">Khoá: 2023 - 2027</p>
-                </div>
-            </div>
-        </a>
-
-        <!-- Class Card 5 -->
-        <a href="@Url.Action("ClassDetails", "Student", new { classId = "CS101" })" class="class-card" data-class-name="CS101" data-students="95" data-year="2023 - 2027">
-            <div class="class-card-content">
-                <div class="class-icon">
-                    <i class="fas fa-book-open"></i>
-                </div>
-                <div class="class-info">
-                    <h3 class="class-name">CS101</h3>
-                    <p class="class-students">95 sinh viên</p>
-                    <p class="class-year">Khoá: 2023 - 2027</p>
-                </div>
-            </div>
-        </a>
-
-        <!-- Class Card 6 -->
-        <a href="@Url.Action("ClassDetails", "Student", new { classId = "DB234" })" class="class-card" data-class-name="DB234" data-students="150" data-year="2023 - 2027">
-            <div class="class-card-content">
-                <div class="class-icon">
-                    <i class="fas fa-book-open"></i>
-                </div>
-                <div class="class-info">
-                    <h3 class="class-name">DB234</h3>
-                    <p class="class-students">150 sinh viên</p>
-                    <p class="class-year">Khoá: 2023 - 2027</p>
-                </div>
-            </div>
-        </a>
+            </a>
+        }
     </div>
 
     <!-- List View (hidden by default) -->
     <div class="classes-list" id="classesList" style="display: none;">
-        <!-- Will be populated by JavaScript -->
+        @foreach (var classItem in classes)
+        {
+            var studentCount = classItem.Students?.Count ?? 0;
+            var academicYear = !string.IsNullOrEmpty(classItem.AcademicYear) ? classItem.AcademicYear : "N/A";
+            var classCode = !string.IsNullOrEmpty(classItem.ClassCode) ? classItem.ClassCode : classItem.Name;
+            
+            <a href="@Url.Action("ClassDetails", "Student", new { classId = classItem.Id })" 
+               class="class-list-item"
+               data-class-name="@classCode" 
+               data-students="@studentCount" 
+               data-year="@academicYear">
+                <div class="class-list-icon">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <div class="class-list-info">
+                    <h4 class="class-list-name">@classCode</h4>
+                    <p class="class-list-details">@studentCount sinh viên • Khoá: @academicYear</p>
+                </div>
+                <div class="class-list-action">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </a>
+        }
     </div>
 
     <!-- Table View (hidden by default) -->
@@ -155,17 +121,184 @@
                 </tr>
             </thead>
             <tbody id="classesTableBody">
-                <!-- Will be populated by JavaScript -->
+                @foreach (var classItem in classes)
+                {
+                    var studentCount = classItem.Students?.Count ?? 0;
+                    var academicYear = !string.IsNullOrEmpty(classItem.AcademicYear) ? classItem.AcademicYear : "N/A";
+                    var classCode = !string.IsNullOrEmpty(classItem.ClassCode) ? classItem.ClassCode : classItem.Name;
+                    
+                    <tr data-class-name="@classCode" data-students="@studentCount" data-year="@academicYear">
+                        <td>@classCode</td>
+                        <td>@studentCount</td>
+                        <td>@academicYear</td>
+                        <td>
+                            <a href="@Url.Action("ClassDetails", "Student", new { classId = classItem.Id })" 
+                               class="table-action-btn">
+                                <i class="fas fa-eye"></i>
+                                Xem chi tiết
+                            </a>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
+}
+else
+{
+    <!-- Empty State -->
+    <div class="empty-state" id="emptyState">
+        <i class="fas fa-inbox empty-icon"></i>
+        <p>Bạn chưa tham gia lớp học nào</p>
+    </div>
+}
 
-<!-- Empty State (hidden by default) -->
-<div class="empty-state" id="emptyState" style="display: none;">
+<!-- Empty Search State (hidden by default) -->
+<div class="empty-state" id="emptySearchState" style="display: none;">
     <i class="fas fa-search empty-icon"></i>
     <p>Không tìm thấy lớp học nào phù hợp</p>
 </div>
 
 @section Scripts {
-    <script src="~/js/student/classes.js"></script>
+    <script>
+        // Classes data for JavaScript
+        const classesData = @Html.Raw(Json.Serialize(classes.Select(c => new {
+            id = c.Id,
+            name = !string.IsNullOrEmpty(c.ClassCode) ? c.ClassCode : c.Name,
+            students = c.Students?.Count ?? 0,
+            year = !string.IsNullOrEmpty(c.AcademicYear) ? c.AcademicYear : "N/A"
+        })));
+
+        let currentView = 'list';
+        let filteredClasses = [...classesData];
+
+        // View toggle
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const view = this.dataset.view;
+                switchView(view);
+            });
+        });
+
+        function switchView(view) {
+            // Update active button
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.view === view);
+            });
+
+            // Hide all views
+            document.getElementById('classesGrid').style.display = 'none';
+            document.getElementById('classesList').style.display = 'none';
+            document.getElementById('classesTableContainer').style.display = 'none';
+
+            // Show selected view
+            currentView = view;
+            if (view === 'grid') {
+                document.getElementById('classesGrid').style.display = 'grid';
+            } else if (view === 'list') {
+                document.getElementById('classesList').style.display = 'block';
+            } else if (view === 'table') {
+                document.getElementById('classesTableContainer').style.display = 'block';
+            }
+        }
+
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            filterAndDisplay(searchTerm);
+        });
+
+        function filterAndDisplay(searchTerm) {
+            const cards = document.querySelectorAll('.class-card');
+            const listItems = document.querySelectorAll('.class-list-item');
+            const tableRows = document.querySelectorAll('#classesTableBody tr');
+            
+            let visibleCount = 0;
+
+            // Filter grid cards
+            cards.forEach(card => {
+                const className = card.dataset.className.toLowerCase();
+                if (className.includes(searchTerm)) {
+                    card.style.display = '';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Filter list items
+            listItems.forEach(item => {
+                const className = item.dataset.className.toLowerCase();
+                if (className.includes(searchTerm)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Filter table rows
+            tableRows.forEach(row => {
+                const className = row.dataset.className.toLowerCase();
+                if (className.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            // Show/hide empty state
+            const emptySearchState = document.getElementById('emptySearchState');
+            if (visibleCount === 0 && searchTerm !== '') {
+                emptySearchState.style.display = 'flex';
+                document.getElementById('classesGrid').style.display = 'none';
+                document.getElementById('classesList').style.display = 'none';
+                document.getElementById('classesTableContainer').style.display = 'none';
+            } else {
+                emptySearchState.style.display = 'none';
+                switchView(currentView);
+            }
+        }
+
+        // Sort functionality
+        const sortSelect = document.getElementById('sortSelect');
+        sortSelect.addEventListener('change', function() {
+            sortClasses(this.value);
+        });
+
+        function sortClasses(sortType) {
+            const grid = document.getElementById('classesGrid');
+            const list = document.getElementById('classesList');
+            const tbody = document.getElementById('classesTableBody');
+            
+            const cards = Array.from(grid.querySelectorAll('.class-card'));
+            const listItems = Array.from(list.querySelectorAll('.class-list-item'));
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+
+            // Sort function
+            let sortFn;
+            switch(sortType) {
+                case 'name-asc':
+                    sortFn = (a, b) => a.dataset.className.localeCompare(b.dataset.className);
+                    break;
+                case 'name-desc':
+                    sortFn = (a, b) => b.dataset.className.localeCompare(a.dataset.className);
+                    break;
+                case 'students-desc':
+                    sortFn = (a, b) => parseInt(b.dataset.students) - parseInt(a.dataset.students);
+                    break;
+                case 'students-asc':
+                    sortFn = (a, b) => parseInt(a.dataset.students) - parseInt(b.dataset.students);
+                    break;
+            }
+
+            // Sort and reappend
+            cards.sort(sortFn).forEach(card => grid.appendChild(card));
+            listItems.sort(sortFn).forEach(item => list.appendChild(item));
+            rows.sort(sortFn).forEach(row => tbody.appendChild(row));
+        }
+
+        // Initialize default view (list)
+        switchView('list');
+    </script>
 }

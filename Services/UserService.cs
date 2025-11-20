@@ -16,131 +16,135 @@ namespace E_TestHub.Services
 
     public class UserService : IUserService
     {
-        // Demo implementation - In production, use database
-        private static readonly List<User> _users = new()
+        private readonly IUserApiService _userApiService;
+        private readonly ILogger<UserService> _logger;
+
+        public UserService(IUserApiService userApiService, ILogger<UserService> logger)
         {
-            new User 
-            { 
-                Id = 1, 
-                Email = "student@demo.com", 
-                FullName = "Nguyễn Văn Sinh Viên", 
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword("student123"), 
-                Role = UserRole.Student,
-                StudentId = "SV001",
-                Class = "PM233H"
-            },
-            new User 
-            { 
-                Id = 2, 
-                Email = "teacher@demo.com", 
-                FullName = "Võ Nguyễn Thanh Hiếu", 
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword("teacher123"), 
-                Role = UserRole.Teacher,
-                EmployeeId = "T001",
-                Department = "Khoa Công Nghệ Thông Tin"
-            },
-            new User 
-            { 
-                Id = 3, 
-                Email = "admin@demo.com", 
-                FullName = "Trần Thị Quản Trị", 
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin123"), 
-                Role = UserRole.Admin,
-                Position = "Quản trị hệ thống"
-            }
-        };
+            _userApiService = userApiService;
+            _logger = logger;
+        }
 
         public async Task<User?> AuthenticateAsync(string email, string password)
         {
-            await Task.Delay(100); // Simulate async operation
-            
-            var user = _users.FirstOrDefault(u => u.Email.ToLower() == email.ToLower() && u.IsActive);
-            
-            if (user != null && BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+            try
             {
-                user.LastLoginDate = DateTime.Now;
-                return user;
+                var result = await _userApiService.AuthenticateAsync(email, password);
+                if (result.user != null)
+                {
+                    _logger.LogInformation($"User {email} authenticated successfully");
+                    return result.user;
+                }
+                
+                _logger.LogWarning($"Authentication failed for user {email}");
+                return null;
             }
-            
-            return null;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error authenticating user {email}");
+                return null;
+            }
         }
 
         public async Task<User?> GetUserByIdAsync(int userId)
         {
-            await Task.Delay(50);
-            return _users.FirstOrDefault(u => u.Id == userId);
+            try
+            {
+                return await _userApiService.GetUserByIdAsync(userId.ToString());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error getting user by ID {userId}");
+                return null;
+            }
         }
 
         public async Task<User?> GetUserByEmailAsync(string email)
         {
-            await Task.Delay(50);
-            return _users.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
+            try
+            {
+                return await _userApiService.GetUserByEmailAsync(email);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error getting user by email {email}");
+                return null;
+            }
         }
 
         public async Task<bool> CreateUserAsync(User user, string password)
         {
-            await Task.Delay(100);
-            
-            user.Id = _users.Max(u => u.Id) + 1;
-            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(password);
-            user.CreatedDate = DateTime.Now;
-            
-            _users.Add(user);
-            return true;
+            try
+            {
+                return await _userApiService.CreateUserAsync(user, password);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error creating user {user.Email}");
+                return false;
+            }
         }
 
         public async Task<bool> UpdateUserAsync(User user)
         {
-            await Task.Delay(100);
-            
-            var existingUser = _users.FirstOrDefault(u => u.Id == user.Id);
-            if (existingUser != null)
+            try
             {
-                existingUser.FullName = user.FullName;
-                existingUser.Email = user.Email;
-                existingUser.Role = user.Role;
-                existingUser.IsActive = user.IsActive;
-                // Update role-specific properties as needed
-                return true;
+                return await _userApiService.UpdateUserAsync(user);
             }
-            
-            return false;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error updating user {user.Id}");
+                return false;
+            }
         }
 
         public async Task<bool> DeleteUserAsync(int userId)
         {
-            await Task.Delay(100);
-            
-            var user = _users.FirstOrDefault(u => u.Id == userId);
-            if (user != null)
+            try
             {
-                user.IsActive = false; // Soft delete
-                return true;
+                return await _userApiService.DeleteUserAsync(userId.ToString());
             }
-            
-            return false;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error deleting user {userId}");
+                return false;
+            }
         }
 
         public async Task<IEnumerable<User>> GetUsersByRoleAsync(UserRole role)
         {
-            await Task.Delay(100);
-            return _users.Where(u => u.Role == role && u.IsActive).ToList();
+            try
+            {
+                return await _userApiService.GetUsersByRoleAsync(role);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error getting users by role {role}");
+                return new List<User>();
+            }
         }
 
         public async Task<bool> ResetPasswordAsync(string email)
         {
-            await Task.Delay(100);
-            
-            var user = _users.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
-            if (user != null)
+            try
             {
-                // In production, send email with reset link
-                // For demo, reset to default password
-                user.PasswordHash = BCrypt.Net.BCrypt.HashPassword("123456");
-                return true;
+                // Get user first to validate email exists
+                var user = await _userApiService.GetUserByEmailAsync(email);
+                if (user != null)
+                {
+                    // TODO: Implement proper password reset via API
+                    // For now, return success (actual reset should be handled by API)
+                    _logger.LogInformation($"Password reset requested for {email}");
+                    return true;
+                }
+                
+                return false;
             }
-            
-            return false;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error resetting password for {email}");
+                return false;
+            }
         }
     }
 }

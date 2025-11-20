@@ -77,8 +77,16 @@
                 </div>
                 <div class="dashboard-item-content">
                     <h4 class="dashboard-item-title">Tổng số sinh viên</h4>
-                    <p class="dashboard-item-subtitle">1,250 sinh viên đang hoạt động</p>
-                    <p class="dashboard-item-subtitle">Tăng 5% so với tháng trước</p>
+                    <p class="dashboard-item-subtitle">
+                        @(ViewBag.SystemStats?.TotalStudents ?? 0) sinh viên trong hệ thống
+                    </p>
+                    @if (ViewBag.SystemStats?.NewUsersThisMonth > 0)
+                    {
+                        <p class="dashboard-item-subtitle">
+                            <i class="fas fa-arrow-up text-success"></i>
+                            @ViewBag.SystemStats.NewUsersThisMonth người dùng mới tháng này
+                        </p>
+                    }
                 </div>
             </li>
 
@@ -88,43 +96,62 @@
                 </div>
                 <div class="dashboard-item-content">
                     <h4 class="dashboard-item-title">Tổng số giáo viên</h4>
-                    <p class="dashboard-item-subtitle">85 giáo viên đang hoạt động</p>
-                    <p class="dashboard-item-subtitle">Trong 15 khoa khác nhau</p>
+                    <p class="dashboard-item-subtitle">
+                        @(ViewBag.SystemStats?.TotalTeachers ?? 0) giáo viên trong hệ thống
+                    </p>
+                    <p class="dashboard-item-subtitle">
+                        @(ViewBag.SystemStats?.ActiveUsers ?? 0) người dùng đang hoạt động
+                    </p>
                 </div>
             </li>
         </ul>
     </div>
 
-    <!-- Recent Activities Section -->
+    <!-- System Statistics Section -->
     <div class="dashboard-section">
         <div class="dashboard-section-header">
-            <h3 class="dashboard-section-title">Hoạt động gần đây</h3>
-            <a href="@Url.Action("AuditLogs", "Admin")" class="dashboard-view-more-btn">
+            <h3 class="dashboard-section-title">Thống kê hệ thống</h3>
+            <a href="@Url.Action("UserManagement", "Admin")" class="dashboard-view-more-btn">
                 <i class="fas fa-external-link-alt"></i>
-                Xem tất cả
+                Xem chi tiết
             </a>
         </div>
 
         <ul class="dashboard-item-list">
             <li class="dashboard-item">
                 <div class="dashboard-item-icon">
-                    <i class="fas fa-user-plus"></i>
+                    <i class="fas fa-users"></i>
                 </div>
                 <div class="dashboard-item-content">
-                    <h4 class="dashboard-item-title">Tài khoản mới được tạo</h4>
-                    <p class="dashboard-item-subtitle">5 tài khoản sinh viên mới</p>
-                    <p class="dashboard-item-subtitle">Hôm nay, 14:30</p>
+                    <h4 class="dashboard-item-title">Tổng số người dùng</h4>
+                    <p class="dashboard-item-subtitle">
+                        <strong>@(ViewBag.SystemStats?.TotalUsers ?? 0)</strong> người dùng trong hệ thống
+                    </p>
+                    <p class="dashboard-item-subtitle">
+                        <span class="text-success">@(ViewBag.SystemStats?.ActiveUsers ?? 0) hoạt động</span>
+                        <span class="text-muted mx-2">•</span>
+                        <span class="text-secondary">@(ViewBag.SystemStats?.InactiveUsers ?? 0) không hoạt động</span>
+                    </p>
                 </div>
             </li>
 
             <li class="dashboard-item">
                 <div class="dashboard-item-icon">
-                    <i class="fas fa-file-upload"></i>
+                    <i class="fas fa-user-shield"></i>
                 </div>
                 <div class="dashboard-item-content">
-                    <h4 class="dashboard-item-title">Sao lưu dữ liệu</h4>
-                    <p class="dashboard-item-subtitle">Sao lưu tự động thành công</p>
-                    <p class="dashboard-item-subtitle">Hôm qua, 02:00</p>
+                    <h4 class="dashboard-item-title">Phân loại theo vai trò</h4>
+                    <p class="dashboard-item-subtitle">
+                        <i class="fas fa-user-graduate text-primary"></i> 
+                        @(ViewBag.SystemStats?.TotalStudents ?? 0) Sinh viên
+                    </p>
+                    <p class="dashboard-item-subtitle">
+                        <i class="fas fa-chalkboard-teacher text-success"></i>
+                        @(ViewBag.SystemStats?.TotalTeachers ?? 0) Giáo viên
+                        <span class="text-muted mx-2">•</span>
+                        <i class="fas fa-user-cog text-warning"></i>
+                        @(ViewBag.SystemStats?.TotalAdmins ?? 0) Quản trị viên
+                    </p>
                 </div>
             </li>
         </ul>

@@ -1,367 +1,421 @@
 @{
     ViewData["Title"] = "Quản lý đề thi";
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    var exams = ViewBag.Exams as List<E_TestHub.Models.Exam> ?? new List<E_TestHub.Models.Exam>();
+    var subjects = ViewBag.Subjects as List<E_TestHub.Models.Subject> ?? new List<E_TestHub.Models.Subject>();
 }
 
 @section Styles {
     <link href="~/css/shared/dashboard.css" rel="stylesheet">
-    <link href="~/css/teacher/exam-management.css" rel="stylesheet">
+    <link href="~/css/teacher/question-bank.css" rel="stylesheet">
 }
+
+<!-- Hidden form for AJAX CSRF token -->
+<form id="antiForgeryForm">
+    @Html.AntiForgeryToken()
+</form>
 
 <!-- Welcome Section -->
 <div class="dashboard-welcome-section">
     <h1 class="dashboard-welcome-title" style="font-weight: 700; color: #1a73e8;">Quản lý đề thi</h1>
-    <p class="dashboard-welcome-subtitle">Tạo, chỉnh sửa và quản lý các đề thi của bạn</p>
+    <p class="dashboard-welcome-subtitle">Tạo và quản lý các đề thi trắc nghiệm</p>
 </div>
 
-<!-- Action Cards -->
-<div class="dashboard-action-cards">
-    <a href="@Url.Action("CreateExam", "Teacher")" class="dashboard-action-card">
-        <div class="dashboard-action-icon">
-            <i class="fas fa-plus-circle"></i>
+<!-- Success/Error Messages -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle"></i> @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card stats-card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-subtitle mb-2">Tổng số đề thi</h6>
+                        <h2 class="card-title mb-0">@ViewBag.TotalExams</h2>
+                    </div>
+                    <div class="stats-icon">
+                        <i class="fas fa-file-alt fa-2x"></i>
+                    </div>
+                </div>
+            </div>
         </div>
-        <h3 class="dashboard-action-title">Tạo đề thi mới</h3>
-        <p class="dashboard-action-subtitle">Tạo đề thi trắc nghiệm mới</p>
-    </a>
-
-    <a href="@Url.Action("QuestionBank", "Teacher")" class="dashboard-action-card">
-        <div class="dashboard-action-icon">
-            <i class="fas fa-database"></i>
-        </div>
-        <h3 class="dashboard-action-title">Ngân hàng câu hỏi</h3>
-        <p class="dashboard-action-subtitle">Quản lý kho câu hỏi</p>
-    </a>
-
-    <a href="#" class="dashboard-action-card" onclick="openSearchModal(); return false;">
-        <div class="dashboard-action-icon">
-            <i class="fas fa-search"></i>
-        </div>
-        <h3 class="dashboard-action-title">Tìm kiếm đề thi</h3>
-        <p class="dashboard-action-subtitle">Tìm kiếm nhanh theo tên</p>
-    </a>
-</div>
-
-<!-- Content Sections -->
-<div class="dashboard-content-sections">
-    <!-- Recent Exams Section -->
-    <div class="dashboard-section">
-        <div class="dashboard-section-header">
-            <h3 class="dashboard-section-title">Đề thi gần đây</h3>
-            <a href="#all-exams" class="dashboard-view-more-btn">
-                <i class="fas fa-chevron-down"></i>
-                Xem tất cả
-            </a>
-        </div>
-
-        <ul class="dashboard-item-list">
-            <!-- Demo Data - Replace with actual data from ViewBag -->
-            <li class="dashboard-item">
-                <div class="dashboard-item-icon">
-                    <i class="fas fa-file-alt"></i>
-                </div>
-                <div class="dashboard-item-content">
-                    <h4 class="dashboard-item-title">Kiểm tra giữa kỳ - Xác suất thống kê</h4>
-                    <p class="dashboard-item-subtitle">45 câu hỏi • 90 phút</p>
-                    <p class="dashboard-item-subtitle">Tạo ngày: 15/09/2025</p>
-                </div>
-                <div class="dashboard-item-actions">
-                    <a href="@Url.Action("ExamDetails", "Teacher", new { examId = 1 })" class="dashboard-item-action-btn" title="Xem chi tiết">
-                        <i class="fas fa-eye"></i>
-                    </a>
-                    <a href="#" class="dashboard-item-action-btn" title="Chỉnh sửa" onclick="alert('Tính năng đang phát triển'); return false;">
-                        <i class="fas fa-edit"></i>
-                    </a>
-                </div>
-            </li>
-
-            <li class="dashboard-item">
-                <div class="dashboard-item-icon">
-                    <i class="fas fa-file-alt"></i>
-                </div>
-                <div class="dashboard-item-content">
-                    <h4 class="dashboard-item-title">Bài tập tuần 5 - Đại số tuyến tính</h4>
-                    <p class="dashboard-item-subtitle">30 câu hỏi • 60 phút</p>
-                    <p class="dashboard-item-subtitle">Tạo ngày: 10/09/2025</p>
-                </div>
-                <div class="dashboard-item-actions">
-                    <a href="@Url.Action("ExamDetails", "Teacher", new { examId = 2 })" class="dashboard-item-action-btn" title="Xem chi tiết">
-                        <i class="fas fa-eye"></i>
-                    </a>
-                    <a href="#" class="dashboard-item-action-btn" title="Chỉnh sửa" onclick="alert('Tính năng đang phát triển'); return false;">
-                        <i class="fas fa-edit"></i>
-                    </a>
-                </div>
-            </li>
-
-            <li class="dashboard-item">
-                <div class="dashboard-item-icon">
-                    <i class="fas fa-file-alt"></i>
-                </div>
-                <div class="dashboard-item-content">
-                    <h4 class="dashboard-item-title">Thi cuối kỳ - Giải tích 1</h4>
-                    <p class="dashboard-item-subtitle">50 câu hỏi • 120 phút</p>
-                    <p class="dashboard-item-subtitle">Tạo ngày: 05/09/2025</p>
-                </div>
-                <div class="dashboard-item-actions">
-                    <a href="@Url.Action("ExamDetails", "Teacher", new { examId = 3 })" class="dashboard-item-action-btn" title="Xem chi tiết">
-                        <i class="fas fa-eye"></i>
-                    </a>
-                    <a href="#" class="dashboard-item-action-btn" title="Chỉnh sửa" onclick="alert('Tính năng đang phát triển'); return false;">
-                        <i class="fas fa-edit"></i>
-                    </a>
-                </div>
-            </li>
-        </ul>
     </div>
 
-    <!-- Exam Statistics Section -->
-    <div class="dashboard-section">
-        <div class="dashboard-section-header">
-            <h3 class="dashboard-section-title">Thống kê</h3>
+    <div class="col-md-3">
+        <div class="card stats-card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-subtitle mb-2">Bản nháp</h6>
+                        <h2 class="card-title mb-0">@ViewBag.DraftExams</h2>
+                    </div>
+                    <div class="stats-icon">
+                        <i class="fas fa-edit fa-2x"></i>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
 
-        <div class="exam-stats-grid">
-            <div class="exam-stat-card">
-                <div class="exam-stat-icon">
-                    <i class="fas fa-file-alt"></i>
-                </div>
-                <div class="exam-stat-content">
-                    <h4 class="exam-stat-number">24</h4>
-                    <p class="exam-stat-label">Tổng đề thi</p>
+    <div class="col-md-3">
+        <div class="card stats-card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-subtitle mb-2">Đã xuất bản</h6>
+                        <h2 class="card-title mb-0">@ViewBag.PublishedExams</h2>
+                    </div>
+                    <div class="stats-icon">
+                        <i class="fas fa-check-circle fa-2x"></i>
+                    </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <div class="exam-stat-card">
-                <div class="exam-stat-icon">
-                    <i class="fas fa-clock"></i>
-                </div>
-                <div class="exam-stat-content">
-                    <h4 class="exam-stat-number">8</h4>
-                    <p class="exam-stat-label">Đang diễn ra</p>
-                </div>
-            </div>
-
-            <div class="exam-stat-card">
-                <div class="exam-stat-icon">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <div class="exam-stat-content">
-                    <h4 class="exam-stat-number">156</h4>
-                    <p class="exam-stat-label">Bài đã nộp</p>
-                </div>
-            </div>
-
-            <div class="exam-stat-card">
-                <div class="exam-stat-icon">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div class="exam-stat-content">
-                    <h4 class="exam-stat-number">396</h4>
-                    <p class="exam-stat-label">Sinh viên</p>
+    <div class="col-md-3">
+        <div class="card stats-card bg-secondary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-subtitle mb-2">Đã khóa</h6>
+                        <h2 class="card-title mb-0">@ViewBag.LockedExams</h2>
+                    </div>
+                    <div class="stats-icon">
+                        <i class="fas fa-lock fa-2x"></i>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- All Exams Section (Anchor for scroll) -->
-<div id="all-exams" class="dashboard-section" style="margin-top: 50px;">
-    <div class="dashboard-section-header">
-        <h3 class="dashboard-section-title">Tất cả đề thi</h3>
-        <div class="exam-table-search">
-            <input type="text" id="examSearch" placeholder="Tìm kiếm đề thi..." />
-            <i class="fas fa-search"></i>
-        </div>
-    </div>
+<!-- Filters and Actions -->
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <form method="get" asp-action="ExamManagement" class="row g-3">
+                    <div class="col-md-5">
+                        <label class="form-label">Môn học</label>
+                        <select name="subjectId" class="form-select" onchange="this.form.submit()">
+                            <option value="">Tất cả môn học</option>
+                            @foreach (var subject in subjects)
+                            {
+                                <option value="@subject.Id" selected="@(ViewBag.SelectedSubject == subject.Id)">
+                                    @subject.Name
+                                </option>
+                            }
+                        </select>
+                    </div>
 
-    <div class="exam-table-container">
-        <table class="exam-table">
-            <thead>
-                <tr>
-                    <th>Tên đề thi</th>
-                    <th>Số câu hỏi</th>
-                    <th>Thời gian</th>
-                    <th>Lớp</th>
-                    <th>Trạng thái</th>
-                    <th>Thao tác</th>
-                </tr>
-            </thead>
-            <tbody id="examTableBody">
-                <!-- Demo Data - Replace with actual data -->
-                <tr>
-                    <td>
-                        <div class="exam-table-name-cell">
-                            <i class="fas fa-file-alt"></i>
-                            <span>Kiểm tra giữa kỳ - Xác suất thống kê</span>
-                        </div>
-                    </td>
-                    <td>45</td>
-                    <td>90 phút</td>
-                    <td>PM233H</td>
-                    <td><span class="exam-status-badge status-active">Đang diễn ra</span></td>
-                    <td>
-                        <div class="exam-table-actions">
-                            <a href="@Url.Action("ExamDetails", "Teacher", new { examId = 1 })" title="Xem chi tiết">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a href="#" title="Chỉnh sửa" onclick="alert('Tính năng đang phát triển'); return false;">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <a href="#" title="Xóa" onclick="if(confirm('Bạn có chắc chắn muốn xóa đề thi này?')) alert('Tính năng đang phát triển'); return false;">
-                                <i class="fas fa-trash-alt"></i>
+                    <div class="col-md-5">
+                        <label class="form-label">Trạng thái</label>
+                        <select name="isPublished" class="form-select" onchange="this.form.submit()">
+                            <option value="">Tất cả</option>
+                            <option value="false" selected="@(ViewBag.SelectedIsPublished == false)">Bản nháp</option>
+                            <option value="true" selected="@(ViewBag.SelectedIsPublished == true)">Đã xuất bản</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label">&nbsp;</label>
+                        <div>
+                            <a href="@Url.Action("ExamManagement")" class="btn btn-outline-secondary w-100">
+                                <i class="fas fa-redo"></i> Đặt lại
                             </a>
                         </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="exam-table-name-cell">
-                            <i class="fas fa-file-alt"></i>
-                            <span>Bài tập tuần 5 - Đại số tuyến tính</span>
-                        </div>
-                    </td>
-                    <td>30</td>
-                    <td>60 phút</td>
-                    <td>TM231H</td>
-                    <td><span class="exam-status-badge status-upcoming">Sắp diễn ra</span></td>
-                    <td>
-                        <div class="exam-table-actions">
-                            <a href="@Url.Action("ExamDetails", "Teacher", new { examId = 2 })" title="Xem chi tiết">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a href="#" title="Chỉnh sửa" onclick="alert('Tính năng đang phát triển'); return false;">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <a href="#" title="Xóa" onclick="if(confirm('Bạn có chắc chắn muốn xóa đề thi này?')) alert('Tính năng đang phát triển'); return false;">
-                                <i class="fas fa-trash-alt"></i>
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="exam-table-name-cell">
-                            <i class="fas fa-file-alt"></i>
-                            <span>Thi cuối kỳ - Giải tích 1</span>
-                        </div>
-                    </td>
-                    <td>50</td>
-                    <td>120 phút</td>
-                    <td>PM233H, TM231H</td>
-                    <td><span class="exam-status-badge status-completed">Đã kết thúc</span></td>
-                    <td>
-                        <div class="exam-table-actions">
-                            <a href="@Url.Action("ExamDetails", "Teacher", new { examId = 3 })" title="Xem chi tiết">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a href="@Url.Action("ViewResults", "Teacher", new { examId = 3 })" title="Xem kết quả">
-                                <i class="fas fa-chart-bar"></i>
-                            </a>
-                            <a href="#" title="Xóa" onclick="if(confirm('Bạn có chắc chắn muốn xóa đề thi này?')) alert('Tính năng đang phát triển'); return false;">
-                                <i class="fas fa-trash-alt"></i>
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-md-4 text-end">
+                <a href="@Url.Action("CreateExam")" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Tạo đề thi mới
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- Search Modal -->
-<div id="searchModal" class="search-modal" style="display: none;">
-    <div class="search-modal-content">
-        <div class="search-modal-header">
-            <h3>Tìm kiếm đề thi</h3>
-            <button onclick="closeSearchModal()" class="search-modal-close">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="search-modal-body">
-            <input type="text" id="modalSearchInput" placeholder="Nhập tên đề thi..." class="search-modal-input" />
-            <div id="searchResults" class="search-results">
-                <p class="search-placeholder">Nhập để tìm kiếm...</p>
+<!-- Exams Table -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">
+            <i class="fas fa-list"></i> Danh sách đề thi
+            <span class="badge bg-secondary ms-2">@exams.Count</span>
+        </h5>
+    </div>
+    <div class="card-body">
+        @if (exams.Count == 0)
+        {
+            <div class="text-center py-5">
+                <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                <p class="text-muted">Chưa có đề thi nào. Hãy tạo đề thi đầu tiên!</p>
+                <a href="@Url.Action("CreateExam")" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Tạo đề thi
+                </a>
             </div>
-        </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 50px;">#</th>
+                            <th>Tiêu đề</th>
+                            <th>Môn học</th>
+                            <th style="width: 100px;">Thời gian</th>
+                            <th style="width: 100px;">Số câu hỏi</th>
+                            <th style="width: 120px;">Trạng thái</th>
+                            <th style="width: 180px;">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < exams.Count; i++)
+                        {
+                            var exam = exams[i];
+                            var statusClass = exam.IsPublished ? "success" : "warning";
+                            var statusText = exam.IsPublished ? "Đã xuất bản" : "Bản nháp";
+                            var statusIcon = exam.IsPublished ? "check-circle" : "edit";
+
+                            if (exam.IsLocked)
+                            {
+                                statusClass = "secondary";
+                                statusText = "Đã khóa";
+                                statusIcon = "lock";
+                            }
+
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>
+                                    <div style="max-width: 400px;">
+                                        <strong>@exam.Title</strong>
+                                        @if (!string.IsNullOrEmpty(exam.Description))
+                                        {
+                                            <br />
+                                            <small class="text-muted">@exam.Description</small>
+                                        }
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-info">@(exam.SubjectName ?? "N/A")</span>
+                                </td>
+                                <td>@exam.Duration phút</td>
+                                <td class="text-center">
+                                    <span class="badge bg-primary">@exam.QuestionCount</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-@statusClass">
+                                        <i class="fas fa-@statusIcon"></i> @statusText
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="@Url.Action("ExamBuilder", "Teacher", new { id = exam.ApiId })" 
+                                           class="btn btn-sm btn-outline-info" 
+                                           title="Thêm câu hỏi">
+                                            <i class="fas fa-puzzle-piece"></i>
+                                        </a>
+                                        <a href="@Url.Action("EditExam", "Teacher", new { id = exam.ApiId })" 
+                                           class="btn btn-sm btn-outline-primary" 
+                                           title="Chỉnh sửa">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        
+                                        @if (exam.IsPublished)
+                                        {
+                                            <a href="@Url.Action("AssignExam", "Teacher", new { examId = exam.ApiId })" 
+                                               class="btn btn-sm btn-outline-success" 
+                                               title="Gán cho lớp">
+                                                <i class="fas fa-calendar-plus"></i>
+                                            </a>
+                                        }
+                                        
+                                        @if (!exam.IsPublished)
+                                        {
+                                            <button type="button" 
+                                                    class="btn btn-sm btn-outline-success" 
+                                                    onclick="publishExam('@exam.ApiId', '@exam.Title')" 
+                                                    title="Xuất bản">
+                                                <i class="fas fa-paper-plane"></i>
+                                            </button>
+                                        }
+
+                                        @if (!exam.IsLocked)
+                                        {
+                                            <button type="button" 
+                                                    class="btn btn-sm btn-outline-danger" 
+                                                    onclick="deleteExam('@exam.ApiId', '@exam.Title')" 
+                                                    title="Xóa">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
     </div>
 </div>
 
 @section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // Table search functionality
-        document.getElementById('examSearch').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            const tableRows = document.querySelectorAll('#examTableBody tr');
-            
-            tableRows.forEach(row => {
-                const examName = row.querySelector('.exam-table-name-cell span')?.textContent.toLowerCase() || '';
-                if (examName.includes(searchTerm)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
+        // Delete exam function with SweetAlert2
+        function deleteExam(examId, examTitle) {
+            Swal.fire({
+                title: 'Xác nhận xóa đề thi',
+                html: `Bạn có chắc chắn muốn xóa đề thi <strong>"${examTitle}"</strong>?<br><br>
+                       <i class="fas fa-exclamation-triangle text-warning"></i> 
+                       <strong>Lưu ý:</strong> Hành động này không thể hoàn tác!`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: '<i class="fas fa-trash me-1"></i> Xóa',
+                cancelButtonText: '<i class="fas fa-times me-1"></i> Hủy',
+                showLoaderOnConfirm: true,
+                preConfirm: () => {
+                    return $.ajax({
+                        url: '@Url.Action("DeleteExam", "Teacher")',
+                        type: 'POST',
+                        data: {
+                            id: examId,
+                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                        }
+                    }).then(response => {
+                        if (!response.success) {
+                            throw new Error(response.message);
+                        }
+                        return response;
+                    }).catch(error => {
+                        Swal.showValidationMessage(`Lỗi: ${error.message || 'Có lỗi xảy ra khi xóa đề thi.'}`);
+                    });
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed && result.value) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Đã xóa!',
+                        text: result.value.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        location.reload();
+                    });
                 }
             });
-        });
-
-        // Search modal functions
-        function openSearchModal() {
-            document.getElementById('searchModal').style.display = 'flex';
-            document.getElementById('modalSearchInput').focus();
         }
 
-        function closeSearchModal() {
-            document.getElementById('searchModal').style.display = 'none';
-            document.getElementById('modalSearchInput').value = '';
-            document.getElementById('searchResults').innerHTML = '<p class="search-placeholder">Nhập để tìm kiếm...</p>';
+        // Publish exam function with SweetAlert2
+        function publishExam(examId, examTitle) {
+            Swal.fire({
+                title: 'Xuất bản đề thi',
+                html: `Bạn có chắc chắn muốn xuất bản đề thi <strong>"${examTitle}"</strong>?<br><br>
+                       <i class="fas fa-info-circle text-info"></i> 
+                       Sau khi xuất bản, sinh viên sẽ có thể xem và làm bài thi này.`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: '<i class="fas fa-paper-plane me-1"></i> Xuất bản',
+                cancelButtonText: '<i class="fas fa-times me-1"></i> Hủy',
+                showLoaderOnConfirm: true,
+                preConfirm: () => {
+                    return $.ajax({
+                        url: '@Url.Action("PublishExam", "Teacher")',
+                        type: 'POST',
+                        data: {
+                            id: examId,
+                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                        }
+                    }).then(response => {
+                        if (!response.success) {
+                            throw new Error(response.message);
+                        }
+                        return response;
+                    }).catch(error => {
+                        Swal.showValidationMessage(`Lỗi: ${error.message || 'Có lỗi xảy ra khi xuất bản đề thi.'}`);
+                    });
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed && result.value) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Đã xuất bản!',
+                        text: result.value.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        location.reload();
+                    });
+                }
+            });
         }
 
-        // Modal search functionality (demo)
-        document.getElementById('modalSearchInput')?.addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            const resultsDiv = document.getElementById('searchResults');
-            
-            if (searchTerm.length === 0) {
-                resultsDiv.innerHTML = '<p class="search-placeholder">Nhập để tìm kiếm...</p>';
-                return;
+        // Show success/error messages from TempData with Toast
+        $(document).ready(function() {
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <text>
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
+                Toast.fire({
+                    icon: 'success',
+                    title: '@TempData["SuccessMessage"]'
+                });
+                </text>
             }
-
-            // Demo search results
-            const demoExams = [
-                { id: 1, name: 'Kiểm tra giữa kỳ - Xác suất thống kê', questions: 45, time: 90 },
-                { id: 2, name: 'Bài tập tuần 5 - Đại số tuyến tính', questions: 30, time: 60 },
-                { id: 3, name: 'Thi cuối kỳ - Giải tích 1', questions: 50, time: 120 }
-            ];
-
-            const filtered = demoExams.filter(exam => 
-                exam.name.toLowerCase().includes(searchTerm)
-            );
-
-            if (filtered.length === 0) {
-                resultsDiv.innerHTML = '<p class="search-placeholder">Không tìm thấy kết quả</p>';
-            } else {
-                resultsDiv.innerHTML = filtered.map(exam => `
-                    <a href="${'@Url.Action("ExamDetails", "Teacher")'}&examId=${exam.id}" class="search-result-item">
-                        <i class="fas fa-file-alt"></i>
-                        <div>
-                            <h4>${exam.name}</h4>
-                            <p>${exam.questions} câu hỏi • ${exam.time} phút</p>
-                        </div>
-                    </a>
-                `).join('');
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <text>
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 4000,
+                    timerProgressBar: true
+                });
+                Toast.fire({
+                    icon: 'error',
+                    title: '@TempData["ErrorMessage"]'
+                });
+                </text>
             }
-        });
-
-        // Close modal on outside click
-        document.getElementById('searchModal')?.addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeSearchModal();
-            }
-        });
-
-        // Smooth scroll to all exams
-        document.querySelector('.dashboard-view-more-btn')?.addEventListener('click', function(e) {
-            e.preventDefault();
-            document.getElementById('all-exams').scrollIntoView({ behavior: 'smooth' });
         });
     </script>
+
+    @Html.AntiForgeryToken()
 }

@@ -50,21 +50,106 @@
         <p class="dashboard-action-subtitle">Tạo câu hỏi trắc nghiệm mới</p>
     </a>
 
-    <a href="#" class="dashboard-action-card" onclick="alert('Tính năng Import đang phát triển'); return false;">
+    <a href="#" class="dashboard-action-card" onclick="openImportModal(); return false;">
         <div class="dashboard-action-icon">
             <i class="fas fa-file-import"></i>
         </div>
         <h3 class="dashboard-action-title">Import câu hỏi</h3>
-        <p class="dashboard-action-subtitle">Nhập từ file Excel/CSV</p>
+        <p class="dashboard-action-subtitle">Nhập từ file Excel/Word/PDF</p>
     </a>
 
-    <a href="#" class="dashboard-action-card" onclick="alert('Tính năng Export đang phát triển'); return false;">
+    <a href="#" class="dashboard-action-card" onclick="openExportModal(); return false;">
         <div class="dashboard-action-icon">
             <i class="fas fa-file-export"></i>
         </div>
         <h3 class="dashboard-action-title">Export câu hỏi</h3>
-        <p class="dashboard-action-subtitle">Xuất ra file Excel/PDF</p>
+        <p class="dashboard-action-subtitle">Xuất ra file Excel/Word/PDF</p>
     </a>
+</div>
+
+<!-- Import Modal -->
+<div id="importModal" class="import-modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-file-import"></i> Import Câu Hỏi</h3>
+            <button class="close-btn" onclick="closeImportModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="file-upload-section">
+                <label for="importFile" class="file-upload-label">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span>Chọn file để import</span>
+                    <input type="file" id="importFile" accept=".xlsx,.docx,.pdf" onchange="updateFileName()" style="display: none;">
+                </label>
+                <p class="file-info">Hỗ trợ: .xlsx, .docx, .pdf (Tối đa 5MB)</p>
+                <p id="selectedFileName" class="selected-file"></p>
+            </div>
+            <div class="template-section">
+                <p><i class="fas fa-info-circle"></i> Chưa có file mẫu?</p>
+                <div class="template-buttons">
+                    <button class="btn-template" onclick="downloadTemplate('excel')">
+                        <i class="fas fa-file-excel"></i> Tải mẫu Excel
+                    </button>
+                    <button class="btn-template btn-template-word" onclick="downloadTemplate('word')">
+                        <i class="fas fa-file-word"></i> Tải mẫu Word
+                    </button>
+                    <button class="btn-template btn-template-pdf" onclick="downloadTemplate('pdf')">
+                        <i class="fas fa-file-pdf"></i> Tải mẫu PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancel" onclick="closeImportModal()">Hủy</button>
+            <button class="btn-import" onclick="handleImport()">
+                <i class="fas fa-file-import"></i> Import
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Export Modal -->
+<div id="exportModal" class="import-modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-file-export"></i> Export Câu Hỏi</h3>
+            <button class="close-btn" onclick="closeExportModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="export-options">
+                <div class="option-group">
+                    <label><i class="fas fa-filter"></i> Lọc theo môn học:</label>
+                    <select id="exportSubject" class="export-select">
+                        <option value="">Tất cả môn học</option>
+                        @foreach (var subject in subjects)
+                        {
+                            <option value="@subject.Code">@subject.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="option-group">
+                    <label><i class="fas fa-file"></i> Chọn định dạng:</label>
+                    <div class="format-buttons">
+                        <button class="btn-format btn-excel active" data-format="excel" onclick="selectFormat('excel')">
+                            <i class="fas fa-file-excel"></i> Excel
+                        </button>
+                        <button class="btn-format btn-word" data-format="word" onclick="selectFormat('word')">
+                            <i class="fas fa-file-word"></i> Word
+                        </button>
+                        <button class="btn-format btn-pdf" data-format="pdf" onclick="selectFormat('pdf')">
+                            <i class="fas fa-file-pdf"></i> PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancel" onclick="closeExportModal()">Hủy</button>
+            <button class="btn-export" onclick="handleExport()">
+                <i class="fas fa-download"></i> Export
+            </button>
+        </div>
+    </div>
 </div>
 
 <!-- Content Sections -->
@@ -299,6 +384,112 @@
                     }
                 });
             }
+        }
+
+        // Import Modal Functions
+        function openImportModal() {
+            $('#importModal').fadeIn(300);
+        }
+
+        function closeImportModal() {
+            $('#importModal').fadeOut(300);
+            $('#importFile').val('');
+            $('#selectedFileName').text('');
+        }
+
+        function updateFileName() {
+            const input = document.getElementById('importFile');
+            const fileName = input.files[0]?.name || '';
+            $('#selectedFileName').text(fileName);
+        }
+
+        function downloadTemplate(type) {
+            if (type === 'excel') {
+                window.location.href = '@Url.Action("DownloadQuestionTemplate", "Teacher")';
+            } else if (type === 'word') {
+                window.location.href = '@Url.Action("DownloadQuestionTemplateWord", "Teacher")';
+            } else if (type === 'pdf') {
+                window.location.href = '@Url.Action("DownloadQuestionTemplatePdf", "Teacher")';
+            }
+        }
+
+        function handleImport() {
+            const fileInput = document.getElementById('importFile');
+            if (!fileInput.files[0]) {
+                alert('Vui lòng chọn file để import!');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            
+            // Show loading
+            $('#importModal .modal-content').append('<div class="loading-overlay"><i class="fas fa-spinner fa-spin"></i> Đang xử lý...</div>');
+
+            $.ajax({
+                url: '@Url.Action("ImportQuestions", "Teacher")',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    if (response.success) {
+                        // Redirect to preview page
+                        window.location.href = response.redirectUrl;
+                    } else {
+                        alert('Lỗi: ' + response.message);
+                        $('.loading-overlay').remove();
+                    }
+                },
+                error: function() {
+                    alert('Có lỗi xảy ra khi import file.');
+                    $('.loading-overlay').remove();
+                }
+            });
+        }
+
+        // Export Modal Functions
+        let selectedExportFormat = 'excel';
+
+        function openExportModal() {
+            $('#exportModal').fadeIn(300);
+        }
+
+        function closeExportModal() {
+            $('#exportModal').fadeOut(300);
+            selectedExportFormat = 'excel';
+            $('.btn-format').removeClass('active');
+            $('.btn-format[data-format="excel"]').addClass('active');
+        }
+
+        function selectFormat(format) {
+            selectedExportFormat = format;
+            $('.btn-format').removeClass('active');
+            $('.btn-format[data-format="' + format + '"]').addClass('active');
+        }
+
+        function handleExport() {
+            const subjectCode = $('#exportSubject').val();
+            let url = '';
+
+            if (selectedExportFormat === 'excel') {
+                url = '@Url.Action("ExportQuestionsExcel", "Teacher")';
+            } else if (selectedExportFormat === 'word') {
+                url = '@Url.Action("ExportQuestionsWord", "Teacher")';
+            } else if (selectedExportFormat === 'pdf') {
+                url = '@Url.Action("ExportQuestionsPdf", "Teacher")';
+            }
+
+            if (subjectCode) {
+                url += '?subjectCode=' + encodeURIComponent(subjectCode);
+            }
+
+            window.location.href = url;
+            
+            // Close modal after a short delay
+            setTimeout(function() {
+                closeExportModal();
+            }, 500);
         }
     </script>
 }

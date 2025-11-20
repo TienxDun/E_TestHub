@@ -1,0 +1,347 @@
+@model List<E_TestHub.Models.Subject>
+@{
+    ViewData["Title"] = "Quản lý Môn học";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-2">
+                        <i class="fas fa-book text-primary"></i>
+                        Quản lý Môn học
+                    </h2>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Dashboard">Dashboard</a></li>
+                            <li class="breadcrumb-item active">Môn học</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div>
+                    <a asp-action="Create" class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Thêm Môn học
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i>
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle"></i>
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Stats Card -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card stats-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">Tổng Môn học</h6>
+                            <h3 class="mb-0">@ViewBag.TotalSubjects</h3>
+                        </div>
+                        <div class="stats-icon bg-primary">
+                            <i class="fas fa-book"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filter -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm theo tên hoặc mã môn học...">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <button id="clearSearch" class="btn btn-outline-secondary w-100">
+                        <i class="fas fa-times"></i>
+                        Xóa tìm kiếm
+                    </button>
+                </div>
+                <div class="col-md-3">
+                    <button id="exportSubjects" class="btn btn-success w-100">
+                        <i class="fas fa-download"></i>
+                        Xuất Excel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subjects Table -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Danh sách Môn học</h5>
+                <span class="badge bg-primary" id="tableInfo">@ViewBag.TotalSubjects môn học</span>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0" id="subjectsTable">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 5%">#</th>
+                            <th style="width: 15%">Mã Môn học</th>
+                            <th style="width: 30%">Tên Môn học</th>
+                            <th style="width: 35%">Mô tả</th>
+                            <th style="width: 15%" class="text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Count > 0)
+                        {
+                            var index = 1;
+                            foreach (var subject in Model)
+                            {
+                                <tr data-subject-id="@subject.Id">
+                                    <td>@index</td>
+                                    <td>
+                                        <span class="badge bg-info text-dark">@subject.Code</span>
+                                    </td>
+                                    <td>
+                                        <strong>@subject.Name</strong>
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">
+                                            @(string.IsNullOrEmpty(subject.Description) ? "Không có mô tả" : subject.Description)
+                                        </small>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="btn-group" role="group">
+                                            <a asp-action="Details" asp-route-id="@subject.Id" 
+                                               class="btn btn-sm btn-info" title="Xem chi tiết">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a asp-action="Edit" asp-route-id="@subject.Id" 
+                                               class="btn btn-sm btn-warning" title="Chỉnh sửa">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-sm btn-danger btn-delete" 
+                                                    data-subject-id="@subject.Id" 
+                                                    data-subject-name="@subject.Name"
+                                                    title="Xóa">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                index++;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center py-4">
+                                    <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                                    <p class="text-muted">Chưa có môn học nào trong hệ thống.</p>
+                                    <a asp-action="Create" class="btn btn-primary">
+                                        <i class="fas fa-plus"></i>
+                                        Thêm môn học đầu tiên
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Html.AntiForgeryToken()
+    <script>
+        $(document).ready(function () {
+            // Delete subject
+            $(document).on('click', '.btn-delete', function () {
+                const subjectId = $(this).data('subject-id');
+                const subjectName = $(this).data('subject-name');
+                const row = $(this).closest('tr');
+
+                if (confirm(`Bạn có chắc chắn muốn xóa môn học "${subjectName}"?\n\nLưu ý: Môn học có thể đang được sử dụng trong các bài thi.`)) {
+                    $.ajax({
+                        url: '@Url.Action("Delete", "Subject")/' + subjectId,
+                        type: 'POST',
+                        headers: {
+                            'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                        },
+                        beforeSend: function () {
+                            row.css('opacity', '0.5');
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                showNotification('success', response.message);
+                                row.fadeOut(400, function () {
+                                    $(this).remove();
+                                    updateTableInfo();
+                                    reindexTable();
+                                });
+                            } else {
+                                showNotification('error', response.message);
+                                row.css('opacity', '1');
+                            }
+                        },
+                        error: function () {
+                            showNotification('error', 'Đã xảy ra lỗi khi xóa môn học.');
+                            row.css('opacity', '1');
+                        }
+                    });
+                }
+            });
+
+            // Search functionality
+            let searchTimeout;
+            $('#searchInput').on('keyup', function () {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(function () {
+                    filterTable();
+                }, 300);
+            });
+
+            $('#clearSearch').on('click', function () {
+                $('#searchInput').val('');
+                filterTable();
+            });
+
+            function filterTable() {
+                const searchTerm = $('#searchInput').val().toLowerCase();
+
+                $('#subjectsTable tbody tr').each(function () {
+                    const row = $(this);
+                    const code = row.find('td:eq(1)').text().toLowerCase();
+                    const name = row.find('td:eq(2)').text().toLowerCase();
+                    const description = row.find('td:eq(3)').text().toLowerCase();
+
+                    const showRow = code.includes(searchTerm) || 
+                                  name.includes(searchTerm) || 
+                                  description.includes(searchTerm);
+
+                    row.toggle(showRow);
+                });
+
+                updateTableInfo();
+            }
+
+            function updateTableInfo() {
+                const visibleRows = $('#subjectsTable tbody tr:visible').length;
+                $('#tableInfo').text(visibleRows + ' môn học');
+            }
+
+            function reindexTable() {
+                let index = 1;
+                $('#subjectsTable tbody tr:visible').each(function () {
+                    $(this).find('td:first').text(index++);
+                });
+            }
+
+            // Export to Excel
+            $('#exportSubjects').on('click', function () {
+                let csv = 'STT,Mã môn học,Tên môn học,Mô tả\n';
+
+                $('#subjectsTable tbody tr:visible').each(function (index) {
+                    const row = $(this);
+                    const stt = index + 1;
+                    const code = row.find('td:eq(1)').text().trim();
+                    const name = row.find('td:eq(2)').text().trim();
+                    const description = row.find('td:eq(3)').text().trim();
+
+                    csv += `${stt},"${code}","${name}","${description}"\n`;
+                });
+
+                // Download CSV
+                const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                const url = URL.createObjectURL(blob);
+                link.setAttribute('href', url);
+                link.setAttribute('download', `subjects_${new Date().toISOString().split('T')[0]}.csv`);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                showNotification('success', 'Đã xuất danh sách môn học thành công!');
+            });
+
+            function showNotification(type, message) {
+                const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+                const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+
+                const notification = $(`
+                    <div class="alert ${alertClass} alert-dismissible fade show" role="alert" 
+                         style="position: fixed; top: 80px; right: 20px; z-index: 9999; min-width: 300px;">
+                        <i class="fas ${icon}"></i>
+                        ${message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                `);
+
+                $('body').append(notification);
+
+                setTimeout(function () {
+                    notification.fadeOut(400, function () {
+                        $(this).remove();
+                    });
+                }, 5000);
+            }
+        });
+    </script>
+}
+
+<style>
+    .stats-card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .stats-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+    }
+
+    .table tbody tr {
+        transition: background-color 0.2s;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    .btn-group .btn {
+        padding: 0.25rem 0.5rem;
+    }
+</style>

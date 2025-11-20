@@ -148,27 +148,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Sample data - will be populated by JavaScript -->
                     <tr>
-                        <td>@DateTime.Now.ToString("dd/MM/yyyy")</td>
-                        <td>5</td>
-                        <td>2</td>
-                        <td>15</td>
-                        <td>7.8</td>
-                    </tr>
-                    <tr>
-                        <td>@DateTime.Now.AddDays(-1).ToString("dd/MM/yyyy")</td>
-                        <td>3</td>
-                        <td>1</td>
-                        <td>12</td>
-                        <td>8.2</td>
-                    </tr>
-                    <tr>
-                        <td>@DateTime.Now.AddDays(-2).ToString("dd/MM/yyyy")</td>
-                        <td>7</td>
-                        <td>3</td>
-                        <td>18</td>
-                        <td>7.5</td>
+                        <td colspan="5" class="text-center text-muted py-4">
+                            <i class="fas fa-chart-line fa-3x mb-3 d-block"></i>
+                            <p class="mb-0">Báo cáo hoạt động chi tiết sẽ được triển khai trong phiên bản tiếp theo</p>
+                            <small class="text-muted">Hiện tại có thể xem thống kê người dùng ở phần trên</small>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -191,13 +176,23 @@
 
             // Generate report button
             $('#generateReport').click(function () {
-                // In a real implementation, this would make an AJAX call to get filtered data
-                alert('Đang tạo báo cáo... (Tính năng này sẽ được triển khai sau)');
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Tính năng đang phát triển',
+                    text: 'Báo cáo chi tiết theo bộ lọc sẽ được triển khai trong phiên bản tiếp theo.',
+                    confirmButtonText: 'Đã hiểu'
+                });
             });
 
             // Export report button
             $('#exportReport').click(function () {
-                // In a real implementation, this would export the current report
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Tính năng đang phát triển',
+                    text: 'Xuất báo cáo Excel/PDF sẽ được triển khai trong phiên bản tiếp theo.',
+                    confirmButtonText: 'Đã hiểu'
+                });
+            });
                 alert('Đang xuất báo cáo... (Tính năng này sẽ được triển khai sau)');
             });
 

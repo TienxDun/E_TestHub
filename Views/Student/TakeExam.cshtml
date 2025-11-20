@@ -1,3 +1,4 @@
+@model E_TestHub.Models.TakeExamViewModel
 @{
     ViewData["Title"] = "Làm bài thi - Sinh Viên";
     Layout = "~/Views/Shared/_ExamLayout.cshtml";
@@ -5,696 +6,508 @@
 
 @section Styles {
     <link href="~/css/student/take-exam.css" rel="stylesheet">
+    <style>
+        .auto-save-indicator {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            padding: 10px 15px;
+            background: #27ae60;
+            color: white;
+            border-radius: 4px;
+            display: none;
+            z-index: 1000;
+            animation: fadeInOut 2s;
+        }
+        @@keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            10%, 90% { opacity: 1; }
+        }
+        .exam-disabled {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+        .message-box {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+    </style>
 }
 
-<div class="exam-container">
-    <!-- Toggle Button for Mobile -->
-    <button class="question-nav-toggle" id="questionNavToggle" onclick="toggleQuestionNav()">
-        <i class="fas fa-list"></i>
-        <span>Danh sách câu hỏi</span>
-    </button>
-
-    <!-- Left Sidebar - Question Navigation -->
-    <div class="question-nav-sidebar" id="questionNavSidebar">
-        <div class="nav-header">
-            <div class="nav-title">Danh sách câu hỏi</div>
-            <div class="nav-subtitle">Đã hoàn thành: <span id="completedCount">1</span>/12 câu hỏi</div>
-            <button class="nav-close-btn" onclick="toggleQuestionNav()">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        
-        <div class="question-grid">
-            <div class="question-number current" onclick="goToQuestion(1)">1</div>
-            <div class="question-number" onclick="goToQuestion(2)">2</div>
-            <div class="question-number" onclick="goToQuestion(3)">3</div>
-            <div class="question-number" onclick="goToQuestion(4)">4</div>
-            <div class="question-number" onclick="goToQuestion(5)">5</div>
-            <div class="question-number" onclick="goToQuestion(6)">6</div>
-            <div class="question-number" onclick="goToQuestion(7)">7</div>
-            <div class="question-number" onclick="goToQuestion(8)">8</div>
-            <div class="question-number" onclick="goToQuestion(9)">9</div>
-            <div class="question-number" onclick="goToQuestion(10)">10</div>
-            <div class="question-number" onclick="goToQuestion(11)">11</div>
-            <div class="question-number" onclick="goToQuestion(12)">12</div>
+@if (!Model.CanStart)
+{
+    <div class="exam-container">
+        <div class="message-box">
+            <h2>@Model.Message</h2>
+            <a href="@Url.Action("MyExams")" class="btn btn-primary" style="margin-top: 20px;">
+                <i class="fas fa-arrow-left"></i> Quay lại
+            </a>
         </div>
     </div>
-    
-    <!-- Main Content Area -->
-    <div class="exam-main-content">
-        <!-- Exam Header -->
-        <div class="exam-header">
-            <div class="exam-info">
-                <a href="@Url.Action("ExamInfo", "Student", new { examId = ViewBag.ExamId })" class="back-btn">
-                    <i class="fas fa-arrow-left"></i>
-                    Quay lại
-                </a>
-                <h1 class="exam-title">Kiểm tra giữa kỳ: Công nghệ phần mềm nâng cao</h1>
+}
+else
+{
+    <div class="exam-container" id="examContainer">
+        <!-- Auto-save indicator -->
+        <div class="auto-save-indicator" id="autoSaveIndicator">
+            <i class="fas fa-check"></i> Đã lưu tự động
+        </div>
+
+        <!-- Toggle Button for Mobile -->
+        <button class="question-nav-toggle" id="questionNavToggle" onclick="toggleQuestionNav()">
+            <i class="fas fa-list"></i>
+            <span>Danh sách câu hỏi</span>
+        </button>
+
+        <!-- Left Sidebar - Question Navigation -->
+        <div class="question-nav-sidebar" id="questionNavSidebar">
+            <div class="nav-header">
+                <div class="nav-title">Danh sách câu hỏi</div>
+                <div class="nav-subtitle">Đã hoàn thành: <span id="completedCount">0</span>/@Model.Questions.Count câu hỏi</div>
+                <button class="nav-close-btn" onclick="toggleQuestionNav()">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             
-            <div class="exam-controls">
-                <div class="timer">
-                    <i class="fas fa-clock"></i>
-                    <span id="timeRemaining">12:06:02</span>
+            <div class="question-grid" id="questionGrid">
+                @for (int i = 0; i < Model.Questions.Count; i++)
+                {
+                    <div class="question-number @(i == 0 ? "current" : "")" onclick="goToQuestion(@(i + 1))">@(i + 1)</div>
+                }
+            </div>
+        </div>
+        
+        <!-- Main Content Area -->
+        <div class="exam-main-content">
+            <!-- Exam Header -->
+            <div class="exam-header">
+                <div class="exam-info">
+                    <a href="@Url.Action("ExamInfo", "Student", new { examId = Model.Exam.ApiId })" class="back-btn">
+                        <i class="fas fa-arrow-left"></i>
+                        Quay lại
+                    </a>
+                    <h1 class="exam-title">@Model.Exam.Title</h1>
                 </div>
-                <button class="submit-btn" onclick="submitExam()">
-                    <i class="fas fa-paper-plane"></i>
-                    Nộp bài
+                
+                <div class="exam-controls">
+                    <div class="timer">
+                        <i class="fas fa-clock"></i>
+                        <span id="timeRemaining">@(Model.DurationMinutes):00</span>
+                    </div>
+                    <button class="submit-btn" onclick="submitExam()">
+                        <i class="fas fa-paper-plane"></i>
+                        Nộp bài
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Question Content -->
+            <div class="question-content">
+                <div class="question-header">
+                    <h2 class="question-title">Câu <span id="currentQuestionNumber">1</span></h2>
+                </div>
+                
+                <div id="questionContainer">
+                    @for (int i = 0; i < Model.Questions.Count; i++)
+                    {
+                        var question = Model.Questions[i];
+                        <div class="question" id="question@(i + 1)" style="display: @(i == 0 ? "block" : "none");" data-question-id="@question.ApiId">
+                            <div class="question-text">
+                                @Html.Raw(question.Content)
+                            </div>
+                            
+                            @if (question.Type == E_TestHub.Models.QuestionType.MultipleChoice)
+                            {
+                                <ul class="answer-options">
+                                    @for (int j = 0; j < question.Options.Count && j < 4; j++)
+                                    {
+                                        var optionLabel = ((char)('A' + j)).ToString();
+                                        var option = question.Options[j];
+                                        @if (!string.IsNullOrEmpty(option))
+                                        {
+                                            <li class="answer-option">
+                                                <label>
+                                                    <input type="radio" name="question@(i + 1)" value="@optionLabel" data-question-id="@question.ApiId">
+                                                    <span class="answer-text">@option</span>
+                                                </label>
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+                            }
+                            else if (question.Type == E_TestHub.Models.QuestionType.TrueFalse)
+                            {
+                                <ul class="answer-options">
+                                    <li class="answer-option">
+                                        <label>
+                                            <input type="radio" name="question@(i + 1)" value="True" data-question-id="@question.ApiId">
+                                            <span class="answer-text">Đúng</span>
+                                        </label>
+                                    </li>
+                                    <li class="answer-option">
+                                        <label>
+                                            <input type="radio" name="question@(i + 1)" value="False" data-question-id="@question.ApiId">
+                                            <span class="answer-text">Sai</span>
+                                        </label>
+                                    </li>
+                                </ul>
+                            }
+                            else if (question.Type == E_TestHub.Models.QuestionType.Essay)
+                            {
+                                <textarea 
+                                    class="form-control essay-answer" 
+                                    name="question@(i + 1)" 
+                                    rows="6" 
+                                    placeholder="Nhập câu trả lời của bạn..."
+                                    data-question-id="@question.ApiId"></textarea>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+            
+            <!-- Navigation Buttons -->
+            <div class="question-navigation">
+                <button class="nav-btn" id="prevBtn" onclick="previousQuestion()">
+                    <i class="fas fa-chevron-left"></i>
+                    Câu trước
+                </button>
+                <button class="nav-btn" id="nextBtn" onclick="nextQuestion()">
+                    Câu sau
+                    <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
         </div>
-        
-        <!-- Question Content -->
-        <div class="question-content">
-            <div class="question-header">
-                <h2 class="question-title">Câu <span id="currentQuestionNumber">1</span></h2>
-            </div>
-            
-            <div id="questionContainer">
-                <!-- Question 1 -->
-                <div class="question" id="question1" style="display: block;">
-                    <div class="question-text">
-                        Mô hình phát triển phần mềm nào phù hợp nhất cho dự án có yêu cầu thay đổi thường xuyên?
-                    </div>
-                    
-                    <ul class="answer-options">
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question1" value="A">
-                                <span class="answer-text">Mô hình Waterfall</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question1" value="B">
-                                <span class="answer-text">Mô hình V-Model</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question1" value="C" checked>
-                                <span class="answer-text">Mô hình Agile</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question1" value="D">
-                                <span class="answer-text">Mô hình Spiral</span>
-                            </label>
-                        </li>
-                    </ul>
-                </div>
-                
-                <!-- Question 2 -->
-                <div class="question" id="question2" style="display: none;">
-                    <div class="question-text">
-                        Design Pattern nào được sử dụng để đảm bảo một class chỉ có duy nhất một instance?
-                    </div>
-                    
-                    <ul class="answer-options">
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question2" value="A">
-                                <span class="answer-text">Factory Pattern</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question2" value="B">
-                                <span class="answer-text">Singleton Pattern</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question2" value="C">
-                                <span class="answer-text">Observer Pattern</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question2" value="D">
-                                <span class="answer-text">Strategy Pattern</span>
-                            </label>
-                        </li>
-                    </ul>
-                </div>
-                
-                <!-- Question 3 -->
-                <div class="question" id="question3" style="display: none;">
-                    <div class="question-text">
-                        Nguyên tắc SOLID nào khuyến nghị "Một class chỉ nên có một lý do duy nhất để thay đổi"?
-                    </div>
-                    
-                    <ul class="answer-options">
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question3" value="A">
-                                <span class="answer-text">Single Responsibility Principle</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question3" value="B">
-                                <span class="answer-text">Open/Closed Principle</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question3" value="C">
-                                <span class="answer-text">Liskov Substitution Principle</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question3" value="D">
-                                <span class="answer-text">Dependency Inversion Principle</span>
-                            </label>
-                        </li>
-                    </ul>
-                </div>
-                
-                <!-- Question 4 -->
-                <div class="question" id="question4" style="display: none;">
-                    <div class="question-text">
-                        Trong kiến trúc Microservices, công nghệ nào thường được sử dụng để quản lý container?
-                    </div>
-                    
-                    <ul class="answer-options">
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question4" value="A">
-                                <span class="answer-text">Kubernetes</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question4" value="B">
-                                <span class="answer-text">Apache Tomcat</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question4" value="C">
-                                <span class="answer-text">IIS Server</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question4" value="D">
-                                <span class="answer-text">XAMPP</span>
-                            </label>
-                        </li>
-                    </ul>
-                </div>
-                
-                <!-- Question 5 -->
-                <div class="question" id="question5" style="display: none;">
-                    <div class="question-text">
-                        Công cụ nào được sử dụng để quản lý phiên bản mã nguồn (Version Control)?
-                    </div>
-                    
-                    <ul class="answer-options">
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question5" value="A">
-                                <span class="answer-text">Git</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question5" value="B">
-                                <span class="answer-text">Jenkins</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question5" value="C">
-                                <span class="answer-text">Docker</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question5" value="D">
-                                <span class="answer-text">Jira</span>
-                            </label>
-                        </li>
-                    </ul>
-                </div>
-                
-                <!-- Question 6 -->
-                <div class="question" id="question6" style="display: none;">
-                    <div class="question-text">
-                        Trong CI/CD, CD viết tắt của từ nào?
-                    </div>
-                    
-                    <ul class="answer-options">
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question6" value="A">
-                                <span class="answer-text">Code Development</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question6" value="B">
-                                <span class="answer-text">Continuous Deployment</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question6" value="C">
-                                <span class="answer-text">Container Distribution</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question6" value="D">
-                                <span class="answer-text">Cloud Delivery</span>
-                            </label>
-                        </li>
-                    </ul>
-                </div>
-                
-                <!-- Question 7 -->
-                <div class="question" id="question7" style="display: none;">
-                    <div class="question-text">
-                        Kiến trúc phần mềm nào tách biệt logic nghiệp vụ khỏi giao diện người dùng?
-                    </div>
-                    
-                    <ul class="answer-options">
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question7" value="A">
-                                <span class="answer-text">MVC (Model-View-Controller)</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question7" value="B">
-                                <span class="answer-text">Monolithic Architecture</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question7" value="C">
-                                <span class="answer-text">Client-Server Architecture</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question7" value="D">
-                                <span class="answer-text">Peer-to-Peer Architecture</span>
-                            </label>
-                        </li>
-                    </ul>
-                </div>
-                
-                <!-- Question 8 -->
-                <div class="question" id="question8" style="display: none;">
-                    <div class="question-text">
-                        Phương pháp nào được sử dụng để đảm bảo chất lượng phần mềm thông qua kiểm thử tự động?
-                    </div>
-                    
-                    <ul class="answer-options">
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question8" value="A">
-                                <span class="answer-text">Unit Testing</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question8" value="B">
-                                <span class="answer-text">Code Review</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question8" value="C">
-                                <span class="answer-text">Pair Programming</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question8" value="D">
-                                <span class="answer-text">Refactoring</span>
-                            </label>
-                        </li>
-                    </ul>
-                </div>
-                
-                <!-- Question 9 -->
-                <div class="question" id="question9" style="display: none;">
-                    <div class="question-text">
-                        Trong REST API, phương thức HTTP nào được sử dụng để cập nhật một phần tài nguyên?
-                    </div>
-                    
-                    <ul class="answer-options">
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question9" value="A">
-                                <span class="answer-text">PUT</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question9" value="B">
-                                <span class="answer-text">PATCH</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question9" value="C">
-                                <span class="answer-text">POST</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question9" value="D">
-                                <span class="answer-text">DELETE</span>
-                            </label>
-                        </li>
-                    </ul>
-                </div>
-                
-                <!-- Question 10 -->
-                <div class="question" id="question10" style="display: none;">
-                    <div class="question-text">
-                        Cơ sở dữ liệu NoSQL nào phù hợp nhất để lưu trữ dữ liệu dạng document?
-                    </div>
-                    
-                    <ul class="answer-options">
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question10" value="A">
-                                <span class="answer-text">MongoDB</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question10" value="B">
-                                <span class="answer-text">Redis</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question10" value="C">
-                                <span class="answer-text">Cassandra</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question10" value="D">
-                                <span class="answer-text">Neo4j</span>
-                            </label>
-                        </li>
-                    </ul>
-                </div>
-                
-                <!-- Question 11 -->
-                <div class="question" id="question11" style="display: none;">
-                    <div class="question-text">
-                        Design Pattern nào được sử dụng để tạo đối tượng mà không cần chỉ định class cụ thể?
-                    </div>
-                    
-                    <ul class="answer-options">
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question11" value="A">
-                                <span class="answer-text">Factory Pattern</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question11" value="B">
-                                <span class="answer-text">Observer Pattern</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question11" value="C">
-                                <span class="answer-text">Strategy Pattern</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question11" value="D">
-                                <span class="answer-text">Decorator Pattern</span>
-                            </label>
-                        </li>
-                    </ul>
-                </div>
-                
-                <!-- Question 12 -->
-                <div class="question" id="question12" style="display: none;">
-                    <div class="question-text">
-                        Trong bảo mật phần mềm, kỹ thuật nào được sử dụng để bảo vệ mật khẩu trong cơ sở dữ liệu?
-                    </div>
-                    
-                    <ul class="answer-options">
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question12" value="A">
-                                <span class="answer-text">Encryption</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question12" value="B">
-                                <span class="answer-text">Hashing</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question12" value="C">
-                                <span class="answer-text">Encoding</span>
-                            </label>
-                        </li>
-                        <li class="answer-option">
-                            <label>
-                                <input type="radio" name="question12" value="D">
-                                <span class="answer-text">Compression</span>
-                            </label>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Navigation Footer -->
-        <div class="question-navigation">
-            <button class="nav-btn" id="prevBtn" onclick="previousQuestion()" disabled>
-                <i class="fas fa-chevron-left"></i>
-                Câu trước
-            </button>
-            
-            <span class="question-counter">
-                Câu <span id="currentQuestion">1</span> / 12
-            </span>
-            
-            <button class="nav-btn primary" id="nextBtn" onclick="nextQuestion()">
-                Câu tiếp
-                <i class="fas fa-chevron-right"></i>
-            </button>
-        </div>
     </div>
-</div>
+}
 
 @section Scripts {
     <script>
         let currentQuestionIndex = 1;
-        const totalQuestions = 12;
-        let answers = {};
+        const totalQuestions = @Model.Questions.Count;
+        let submissionId = '@Model.ExistingSubmission?.ApiId';
+        const examId = '@(Model.Exam.ApiId ?? Context.Request.Query["examId"].ToString())';
+        const examDuration = @Model.DurationMinutes; // minutes
+        let autoSaveInterval;
+        let timerInterval;
+        let timeRemaining = examDuration * 60; // seconds
+        let hasStarted = false;
         
-        // Timer functionality
-        let timeLeft = 12 * 3600 + 6 * 60 + 2; // 12:06:02 in seconds
-        
-        function updateTimer() {
-            const hours = Math.floor(timeLeft / 3600);
-            const minutes = Math.floor((timeLeft % 3600) / 60);
-            const seconds = timeLeft % 60;
+        // Debug log
+        console.log('Exam ID:', examId);
+        if (!examId || examId === '') {
+            console.error('CRITICAL: examId is empty!');
+            alert('Lỗi: Không tìm thấy mã đề thi. Vui lòng quay lại và thử lại.');
+        }
+
+        // Start exam on page load
+        $(document).ready(async function() {
+            if (!submissionId) {
+                await startExam();
+            } else {
+                hasStarted = true;
+                loadExistingAnswers();
+            }
             
-            const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            document.getElementById('timeRemaining').textContent = timeString;
+            if (hasStarted) {
+                startTimer();
+                startAutoSave();
+            }
+
+            // Add change listeners
+            $('input[type="radio"], textarea.essay-answer').on('change', function() {
+                updateCompletedCount();
+                markQuestionAsAnswered(currentQuestionIndex);
+            });
+        });
+
+        // Start exam - create submission
+        async function startExam() {
+            try {
+                const response = await fetch('@Url.Action("StartExam")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    body: JSON.stringify({ examId: examId })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    submissionId = data.submissionId;
+                    hasStarted = true;
+                    console.log('Exam started. Submission ID:', submissionId);
+                } else {
+                    alert('Không thể bắt đầu làm bài: ' + data.message);
+                    window.location.href = '@Url.Action("MyExams")';
+                }
+            } catch (error) {
+                console.error('Error starting exam:', error);
+                alert('Lỗi khi bắt đầu làm bài');
+            }
+        }
+
+        // Load existing answers (if resuming)
+        function loadExistingAnswers() {
+            @if (Model.ExistingSubmission?.Answers != null && Model.ExistingSubmission.Answers.Any())
+            {
+                <text>
+                const existingAnswers = @Html.Raw(Json.Serialize(Model.ExistingSubmission.Answers));
+                
+                existingAnswers.forEach(answer => {
+                    const input = $(`[data-question-id="${answer.questionId}"][value="${answer.selectedOption}"]`);
+                    if (input.length > 0) {
+                        input.prop('checked', true);
+                    }
+                });
+                
+                updateCompletedCount();
+                updateAllQuestionStatus();
+                </text>
+            }
+        }
+
+        // Auto-save functionality
+        function startAutoSave() {
+            autoSaveInterval = setInterval(async () => {
+                await saveAnswers();
+            }, 30000); // Save every 30 seconds
+        }
+
+        async function saveAnswers() {
+            if (!submissionId) return;
+
+            const answers = collectAnswers();
             
-            if (timeLeft <= 0) {
-                submitExam();
+            try {
+                const response = await fetch('@Url.Action("SaveAnswers")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    body: JSON.stringify({
+                        submissionId: submissionId,
+                        answers: answers
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    showAutoSaveIndicator();
+                    console.log('Auto-saved successfully');
+                }
+            } catch (error) {
+                console.error('Error auto-saving:', error);
+            }
+        }
+
+        function showAutoSaveIndicator() {
+            const indicator = document.getElementById('autoSaveIndicator');
+            indicator.style.display = 'block';
+            setTimeout(() => {
+                indicator.style.display = 'none';
+            }, 2000);
+        }
+
+        // Collect all answers
+        function collectAnswers() {
+            const answers = [];
+            
+            for (let i = 1; i <= totalQuestions; i++) {
+                const questionDiv = $(`#question${i}`);
+                const questionId = questionDiv.data('question-id');
+                const selectedInput = $(`input[name="question${i}"]:checked, textarea[name="question${i}"]`);
+                
+                if (selectedInput.length > 0) {
+                    answers.push({
+                        questionId: questionId,
+                        selectedOption: selectedInput.val(),
+                        score: 0 // Will be calculated on server
+                    });
+                }
+            }
+            
+            return answers;
+        }
+
+        // Submit exam
+        async function submitExam() {
+            if (!confirm('Bạn có chắc chắn muốn nộp bài? Bạn sẽ không thể sửa đổi sau khi nộp.')) {
                 return;
             }
+
+            const answers = collectAnswers();
             
-            timeLeft--;
+            if (answers.length < totalQuestions) {
+                if (!confirm(`Bạn mới trả lời ${answers.length}/${totalQuestions} câu hỏi. Bạn có muốn nộp bài không?`)) {
+                    return;
+                }
+            }
+
+            try {
+                // Stop auto-save and timer
+                clearInterval(autoSaveInterval);
+                clearInterval(timerInterval);
+
+                const response = await fetch('@Url.Action("SubmitExam")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    body: JSON.stringify({
+                        submissionId: submissionId,
+                        answers: answers
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(data.message);
+                    window.location.href = data.redirectUrl;
+                } else {
+                    alert('Không thể nộp bài: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error submitting exam:', error);
+                alert('Lỗi khi nộp bài');
+            }
         }
-        
-        setInterval(updateTimer, 1000);
-        
+
+        // Timer functionality
+        function startTimer() {
+            updateTimerDisplay();
+            
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+                
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    autoSubmitExam();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const hours = Math.floor(timeRemaining / 3600);
+            const minutes = Math.floor((timeRemaining % 3600) / 60);
+            const seconds = timeRemaining % 60;
+            
+            const display = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('timeRemaining').textContent = display;
+            
+            // Warning at 5 minutes
+            if (timeRemaining === 300) {
+                alert('⚠️ Còn 5 phút để hoàn thành bài thi!');
+            }
+        }
+
+        async function autoSubmitExam() {
+            alert('⏰ Hết giờ làm bài! Bài thi sẽ được tự động nộp.');
+            await submitExam();
+        }
+
+        // Question navigation
         function goToQuestion(questionNumber) {
-            // Hide current question
-            document.getElementById(`question${currentQuestionIndex}`).style.display = 'none';
+            if (questionNumber < 1 || questionNumber > totalQuestions) return;
             
-            // Update current question index
             currentQuestionIndex = questionNumber;
-            
-            // Show new question
-            document.getElementById(`question${currentQuestionIndex}`).style.display = 'block';
-            
-            // Update UI
             updateQuestionUI();
         }
-        
+
         function nextQuestion() {
             if (currentQuestionIndex < totalQuestions) {
-                goToQuestion(currentQuestionIndex + 1);
+                currentQuestionIndex++;
+                updateQuestionUI();
             }
         }
-        
+
         function previousQuestion() {
             if (currentQuestionIndex > 1) {
-                goToQuestion(currentQuestionIndex - 1);
+                currentQuestionIndex--;
+                updateQuestionUI();
             }
         }
-        
+
         function updateQuestionUI() {
-            // Update question number displays
+            // Hide all questions
+            document.querySelectorAll('.question').forEach(q => q.style.display = 'none');
+            
+            // Show current question
+            document.getElementById(`question${currentQuestionIndex}`).style.display = 'block';
+            
+            // Update question number display
             document.getElementById('currentQuestionNumber').textContent = currentQuestionIndex;
-            document.getElementById('currentQuestion').textContent = currentQuestionIndex;
             
             // Update navigation buttons
             document.getElementById('prevBtn').disabled = currentQuestionIndex === 1;
             document.getElementById('nextBtn').disabled = currentQuestionIndex === totalQuestions;
             
-            // Update question number buttons
+            // Update question grid
             document.querySelectorAll('.question-number').forEach((btn, index) => {
-                btn.classList.remove('current');
-                if (index + 1 === currentQuestionIndex) {
-                    btn.classList.add('current');
-                }
+                btn.classList.toggle('current', index + 1 === currentQuestionIndex);
             });
-            
-            // Update completed count
-            updateCompletedCount();
         }
-        
+
         function updateCompletedCount() {
             let completed = 0;
+            
             for (let i = 1; i <= totalQuestions; i++) {
-                const questionInputs = document.querySelectorAll(`input[name="question${i}"]`);
-                const isAnswered = Array.from(questionInputs).some(input => input.checked);
-                
-                if (isAnswered) {
+                const selected = document.querySelector(`input[name="question${i}"]:checked, textarea[name="question${i}"]`);
+                if (selected && selected.value) {
                     completed++;
-                    document.querySelector(`.question-number:nth-child(${i})`).classList.add('answered');
-                } else {
-                    document.querySelector(`.question-number:nth-child(${i})`).classList.remove('answered');
                 }
             }
             
             document.getElementById('completedCount').textContent = completed;
         }
-        
-        function submitExam() {
-            if (confirm('Bạn có chắc chắn muốn nộp bài? Bạn sẽ không thể chỉnh sửa sau khi nộp.')) {
-                // Collect all answers
-                const examData = {};
-                for (let i = 1; i <= totalQuestions; i++) {
-                    const selectedAnswer = document.querySelector(`input[name="question${i}"]:checked`);
-                    if (selectedAnswer) {
-                        examData[`question${i}`] = selectedAnswer.value;
-                    }
-                }
-                
-                // Submit to server (you can implement the actual submission logic here)
-                console.log('Exam submitted:', examData);
-                alert('Bài thi đã được nộp thành công!');
-                
-                // Redirect to results or dashboard
-                window.location.href = '@Url.Action("ViewResults", "Student")';
+
+        function updateAllQuestionStatus() {
+            for (let i = 1; i <= totalQuestions; i++) {
+                markQuestionAsAnswered(i);
             }
         }
-        
-        // Add event listeners for answer selection
-        document.addEventListener('change', function(e) {
-            if (e.target.type === 'radio') {
-                updateCompletedCount();
-            }
-        });
-        
-        // Keyboard navigation
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'ArrowLeft' && currentQuestionIndex > 1) {
-                previousQuestion();
-            } else if (e.key === 'ArrowRight' && currentQuestionIndex < totalQuestions) {
-                nextQuestion();
-            }
-        });
-        
-        // Initialize
-        updateQuestionUI();
-        updateCompletedCount();
-        
-        // Prevent accidental page refresh
-        window.addEventListener('beforeunload', function(e) {
-            e.preventDefault();
-            e.returnValue = 'Bạn có chắc chắn muốn rời khỏi trang? Bài thi của bạn sẽ không được lưu.';
-        });
 
-        // Toggle Question Navigation Sidebar (for mobile/tablet)
+        function markQuestionAsAnswered(questionNumber) {
+            const selected = document.querySelector(`input[name="question${questionNumber}"]:checked, textarea[name="question${questionNumber}"]`);
+            const btn = document.querySelectorAll('.question-number')[questionNumber - 1];
+            
+            if (selected && selected.value) {
+                btn.classList.add('answered');
+            } else {
+                btn.classList.remove('answered');
+            }
+        }
+
+        // Toggle sidebar (mobile)
         function toggleQuestionNav() {
             const sidebar = document.getElementById('questionNavSidebar');
-            let overlay = document.getElementById('questionNavOverlay');
-            
             sidebar.classList.toggle('active');
-            
-            if (!overlay) {
-                overlay = document.createElement('div');
-                overlay.id = 'questionNavOverlay';
-                overlay.className = 'question-nav-overlay';
-                overlay.onclick = function(e) {
-                    // Only close if clicking on overlay, not on elements beneath
-                    if (e.target === overlay) {
-                        toggleQuestionNav();
-                    }
-                };
-                document.body.appendChild(overlay);
-                setTimeout(() => overlay.classList.add('active'), 10);
-            } else {
-                overlay.classList.toggle('active');
-                
-                // Remove overlay after transition if not active
-                if (!overlay.classList.contains('active')) {
-                    setTimeout(() => {
-                        if (!overlay.classList.contains('active')) {
-                            overlay.remove();
-                        }
-                    }, 300);
-                }
-            }
         }
 
-        // Close sidebar when clicking on a question number (mobile)
-        document.querySelectorAll('.question-number').forEach(btn => {
-            btn.addEventListener('click', function() {
-                if (window.innerWidth <= 768) {
-                    const sidebar = document.getElementById('questionNavSidebar');
-                    if (sidebar && sidebar.classList.contains('active')) {
-                        toggleQuestionNav();
-                    }
-                }
-            });
+        // Prevent accidental page leave
+        window.addEventListener('beforeunload', function(e) {
+            if (hasStarted) {
+                e.preventDefault();
+                e.returnValue = 'Bạn có chắc chắn muốn rời khỏi? Tiến trình làm bài sẽ được lưu tự động.';
+            }
         });
 
-        // Prevent body scroll when sidebar is open on mobile
-        const sidebar = document.getElementById('questionNavSidebar');
-        const observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                if (mutation.attributeName === 'class') {
-                    if (sidebar.classList.contains('active') && window.innerWidth <= 768) {
-                        document.body.style.overflow = 'hidden';
-                    } else {
-                        document.body.style.overflow = '';
-                    }
-                }
-            });
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') previousQuestion();
+            else if (e.key === 'ArrowRight') nextQuestion();
         });
-        observer.observe(sidebar, { attributes: true });
     </script>
+    @Html.AntiForgeryToken()
 }

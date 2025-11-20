@@ -148,9 +148,9 @@
                     {
                         foreach (var user in ViewBag.Users)
                         {
-                            <tr data-user-id="@user.Id">
+                            <tr data-user-id="@user.ApiId">
                                 <td>
-                                    <input type="checkbox" class="user-checkbox" value="@user.Id" />
+                                    <input type="checkbox" class="user-checkbox" value="@user.ApiId" />
                                 </td>
                                 <td>
                                     <div class="user-info">
@@ -192,25 +192,25 @@
                                 <td>@(user.LastLoginDate?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa đăng nhập")</td>
                                 <td>
                                     <div class="action-buttons">
-                                        <button class="btn-action btn-view" title="Xem chi tiết" data-user-id="@user.Id">
+                                        <button class="btn-action btn-view" title="Xem chi tiết" data-user-id="@user.ApiId">
                                             <i class="fas fa-eye"></i>
                                         </button>
-                                        <button class="btn-action btn-edit" title="Chỉnh sửa" data-user-id="@user.Id">
+                                        <button class="btn-action btn-edit" title="Chỉnh sửa" data-user-id="@user.ApiId">
                                             <i class="fas fa-edit"></i>
                                         </button>
                                         @if (user.IsActive)
                                         {
-                                            <button class="btn-action btn-deactivate" title="Vô hiệu hóa" data-user-id="@user.Id">
+                                            <button class="btn-action btn-deactivate" title="Vô hiệu hóa" data-user-id="@user.ApiId">
                                                 <i class="fas fa-pause"></i>
                                             </button>
                                         }
                                         else
                                         {
-                                            <button class="btn-action btn-activate" title="Kích hoạt" data-user-id="@user.Id">
+                                            <button class="btn-action btn-activate" title="Kích hoạt" data-user-id="@user.ApiId">
                                                 <i class="fas fa-play"></i>
                                             </button>
                                         }
-                                        <button class="btn-action btn-delete" title="Xóa" data-user-id="@user.Id">
+                                        <button class="btn-action btn-delete" title="Xóa" data-user-id="@user.ApiId">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
@@ -295,144 +295,8 @@
 </div>
 
 @section Scripts {
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            // Update table info
-            function updateTableInfo() {
-                var totalRows = $('#usersTable tbody tr').length;
-                var visibleRows = $('#usersTable tbody tr:visible').length;
-                $('#tableInfo').text('Hiển thị ' + visibleRows + ' / ' + totalRows + ' người dùng');
-            }
-
-            updateTableInfo();
-
-            // Select all checkbox
-            $('#selectAll').change(function () {
-                $('.user-checkbox').prop('checked', $(this).prop('checked'));
-                updateBulkActions();
-            });
-
-            $('.user-checkbox').change(function () {
-                var allChecked = $('.user-checkbox:checked').length === $('.user-checkbox').length;
-                $('#selectAll').prop('checked', allChecked);
-                updateBulkActions();
-            });
-
-            function updateBulkActions() {
-                var selectedCount = $('.user-checkbox:checked').length;
-                $('#bulkActivate, #bulkDeactivate, #bulkDelete').prop('disabled', selectedCount === 0);
-            }
-
-            // Search functionality
-            $('#searchInput').on('keyup', function () {
-                var value = $(this).val().toLowerCase();
-                $('#usersTable tbody tr').filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-                });
-                updateTableInfo();
-            });
-
-            $('#clearSearch').click(function () {
-                $('#searchInput').val('');
-                $('#usersTable tbody tr').show();
-                updateTableInfo();
-            });
-
-            // Filters
-            $('#applyFilters').click(function () {
-                var roleFilter = $('#roleFilter').val();
-                var statusFilter = $('#statusFilter').val();
-
-                $('#usersTable tbody tr').each(function () {
-                    var show = true;
-                    var row = $(this);
-
-                    if (roleFilter) {
-                        var roleText = row.find('.role-badge').text().trim();
-                        if (roleText !== roleFilter) show = false;
-                    }
-
-                    if (statusFilter !== '') {
-                        var isActive = row.find('.status-badge').hasClass('status-active');
-                        var filterActive = statusFilter === 'true';
-                        if (isActive !== filterActive) show = false;
-                    }
-
-                    row.toggle(show);
-                });
-
-                updateTableInfo();
-            });
-
-            $('#resetFilters').click(function () {
-                $('#roleFilter, #statusFilter').val('');
-                $('#usersTable tbody tr').show();
-                updateTableInfo();
-            });
-
-            // View user details
-            $('.btn-view').click(function () {
-                var userId = $(this).data('user-id');
-                // In a real implementation, fetch user details via AJAX
-                alert('Xem chi tiết người dùng ID: ' + userId + ' (Tính năng sẽ được triển khai sau)');
-            });
-
-            // Edit user
-            $('.btn-edit').click(function () {
-                var userId = $(this).data('user-id');
-                // In a real implementation, open edit modal or redirect
-                alert('Chỉnh sửa người dùng ID: ' + userId + ' (Tính năng sẽ được triển khai sau)');
-            });
-
-            // Activate/Deactivate user
-            $('.btn-activate, .btn-deactivate').click(function () {
-                var userId = $(this).data('user-id');
-                var action = $(this).hasClass('btn-activate') ? 'kích hoạt' : 'vô hiệu hóa';
-                if (confirm('Bạn có chắc muốn ' + action + ' người dùng này?')) {
-                    // In a real implementation, make AJAX call
-                    alert('Đang ' + action + ' người dùng... (Tính năng sẽ được triển khai sau)');
-                    location.reload();
-                }
-            });
-
-            // Delete user
-            $('.btn-delete').click(function () {
-                var userId = $(this).data('user-id');
-                if (confirm('Bạn có chắc muốn xóa người dùng này? Hành động này không thể hoàn tác.')) {
-                    // In a real implementation, make AJAX call
-                    alert('Đang xóa người dùng... (Tính năng sẽ được triển khai sau)');
-                    location.reload();
-                }
-            });
-
-            // Bulk actions
-            $('#bulkActivate').click(function () {
-                var selectedIds = $('.user-checkbox:checked').map(function () { return $(this).val(); }).get();
-                if (selectedIds.length > 0 && confirm('Kích hoạt ' + selectedIds.length + ' người dùng đã chọn?')) {
-                    alert('Đang kích hoạt người dùng... (Tính năng sẽ được triển khai sau)');
-                }
-            });
-
-            $('#bulkDeactivate').click(function () {
-                var selectedIds = $('.user-checkbox:checked').map(function () { return $(this).val(); }).get();
-                if (selectedIds.length > 0 && confirm('Vô hiệu hóa ' + selectedIds.length + ' người dùng đã chọn?')) {
-                    alert('Đang vô hiệu hóa người dùng... (Tính năng sẽ được triển khai sau)');
-                }
-            });
-
-            $('#bulkDelete').click(function () {
-                var selectedIds = $('.user-checkbox:checked').map(function () { return $(this).val(); }).get();
-                if (selectedIds.length > 0 && confirm('Xóa ' + selectedIds.length + ' người dùng đã chọn? Hành động này không thể hoàn tác.')) {
-                    alert('Đang xóa người dùng... (Tính năng sẽ được triển khai sau)');
-                }
-            });
-
-            // Export users
-            $('#exportUsers').click(function () {
-                alert('Đang xuất danh sách người dùng... (Tính năng sẽ được triển khai sau)');
-            });
-        });
-    </script>
+    @Html.AntiForgeryToken()
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/admin/user-management.js"></script>
 }

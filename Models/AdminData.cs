@@ -6,148 +6,9 @@ namespace E_TestHub.Models
 {
     public static class AdminData
     {
-        // Static list to store users for testing purposes
+        // Static list - kept as fallback structure when API is unavailable
+        // Data now comes from MongoDB API (IUserApiService)
         private static List<User> _users = new List<User>();
-
-        static AdminData()
-        {
-            InitializeDefaultUsers();
-        }
-
-        private static void InitializeDefaultUsers()
-        {
-            _users = new List<User>
-            {
-                new User
-                {
-                    Id = 1,
-                    Email = "admin@e-testhub.edu.vn",
-                    FullName = "Administrator",
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin123"),
-                    Role = UserRole.Admin,
-                    IsActive = true,
-                    CreatedDate = new DateTime(2025, 1, 1),
-                    LastLoginDate = new DateTime(2025, 10, 19, 9, 0, 0),
-                    Position = "System Administrator"
-                },
-                new User
-                {
-                    Id = 2,
-                    Email = "nguyenvana@e-testhub.edu.vn",
-                    FullName = "TS. Nguyễn Văn A",
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("teacher123"),
-                    Role = UserRole.Teacher,
-                    IsActive = true,
-                    CreatedDate = new DateTime(2025, 1, 15),
-                    LastLoginDate = new DateTime(2025, 10, 18, 14, 30, 0),
-                    EmployeeId = "T001",
-                    Department = "Computer Science"
-                },
-                new User
-                {
-                    Id = 3,
-                    Email = "tranthib@e-testhub.edu.vn",
-                    FullName = "PGS.TS. Trần Thị B",
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("teacher123"),
-                    Role = UserRole.Teacher,
-                    IsActive = true,
-                    CreatedDate = new DateTime(2025, 2, 1),
-                    LastLoginDate = new DateTime(2025, 10, 17, 10, 15, 0),
-                    EmployeeId = "T002",
-                    Department = "Mathematics"
-                },
-                new User
-                {
-                    Id = 4,
-                    Email = "levanc@e-testhub.edu.vn",
-                    FullName = "TS. Lê Văn C",
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("teacher123"),
-                    Role = UserRole.Teacher,
-                    IsActive = true,
-                    CreatedDate = new DateTime(2025, 2, 15),
-                    LastLoginDate = new DateTime(2025, 10, 16, 16, 45, 0),
-                    EmployeeId = "T003",
-                    Department = "Software Engineering"
-                },
-                new User
-                {
-                    Id = 5,
-                    Email = "2151012001@student.hcmus.edu.vn",
-                    FullName = "Nguyễn Văn A",
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("student123"),
-                    Role = UserRole.Student,
-                    IsActive = true,
-                    CreatedDate = new DateTime(2025, 9, 1),
-                    LastLoginDate = new DateTime(2025, 10, 19, 8, 30, 0),
-                    StudentId = "2151012001",
-                    Class = "PM233H"
-                },
-                new User
-                {
-                    Id = 6,
-                    Email = "2151012002@student.hcmus.edu.vn",
-                    FullName = "Trần Thị B",
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("student123"),
-                    Role = UserRole.Student,
-                    IsActive = true,
-                    CreatedDate = new DateTime(2025, 9, 1),
-                    LastLoginDate = new DateTime(2025, 10, 18, 12, 0, 0),
-                    StudentId = "2151012002",
-                    Class = "SE214H"
-                },
-                new User
-                {
-                    Id = 7,
-                    Email = "2151012003@student.hcmus.edu.vn",
-                    FullName = "Lê Văn C",
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("student123"),
-                    Role = UserRole.Student,
-                    IsActive = false,
-                    CreatedDate = new DateTime(2025, 9, 1),
-                    LastLoginDate = new DateTime(2025, 9, 15, 14, 20, 0),
-                    StudentId = "2151012003",
-                    Class = "TM231H"
-                },
-                new User
-                {
-                    Id = 8,
-                    Email = "2151012004@student.hcmus.edu.vn",
-                    FullName = "Phạm Thị D",
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("student123"),
-                    Role = UserRole.Student,
-                    IsActive = true,
-                    CreatedDate = new DateTime(2025, 9, 1),
-                    LastLoginDate = new DateTime(2025, 10, 17, 9, 45, 0),
-                    StudentId = "2151012004",
-                    Class = "IT001"
-                },
-                new User
-                {
-                    Id = 9,
-                    Email = "phamthie@e-testhub.edu.vn",
-                    FullName = "ThS. Phạm Thị E",
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("teacher123"),
-                    Role = UserRole.Teacher,
-                    IsActive = true,
-                    CreatedDate = new DateTime(2025, 3, 1),
-                    LastLoginDate = new DateTime(2025, 10, 15, 11, 30, 0),
-                    EmployeeId = "T004",
-                    Department = "Information Technology"
-                },
-                new User
-                {
-                    Id = 10,
-                    Email = "manager@e-testhub.edu.vn",
-                    FullName = "System Manager",
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin123"),
-                    Role = UserRole.Admin,
-                    IsActive = true,
-                    CreatedDate = new DateTime(2025, 1, 10),
-                    LastLoginDate = new DateTime(2025, 10, 18, 17, 0, 0),
-                    Position = "System Manager"
-                }
-            };
-        }
 
         // User Management Data - Cấu trúc tương thích với MongoDB schema
         public static List<User> GetUsers()
@@ -214,8 +75,8 @@ namespace E_TestHub.Models
                     return false;
             }
 
-            // Generate new ID
-            newUser.Id = _users.Max(u => u.Id) + 1;
+            // Generate new ID (handle empty list)
+            newUser.Id = _users.Any() ? _users.Max(u => u.Id) + 1 : 1;
             newUser.CreatedDate = DateTime.Now;
             newUser.IsActive = true;
 
@@ -225,11 +86,67 @@ namespace E_TestHub.Models
             return true;
         }
 
+        // Update user method
+        public static bool UpdateUser(User updatedUser)
+        {
+            // Validation
+            if (updatedUser == null || updatedUser.Id <= 0)
+                return false;
+
+            if (string.IsNullOrWhiteSpace(updatedUser.Email) ||
+                string.IsNullOrWhiteSpace(updatedUser.FullName))
+                return false;
+
+            // Find existing user
+            var existingUser = _users.FirstOrDefault(u => u.Id == updatedUser.Id);
+            if (existingUser == null)
+                return false;
+
+            // Check for email duplicates (excluding current user)
+            if (_users.Any(u => u.Id != updatedUser.Id && u.Email.ToLower() == updatedUser.Email.ToLower()))
+                return false;
+
+            // Update user properties
+            existingUser.Email = updatedUser.Email;
+            existingUser.FullName = updatedUser.FullName;
+            existingUser.Role = updatedUser.Role;
+            existingUser.IsActive = updatedUser.IsActive;
+            existingUser.StudentId = updatedUser.StudentId;
+            existingUser.Class = updatedUser.Class;
+            existingUser.EmployeeId = updatedUser.EmployeeId;
+            existingUser.Department = updatedUser.Department;
+            existingUser.Position = updatedUser.Position;
+
+            return true;
+        }
+
+        // Delete user method (soft delete - set IsActive to false)
+        public static bool DeleteUser(int userId)
+        {
+            var user = _users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+                return false;
+
+            // Soft delete
+            user.IsActive = false;
+            return true;
+        }
+
+        // Hard delete user method (permanently remove from list)
+        public static bool HardDeleteUser(int userId)
+        {
+            var user = _users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+                return false;
+
+            _users.Remove(user);
+            return true;
+        }
+
         // Clear all users (for testing purposes)
         public static void ClearAllUsers()
         {
             _users.Clear();
-            InitializeDefaultUsers();
         }
 
         // System Statistics

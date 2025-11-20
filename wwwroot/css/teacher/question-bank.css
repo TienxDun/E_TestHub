@@ -1201,3 +1201,376 @@ textarea.form-control {
         flex-direction: column;
     }
 }
+
+/* Import/Export Modal Styles */
+.import-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.import-modal .modal-content {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.import-modal .modal-header {
+    padding: 20px 25px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.import-modal .modal-header h3 {
+    margin: 0;
+    font-size: 20px;
+    color: #333;
+}
+
+.import-modal .modal-header h3 i {
+    color: #1a73e8;
+    margin-right: 10px;
+}
+
+.import-modal .close-btn {
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: #999;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s;
+}
+
+.import-modal .close-btn:hover {
+    color: #333;
+}
+
+.import-modal .modal-body {
+    padding: 30px 25px;
+}
+
+.file-upload-section {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.file-upload-label {
+    display: block;
+    padding: 40px 20px;
+    border: 2px dashed #1a73e8;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: #f8f9fa;
+}
+
+.file-upload-label:hover {
+    background: #e8f0fe;
+    border-color: #1557b0;
+}
+
+.file-upload-label i {
+    font-size: 48px;
+    color: #1a73e8;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.file-upload-label span {
+    display: block;
+    color: #333;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.file-info {
+    margin-top: 10px;
+    font-size: 13px;
+    color: #666;
+}
+
+.selected-file {
+    margin-top: 10px;
+    color: #1a73e8;
+    font-weight: 500;
+    font-size: 14px;
+    min-height: 20px;
+}
+
+.template-section {
+    background: #fff8e1;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.template-section p {
+    margin: 0 0 10px 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.template-section p i {
+    color: #ffa726;
+    margin-right: 5px;
+}
+
+.template-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-template {
+    background: #fff;
+    color: #1a73e8;
+    border: 1px solid #1a73e8;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s;
+    flex: 1;
+    min-width: 140px;
+}
+
+.btn-template:hover {
+    background: #1a73e8;
+    color: white;
+}
+
+.btn-template-word {
+    color: #2b5797;
+    border-color: #2b5797;
+}
+
+.btn-template-word:hover {
+    background: #2b5797;
+    color: white;
+}
+
+.btn-template-pdf {
+    color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-template-pdf:hover {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-template i {
+    margin-right: 8px;
+}
+
+.import-modal .modal-footer {
+    padding: 15px 25px;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn-cancel, .btn-import {
+    padding: 10px 25px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.btn-cancel {
+    background: #f5f5f5;
+    color: #666;
+}
+
+.btn-cancel:hover {
+    background: #e0e0e0;
+}
+
+.btn-import {
+    background: #1a73e8;
+    color: white;
+}
+
+.btn-import:hover {
+    background: #1557b0;
+}
+
+.btn-import i {
+    margin-right: 8px;
+}
+
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #1a73e8;
+    border-radius: 12px;
+}
+
+.loading-overlay i {
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+/* Export Modal Styles */
+.export-options {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.option-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.option-group label {
+    font-weight: 600;
+    color: #333;
+    font-size: 15px;
+}
+
+.option-group label i {
+    color: #1a73e8;
+    margin-right: 8px;
+}
+
+.export-select {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: white;
+}
+
+.export-select:focus {
+    outline: none;
+    border-color: #1a73e8;
+    box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+}
+
+.format-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-format {
+    flex: 1;
+    padding: 15px 20px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-format i {
+    font-size: 28px;
+}
+
+.btn-format:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-format.active {
+    border-width: 2px;
+}
+
+.btn-excel {
+    color: #217346;
+}
+
+.btn-excel.active {
+    border-color: #217346;
+    background: #f0f8f4;
+}
+
+.btn-word {
+    color: #2b5797;
+}
+
+.btn-word.active {
+    border-color: #2b5797;
+    background: #f0f4f9;
+}
+
+.btn-pdf {
+    color: #d32f2f;
+}
+
+.btn-pdf.active {
+    border-color: #d32f2f;
+    background: #fef0f0;
+}
+
+.btn-export {
+    background: #1a73e8;
+    color: white;
+    padding: 10px 25px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.btn-export:hover {
+    background: #1557b0;
+}
+
+.btn-export i {
+    margin-right: 8px;
+}
+
+@media (max-width: 768px) {
+    .format-buttons {
+        flex-direction: column;
+    }
+    
+    .btn-format {
+        flex-direction: row;
+        justify-content: center;
+    }
+}

@@ -1,6 +1,13 @@
 @{
     ViewData["Title"] = "Thông tin bài thi - Sinh Viên";
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    
+    var exam = ViewBag.Exam as E_TestHub.Models.Exam;
+    var schedule = ViewBag.Schedule as E_TestHub.Models.ExamSchedule;
+    var examStatus = ViewBag.ExamStatus as string;
+    var examId = ViewBag.ExamId as string;
+    var canTakeExam = ViewBag.CanTakeExam ?? false;
+    var submission = ViewBag.Submission as E_TestHub.Models.Submission;
 }
 
 @section Styles {
@@ -10,28 +17,35 @@
 
 <div class="exam-info-container">
     <div class="exam-info-header">
-        <h1 class="exam-info-title">Kiểm tra giữa kỳ Công nghệ phần mềm nâng cao</h1>
+        <h1 class="exam-info-title">@(exam?.Title ?? "Bài thi")</h1>
         <p class="exam-info-subtitle">Thông tin chi tiết về bài thi</p>
         
-        @if (ViewBag.ExamStatus == "in-progress")
+        @if (examStatus == "in-progress")
         {
             <div class="exam-status-banner in-progress">
                 <i class="fas fa-play-circle"></i>
                 Bài thi đang diễn ra - Có thể vào thi ngay
             </div>
         }
-        else if (ViewBag.ExamStatus == "upcoming")
+        else if (examStatus == "upcoming")
         {
             <div class="exam-status-banner upcoming">
                 <i class="fas fa-clock"></i>
                 Bài thi chưa bắt đầu - Vui lòng chờ đến giờ thi
             </div>
         }
-        else if (ViewBag.ExamStatus == "completed")
+        else if (examStatus == "completed")
         {
             <div class="exam-status-banner completed">
                 <i class="fas fa-check-circle"></i>
                 Bài thi đã kết thúc
+            </div>
+        }
+        else if (examStatus == "closed")
+        {
+            <div class="exam-status-banner completed">
+                <i class="fas fa-times-circle"></i>
+                Bài thi đã đóng
             </div>
         }
     </div>
@@ -42,23 +56,34 @@
                 <i class="fas fa-clock"></i>
                 Thời gian làm bài
             </div>
-            <div class="exam-detail-value">90 phút</div>
+            <div class="exam-detail-value">@(exam?.Duration ?? 0) phút</div>
         </div>
         
-        <div class="exam-detail-row">
-            <div class="exam-detail-label">
-                <i class="fas fa-calendar"></i>
-                Thời gian vào thi
+        @if (schedule != null)
+        {
+            <div class="exam-detail-row">
+                <div class="exam-detail-label">
+                    <i class="fas fa-calendar"></i>
+                    Thời gian bắt đầu
+                </div>
+                <div class="exam-detail-value">@schedule.StartTime.ToString("dd/MM/yyyy HH:mm")</div>
             </div>
-            <div class="exam-detail-value">09-10-2025</div>
-        </div>
+            
+            <div class="exam-detail-row">
+                <div class="exam-detail-label">
+                    <i class="fas fa-calendar-times"></i>
+                    Thời gian kết thúc
+                </div>
+                <div class="exam-detail-value">@schedule.EndTime.ToString("dd/MM/yyyy HH:mm")</div>
+            </div>
+        }
         
         <div class="exam-detail-row">
             <div class="exam-detail-label">
                 <i class="fas fa-question-circle"></i>
                 Số lượng câu hỏi
             </div>
-            <div class="exam-detail-value">30</div>
+            <div class="exam-detail-value">@(exam?.QuestionIds?.Count ?? 0)</div>
         </div>
         
         <div class="exam-detail-row">
@@ -69,13 +94,27 @@
             <div class="exam-detail-value">Trắc nghiệm</div>
         </div>
         
-        <div class="exam-detail-row">
-            <div class="exam-detail-label">
-                <i class="fas fa-redo"></i>
-                Lần thử
+        @if (exam != null && exam.MaxAttempts.HasValue)
+        {
+            <div class="exam-detail-row">
+                <div class="exam-detail-label">
+                    <i class="fas fa-redo"></i>
+                    Số lần thử tối đa
+                </div>
+                <div class="exam-detail-value">@exam.MaxAttempts lần</div>
             </div>
-            <div class="exam-detail-value">1 lần</div>
-        </div>
+        }
+        
+        @if (!string.IsNullOrEmpty(exam?.Description))
+        {
+            <div class="exam-detail-row full-width">
+                <div class="exam-detail-label">
+                    <i class="fas fa-align-left"></i>
+                    Mô tả
+                </div>
+                <div class="exam-detail-value">@exam.Description</div>
+            </div>
+        }
     </div>
     
     <div class="exam-instructions">
@@ -86,30 +125,61 @@
             <li>Bài thi sẽ tự động nộp khi hết thời gian</li>
             <li>Không được sử dụng tài liệu tham khảo</li>
             <li>Hãy kiểm tra kỹ các câu trả lời trước khi nộp bài</li>
+            @if (exam?.MaxAttempts.HasValue == true)
+            {
+                <li>Bạn chỉ được thi tối đa @exam.MaxAttempts lần</li>
+            }
         </ul>
     </div>
     
     <div class="exam-actions">
-        @if (ViewBag.ExamStatus == "in-progress")
+        @if (canTakeExam)
         {
-            <a href="@Url.Action("TakeExam", "Student", new { examId = ViewBag.ExamId })" class="exam-action-btn primary">
-                <i class="fas fa-play"></i>
-                Bắt đầu thi
-            </a>
+            @if (submission?.Status == "in-progress")
+            {
+                <a href="@Url.Action("TakeExam", "Student", new { examId = examId })" class="exam-action-btn primary">
+                    <i class="fas fa-play"></i>
+                    Tiếp tục làm bài
+                </a>
+            }
+            else
+            {
+                <a href="@Url.Action("TakeExam", "Student", new { examId = examId })" class="exam-action-btn primary">
+                    <i class="fas fa-play"></i>
+                    Bắt đầu thi
+                </a>
+            }
         }
-        else if (ViewBag.ExamStatus == "upcoming")
+        else if (examStatus == "upcoming")
         {
             <div class="exam-action-btn disabled">
                 <i class="fas fa-clock"></i>
                 Chưa đến giờ thi
             </div>
         }
-        else if (ViewBag.ExamStatus == "completed")
+        else if (examStatus == "completed")
         {
-            <a href="@Url.Action("ViewResults", "Student", new { examId = ViewBag.ExamId })" class="exam-action-btn success">
-                <i class="fas fa-eye"></i>
-                Xem kết quả
-            </a>
+            @if (submission != null)
+            {
+                <a href="@Url.Action("ViewResults", "Student", new { submissionId = submission.ApiId })" class="exam-action-btn success">
+                    <i class="fas fa-eye"></i>
+                    Xem kết quả
+                </a>
+            }
+            else
+            {
+                <div class="exam-action-btn disabled">
+                    <i class="fas fa-check-circle"></i>
+                    Bài thi đã hoàn thành
+                </div>
+            }
+        }
+        else if (examStatus == "closed")
+        {
+            <div class="exam-action-btn disabled">
+                <i class="fas fa-times-circle"></i>
+                Bài thi đã đóng
+            </div>
         }
         
         <a href="@Url.Action("MyExams", "Student")" class="exam-action-btn secondary">

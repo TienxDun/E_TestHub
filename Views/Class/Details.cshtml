@@ -1,0 +1,322 @@
+@model E_TestHub.Models.Class
+@{
+    ViewData["Title"] = "Chi tiết Lớp học";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-11">
+            <!-- Header -->
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <div class="d-flex align-items-center">
+                    <a href="@Url.Action("Index", "Class")" class="btn btn-outline-secondary me-3">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <div>
+                        <h2 class="mb-1">
+                            <i class="fas fa-chalkboard-teacher text-primary"></i> 
+                            @Model.Name
+                        </h2>
+                        <p class="text-muted mb-0">Chi tiết thông tin lớp học</p>
+                    </div>
+                </div>
+                <div>
+                    <a href="@Url.Action("Edit", "Class", new { id = Model.Id })" class="btn btn-primary">
+                        <i class="fas fa-edit me-2"></i>Chỉnh sửa
+                    </a>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Class Information Card -->
+                <div class="col-lg-4 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Thông tin Lớp học</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="text-muted small mb-1">Mã Lớp học</label>
+                                <h5 class="mb-0">
+                                    <span class="badge bg-primary fs-6">@Model.ClassCode</span>
+                                </h5>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="text-muted small mb-1">Tên Lớp học</label>
+                                <h6 class="mb-0">@Model.Name</h6>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="text-muted small mb-1">Năm học</label>
+                                <p class="mb-0">
+                                    <span class="badge bg-info">@Model.AcademicYear</span>
+                                </p>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="text-muted small mb-1">Giảng viên phụ trách</label>
+                                @if (Model.Teacher != null)
+                                {
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar bg-primary text-white rounded-circle me-2" 
+                                             style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                            <i class="fas fa-user-tie"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">@Model.Teacher.FullName</h6>
+                                            <small class="text-muted">@Model.Teacher.Email</small>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <p class="text-muted mb-0">Chưa phân công</p>
+                                }
+                            </div>
+
+                            <hr />
+
+                            <div class="mb-3">
+                                <label class="text-muted small mb-1">Ngày tạo</label>
+                                <p class="mb-0">
+                                    <i class="fas fa-calendar-alt text-muted me-2"></i>
+                                    @Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+                                </p>
+                            </div>
+
+                            @if (Model.UpdatedAt.HasValue)
+                            {
+                                <div class="mb-3">
+                                    <label class="text-muted small mb-1">Cập nhật lần cuối</label>
+                                    <p class="mb-0">
+                                        <i class="fas fa-clock text-muted me-2"></i>
+                                        @Model.UpdatedAt.Value.ToString("dd/MM/yyyy HH:mm")
+                                    </p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Students List Card -->
+                <div class="col-lg-8 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="fas fa-users text-success me-2"></i>
+                                Danh sách Sinh viên
+                                <span class="badge bg-success ms-2">@Model.StudentList.Count</span>
+                            </h5>
+                            <div>
+                                <input type="text" 
+                                       id="searchStudent" 
+                                       class="form-control form-control-sm" 
+                                       placeholder="Tìm sinh viên..."
+                                       style="width: 250px;" />
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            @if (Model.StudentList.Any())
+                            {
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle mb-0" id="studentTable">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th style="width: 5%;">#</th>
+                                                <th style="width: 15%;">MSSV</th>
+                                                <th style="width: 30%;">Họ và Tên</th>
+                                                <th style="width: 30%;">Email</th>
+                                                <th style="width: 10%;" class="text-center">Lớp</th>
+                                                <th style="width: 10%;" class="text-center">Thao tác</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @for (int i = 0; i < Model.StudentList.Count; i++)
+                                            {
+                                                var student = Model.StudentList[i];
+                                                <tr data-student-id="@student.Id">
+                                                    <td>@(i + 1)</td>
+                                                    <td>
+                                                        <span class="badge bg-secondary">@student.StudentCode</span>
+                                                    </td>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="avatar bg-info text-white rounded-circle me-2" 
+                                                                 style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 14px;">
+                                                                @student.FullName.Substring(0, 1).ToUpper()
+                                                            </div>
+                                                            <strong>@student.FullName</strong>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <i class="fas fa-envelope text-muted me-1"></i>
+                                                        @student.Email
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span class="badge bg-light text-dark">@student.Class</span>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <button type="button" 
+                                                                class="btn btn-sm btn-outline-danger remove-student" 
+                                                                data-id="@student.Id" 
+                                                                data-name="@student.FullName"
+                                                                title="Xóa khỏi lớp">
+                                                            <i class="fas fa-user-minus"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-center py-5">
+                                    <i class="fas fa-user-graduate fa-4x text-muted mb-3"></i>
+                                    <h5 class="text-muted">Chưa có sinh viên nào</h5>
+                                    <p class="text-muted">Hãy thêm sinh viên vào lớp học</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Row -->
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card shadow-sm text-center">
+                        <div class="card-body">
+                            <i class="fas fa-users fa-2x text-primary mb-2"></i>
+                            <h3 class="mb-0">@Model.StudentList.Count</h3>
+                            <p class="text-muted mb-0">Tổng sinh viên</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card shadow-sm text-center">
+                        <div class="card-body">
+                            <i class="fas fa-file-alt fa-2x text-success mb-2"></i>
+                            <h3 class="mb-0">0</h3>
+                            <p class="text-muted mb-0">Bài thi</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card shadow-sm text-center">
+                        <div class="card-body">
+                            <i class="fas fa-check-circle fa-2x text-info mb-2"></i>
+                            <h3 class="mb-0">0</h3>
+                            <p class="text-muted mb-0">Đã hoàn thành</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card shadow-sm text-center">
+                        <div class="card-body">
+                            <i class="fas fa-chart-line fa-2x text-warning mb-2"></i>
+                            <h3 class="mb-0">--</h3>
+                            <p class="text-muted mb-0">Điểm TB</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Html.AntiForgeryToken()
+    
+    <script>
+        $(document).ready(function() {
+            const classId = '@Model.Id';
+
+            // Search student
+            $('#searchStudent').on('keyup', function() {
+                const value = $(this).val().toLowerCase();
+                $('#studentTable tbody tr').filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+
+            // Remove student from class
+            $('.remove-student').on('click', function() {
+                const studentId = $(this).data('id');
+                const studentName = $(this).data('name');
+                const row = $(this).closest('tr');
+
+                if (!confirm(`Bạn có chắc chắn muốn xóa sinh viên "${studentName}" khỏi lớp học này?`)) {
+                    return;
+                }
+
+                const token = $('input[name="__RequestVerificationToken"]').val();
+
+                $.ajax({
+                    url: '@Url.Action("RemoveStudent", "Class")',
+                    type: 'POST',
+                    data: {
+                        __RequestVerificationToken: token,
+                        classId: classId,
+                        studentId: studentId
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            row.fadeOut(300, function() {
+                                $(this).remove();
+                                updateStudentCount();
+                            });
+                            showNotification('success', response.message);
+                        } else {
+                            showNotification('error', response.message);
+                        }
+                    },
+                    error: function() {
+                        showNotification('error', 'Có lỗi xảy ra khi xóa sinh viên');
+                    }
+                });
+            });
+
+            function updateStudentCount() {
+                const count = $('#studentTable tbody tr:visible').length;
+                $('.badge.bg-success').text(count);
+                
+                // Update statistics card
+                $('.card-body h3').first().text(count);
+
+                if (count === 0) {
+                    $('#studentTable').closest('.table-responsive').html(`
+                        <div class="text-center py-5">
+                            <i class="fas fa-user-graduate fa-4x text-muted mb-3"></i>
+                            <h5 class="text-muted">Chưa có sinh viên nào</h5>
+                            <p class="text-muted">Hãy thêm sinh viên vào lớp học</p>
+                        </div>
+                    `);
+                }
+            }
+
+            function showNotification(type, message) {
+                const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+                const iconClass = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+                
+                const alert = $(`
+                    <div class="alert ${alertClass} alert-dismissible fade show position-fixed" 
+                         role="alert" 
+                         style="top: 20px; right: 20px; z-index: 9999; min-width: 300px;">
+                        <i class="fas ${iconClass} me-2"></i>${message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                `);
+                
+                $('body').append(alert);
+                
+                setTimeout(function() {
+                    alert.alert('close');
+                }, 3000);
+            }
+        });
+    </script>
+}

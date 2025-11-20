@@ -1,0 +1,400 @@
+@model List<E_TestHub.Models.Question>
+@{
+    ViewData["Title"] = "Thêm Câu Hỏi Vào Đề Thi";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    var exam = ViewBag.Exam as E_TestHub.Models.Exam;
+    var subjectName = ViewBag.SubjectName as string;
+    var selectedQuestionIds = ViewBag.SelectedQuestionIds as List<string> ?? new List<string>();
+}
+
+<div class="container-fluid py-4">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-1">
+                        <i class="fas fa-puzzle-piece me-2 text-primary"></i>
+                        Thêm Câu Hỏi Vào Đề Thi
+                    </h2>
+                    <p class="text-muted mb-0">
+                        <i class="fas fa-file-alt me-1"></i>
+                        <strong>@exam?.Title</strong>
+                        <span class="mx-2">|</span>
+                        <i class="fas fa-book me-1"></i>
+                        @subjectName
+                    </p>
+                </div>
+                <a href="@Url.Action("ExamManagement")" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-1"></i> Quay lại
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-list-check fa-2x text-primary mb-2"></i>
+                    <h5 class="mb-0" id="selectedCount">@selectedQuestionIds.Count</h5>
+                    <small class="text-muted">Câu hỏi đã chọn</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-question-circle fa-2x text-info mb-2"></i>
+                    <h5 class="mb-0">@Model.Count</h5>
+                    <small class="text-muted">Tổng câu hỏi</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-star fa-2x text-warning mb-2"></i>
+                    <h5 class="mb-0" id="totalScore">@(Model.Where(q => selectedQuestionIds.Contains(q.ApiId)).Sum(q => q.Score))</h5>
+                    <small class="text-muted">Tổng điểm</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-clock fa-2x text-success mb-2"></i>
+                    <h5 class="mb-0">@exam?.Duration phút</h5>
+                    <small class="text-muted">Thời gian</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Messages -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Filter Section -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label"><i class="fas fa-filter me-1"></i>Độ khó</label>
+                    <select class="form-select" id="difficultyFilter">
+                        <option value="">Tất cả</option>
+                        <option value="1">Dễ</option>
+                        <option value="2">Trung bình</option>
+                        <option value="3">Khó</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label"><i class="fas fa-tags me-1"></i>Loại câu hỏi</label>
+                    <select class="form-select" id="typeFilter">
+                        <option value="">Tất cả</option>
+                        <option value="1">Trắc nghiệm</option>
+                        <option value="2">Tự luận</option>
+                        <option value="3">Đúng/Sai</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label"><i class="fas fa-search me-1"></i>Tìm kiếm</label>
+                    <input type="text" class="form-control" id="searchInput" placeholder="Nhập nội dung câu hỏi...">
+                </div>
+            </div>
+            <div class="mt-3">
+                <button class="btn btn-sm btn-primary me-2" onclick="selectAll()">
+                    <i class="fas fa-check-double me-1"></i>Chọn tất cả
+                </button>
+                <button class="btn btn-sm btn-outline-secondary" onclick="deselectAll()">
+                    <i class="fas fa-times me-1"></i>Bỏ chọn tất cả
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Questions List -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0">
+                <i class="fas fa-clipboard-list me-2"></i>
+                Danh Sách Câu Hỏi
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            @if (Model.Count > 0)
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0" id="questionsTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th width="50" class="text-center">
+                                    <input type="checkbox" class="form-check-input" id="selectAllCheckbox" onchange="toggleSelectAll(this)">
+                                </th>
+                                <th width="60">#</th>
+                                <th>Nội dung câu hỏi</th>
+                                <th width="120">Loại</th>
+                                <th width="100">Độ khó</th>
+                                <th width="80" class="text-center">Điểm</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Count; i++)
+                            {
+                                var question = Model[i];
+                                var isSelected = selectedQuestionIds.Contains(question.ApiId);
+                                var difficultyClass = question.DifficultyLevel switch
+                                {
+                                    E_TestHub.Models.DifficultyLevel.Easy => "success",
+                                    E_TestHub.Models.DifficultyLevel.Medium => "warning",
+                                    E_TestHub.Models.DifficultyLevel.Hard => "danger",
+                                    _ => "secondary"
+                                };
+                                var difficultyText = question.DifficultyLevel switch
+                                {
+                                    E_TestHub.Models.DifficultyLevel.Easy => "Dễ",
+                                    E_TestHub.Models.DifficultyLevel.Medium => "Trung bình",
+                                    E_TestHub.Models.DifficultyLevel.Hard => "Khó",
+                                    _ => "N/A"
+                                };
+                                var typeText = question.Type switch
+                                {
+                                    E_TestHub.Models.QuestionType.MultipleChoice => "Trắc nghiệm",
+                                    E_TestHub.Models.QuestionType.Essay => "Tự luận",
+                                    E_TestHub.Models.QuestionType.TrueFalse => "Đúng/Sai",
+                                    _ => "N/A"
+                                };
+
+                                <tr class="question-row" 
+                                    data-difficulty="@((int)question.DifficultyLevel)" 
+                                    data-type="@((int)question.Type)"
+                                    data-score="@question.Score">
+                                    <td class="text-center">
+                                        <input type="checkbox" 
+                                               class="form-check-input question-checkbox" 
+                                               data-question-id="@question.ApiId"
+                                               data-score="@question.Score"
+                                               @(isSelected ? "checked" : "")
+                                               onchange="updateSelection()">
+                                    </td>
+                                    <td>@(i + 1)</td>
+                                    <td>
+                                        <div class="question-content">
+                                            @Html.Raw(question.Content.Length > 100 ? question.Content.Substring(0, 100) + "..." : question.Content)
+                                        </div>
+                                        @if (question.Type == E_TestHub.Models.QuestionType.MultipleChoice && question.Options.Count > 0)
+                                        {
+                                            <small class="text-muted d-block mt-1">
+                                                <i class="fas fa-list-ul me-1"></i>@question.Options.Count đáp án
+                                            </small>
+                                        }
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">@typeText</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-@difficultyClass">@difficultyText</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <strong class="text-primary">@question.Score</strong>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">Chưa có câu hỏi nào</h5>
+                    <p class="text-muted">Hãy tạo câu hỏi cho môn học <strong>@subjectName</strong> trước.</p>
+                    <a href="@Url.Action("QuestionBank")" class="btn btn-primary">
+                        <i class="fas fa-plus me-1"></i> Tạo câu hỏi
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Save Button (Fixed at bottom) -->
+    @if (Model.Count > 0)
+    {
+        <div class="fixed-bottom bg-white border-top p-3 shadow" style="z-index: 1000;">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="me-3">
+                            <i class="fas fa-check-circle text-success me-1"></i>
+                            Đã chọn: <strong id="selectedCountBottom">@selectedQuestionIds.Count</strong> câu hỏi
+                        </span>
+                        <span>
+                            <i class="fas fa-star text-warning me-1"></i>
+                            Tổng điểm: <strong id="totalScoreBottom">@(Model.Where(q => selectedQuestionIds.Contains(q.ApiId)).Sum(q => q.Score))</strong>
+                        </span>
+                    </div>
+                    <button type="button" class="btn btn-success" onclick="saveQuestions()" id="saveBtn">
+                        <i class="fas fa-save me-1"></i> Lưu câu hỏi
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // Filter functionality
+        $('#difficultyFilter, #typeFilter').on('change', filterQuestions);
+        $('#searchInput').on('keyup', filterQuestions);
+
+        function filterQuestions() {
+            const difficulty = $('#difficultyFilter').val();
+            const type = $('#typeFilter').val();
+            const searchTerm = $('#searchInput').val().toLowerCase();
+
+            $('.question-row').each(function() {
+                const $row = $(this);
+                const rowDifficulty = $row.data('difficulty').toString();
+                const rowType = $row.data('type').toString();
+                const content = $row.find('.question-content').text().toLowerCase();
+
+                let show = true;
+
+                if (difficulty && rowDifficulty !== difficulty) show = false;
+                if (type && rowType !== type) show = false;
+                if (searchTerm && !content.includes(searchTerm)) show = false;
+
+                $row.toggle(show);
+            });
+
+            updateSelectAllCheckbox();
+        }
+
+        // Selection functions
+        function selectAll() {
+            $('.question-row:visible .question-checkbox').prop('checked', true);
+            updateSelection();
+        }
+
+        function deselectAll() {
+            $('.question-row:visible .question-checkbox').prop('checked', false);
+            updateSelection();
+        }
+
+        function toggleSelectAll(checkbox) {
+            $('.question-row:visible .question-checkbox').prop('checked', checkbox.checked);
+            updateSelection();
+        }
+
+        function updateSelectAllCheckbox() {
+            const visibleCheckboxes = $('.question-row:visible .question-checkbox');
+            const checkedCheckboxes = visibleCheckboxes.filter(':checked');
+            $('#selectAllCheckbox').prop('checked', visibleCheckboxes.length > 0 && visibleCheckboxes.length === checkedCheckboxes.length);
+        }
+
+        function updateSelection() {
+            const checkedBoxes = $('.question-checkbox:checked');
+            const count = checkedBoxes.length;
+            
+            let totalScore = 0;
+            checkedBoxes.each(function() {
+                totalScore += parseFloat($(this).data('score')) || 0;
+            });
+
+            $('#selectedCount').text(count);
+            $('#selectedCountBottom').text(count);
+            $('#totalScore').text(totalScore.toFixed(1));
+            $('#totalScoreBottom').text(totalScore.toFixed(1));
+
+            updateSelectAllCheckbox();
+        }
+
+        // Save questions
+        function saveQuestions() {
+            const selectedIds = [];
+            $('.question-checkbox:checked').each(function() {
+                selectedIds.push($(this).data('question-id'));
+            });
+
+            if (selectedIds.length === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Chưa chọn câu hỏi',
+                    text: 'Vui lòng chọn ít nhất 1 câu hỏi cho đề thi.',
+                    confirmButtonText: 'Đã hiểu'
+                });
+                return;
+            }
+
+            // Show loading
+            $('#saveBtn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> Đang lưu...');
+
+            $.ajax({
+                url: '@Url.Action("SaveExamQuestions")',
+                type: 'POST',
+                data: {
+                    examId: '@exam?.ApiId',
+                    questionIds: selectedIds,
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công!',
+                            html: `<p>${response.message}</p>
+                                   <p class="mb-0">
+                                       <i class="fas fa-list-check me-1"></i> Số câu hỏi: <strong>${response.questionCount}</strong><br>
+                                       <i class="fas fa-star me-1"></i> Tổng điểm: <strong>${response.totalScore}</strong>
+                                   </p>`,
+                            confirmButtonText: 'Quay lại Quản lý đề thi'
+                        }).then(() => {
+                            window.location.href = '@Url.Action("ExamManagement")';
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: response.message,
+                            confirmButtonText: 'Đóng'
+                        });
+                        $('#saveBtn').prop('disabled', false).html('<i class="fas fa-save me-1"></i> Lưu câu hỏi');
+                    }
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Có lỗi xảy ra khi lưu câu hỏi. Vui lòng thử lại.',
+                        confirmButtonText: 'Đóng'
+                    });
+                    $('#saveBtn').prop('disabled', false).html('<i class="fas fa-save me-1"></i> Lưu câu hỏi');
+                }
+            });
+        }
+
+        // Initialize
+        $(document).ready(function() {
+            updateSelection();
+        });
+    </script>
+
+    @Html.AntiForgeryToken()
+}

@@ -43,14 +43,6 @@ namespace E_TestHub.Services
                 
                 if (response != null)
                 {
-                    // Map _id to ApiId for each exam
-                    foreach (var exam in response)
-                    {
-                        if (string.IsNullOrEmpty(exam.ApiId))
-                        {
-                            exam.ApiId = exam.Id.ToString();
-                        }
-                    }
                     _logger.LogInformation($"Successfully fetched {response.Count} exams");
                 }
                 

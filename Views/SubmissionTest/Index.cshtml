@@ -1,0 +1,310 @@
+@{
+    ViewData["Title"] = "Submission API Service Test";
+}
+
+<style>
+    .test-container {
+        max-width: 1200px;
+        margin: 50px auto;
+        padding: 20px;
+    }
+    .test-section {
+        background: #fff;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .test-section h3 {
+        color: #2c3e50;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+    }
+    .form-group {
+        margin-bottom: 15px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+        color: #555;
+    }
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+    .btn-test {
+        background: #3498db;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background 0.3s;
+    }
+    .btn-test:hover {
+        background: #2980b9;
+    }
+    .result-box {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        padding: 15px;
+        margin-top: 15px;
+        display: none;
+    }
+    .result-box.show {
+        display: block;
+    }
+    .result-box pre {
+        margin: 0;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        font-size: 13px;
+    }
+    .success {
+        border-left: 4px solid #27ae60;
+    }
+    .error {
+        border-left: 4px solid #e74c3c;
+    }
+    .info-box {
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    .spinner {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #3498db;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+        margin-left: 10px;
+    }
+    @@keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+
+<div class="test-container">
+    <h1>🧪 Submission API Service - Test Page</h1>
+    
+    <div class="info-box">
+        <strong>⚠️ Important:</strong> This is a test page to verify the SubmissionApiService implementation. 
+        Make sure MongoDB API is running at <code>http://localhost:3000</code> before testing.
+    </div>
+
+    <!-- Test 1: Get Student Submissions -->
+    <div class="test-section">
+        <h3>1️⃣ Get Student Submissions</h3>
+        <div class="form-group">
+            <label for="studentId1">Student ID (MongoDB _id):</label>
+            <input type="text" id="studentId1" placeholder="e.g., 6730866fa6f9b79c0f6f4509">
+        </div>
+        <button class="btn-test" onclick="testGetStudentSubmissions()">
+            <i class="fas fa-play"></i> Run Test
+        </button>
+        <div id="result1" class="result-box"></div>
+    </div>
+
+    <!-- Test 2: Get Submission By ID -->
+    <div class="test-section">
+        <h3>2️⃣ Get Submission By ID</h3>
+        <div class="form-group">
+            <label for="submissionId2">Submission ID (MongoDB _id):</label>
+            <input type="text" id="submissionId2" placeholder="e.g., 673190a1b2c3d4e5f6789012">
+        </div>
+        <button class="btn-test" onclick="testGetSubmissionById()">
+            <i class="fas fa-play"></i> Run Test
+        </button>
+        <div id="result2" class="result-box"></div>
+    </div>
+
+    <!-- Test 3: Check Has Submitted -->
+    <div class="test-section">
+        <h3>3️⃣ Check If Student Has Submitted Exam</h3>
+        <div class="form-group">
+            <label for="examId3">Exam ID:</label>
+            <input type="text" id="examId3" placeholder="e.g., 673087c6a6f9b79c0f6f4567">
+        </div>
+        <div class="form-group">
+            <label for="studentId3">Student ID:</label>
+            <input type="text" id="studentId3" placeholder="e.g., 6730866fa6f9b79c0f6f4509">
+        </div>
+        <button class="btn-test" onclick="testHasSubmitted()">
+            <i class="fas fa-play"></i> Run Test
+        </button>
+        <div id="result3" class="result-box"></div>
+    </div>
+
+    <!-- Test 4: Get Exam Submissions -->
+    <div class="test-section">
+        <h3>4️⃣ Get All Submissions For Exam</h3>
+        <div class="form-group">
+            <label for="examId4">Exam ID:</label>
+            <input type="text" id="examId4" placeholder="e.g., 673087c6a6f9b79c0f6f4567">
+        </div>
+        <button class="btn-test" onclick="testGetExamSubmissions()">
+            <i class="fas fa-play"></i> Run Test
+        </button>
+        <div id="result4" class="result-box"></div>
+    </div>
+
+    <!-- Test 5: Get Statistics -->
+    <div class="test-section">
+        <h3>5️⃣ Get Submission Statistics</h3>
+        <button class="btn-test" onclick="testGetStatistics()">
+            <i class="fas fa-play"></i> Run Test
+        </button>
+        <div id="result5" class="result-box"></div>
+    </div>
+
+    <!-- Test 6: Start Exam (Creates Data) -->
+    <div class="test-section" style="border: 2px solid #e74c3c;">
+        <h3>6️⃣ Start New Exam (⚠️ Creates Data)</h3>
+        <div class="form-group">
+            <label for="examId6">Exam ID:</label>
+            <input type="text" id="examId6" placeholder="e.g., 673087c6a6f9b79c0f6f4567">
+        </div>
+        <div class="form-group">
+            <label for="studentId6">Student ID:</label>
+            <input type="text" id="studentId6" placeholder="e.g., 6730866fa6f9b79c0f6f4509">
+        </div>
+        <button class="btn-test" onclick="testStartExam()" style="background: #e74c3c;">
+            <i class="fas fa-exclamation-triangle"></i> Start Exam (Creates New Record)
+        </button>
+        <div id="result6" class="result-box"></div>
+    </div>
+</div>
+
+<script>
+    function showLoading(resultId) {
+        const resultBox = document.getElementById(resultId);
+        resultBox.className = 'result-box show';
+        resultBox.innerHTML = '<span class="spinner"></span> Loading...';
+    }
+
+    function showResult(resultId, data, isError = false) {
+        const resultBox = document.getElementById(resultId);
+        resultBox.className = 'result-box show ' + (isError ? 'error' : 'success');
+        resultBox.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+    }
+
+    async function testGetStudentSubmissions() {
+        const studentId = document.getElementById('studentId1').value.trim();
+        if (!studentId) {
+            alert('Please enter Student ID');
+            return;
+        }
+
+        showLoading('result1');
+        try {
+            const response = await fetch(`/SubmissionTest/TestGetStudentSubmissions?studentId=${studentId}`);
+            const data = await response.json();
+            showResult('result1', data, !data.success);
+        } catch (error) {
+            showResult('result1', { error: error.message }, true);
+        }
+    }
+
+    async function testGetSubmissionById() {
+        const submissionId = document.getElementById('submissionId2').value.trim();
+        if (!submissionId) {
+            alert('Please enter Submission ID');
+            return;
+        }
+
+        showLoading('result2');
+        try {
+            const response = await fetch(`/SubmissionTest/TestGetSubmissionById?submissionId=${submissionId}`);
+            const data = await response.json();
+            showResult('result2', data, !data.success);
+        } catch (error) {
+            showResult('result2', { error: error.message }, true);
+        }
+    }
+
+    async function testHasSubmitted() {
+        const examId = document.getElementById('examId3').value.trim();
+        const studentId = document.getElementById('studentId3').value.trim();
+        if (!examId || !studentId) {
+            alert('Please enter both Exam ID and Student ID');
+            return;
+        }
+
+        showLoading('result3');
+        try {
+            const response = await fetch(`/SubmissionTest/TestHasSubmitted?examId=${examId}&studentId=${studentId}`);
+            const data = await response.json();
+            showResult('result3', data, !data.success);
+        } catch (error) {
+            showResult('result3', { error: error.message }, true);
+        }
+    }
+
+    async function testGetExamSubmissions() {
+        const examId = document.getElementById('examId4').value.trim();
+        if (!examId) {
+            alert('Please enter Exam ID');
+            return;
+        }
+
+        showLoading('result4');
+        try {
+            const response = await fetch(`/SubmissionTest/TestGetExamSubmissions?examId=${examId}`);
+            const data = await response.json();
+            showResult('result4', data, !data.success);
+        } catch (error) {
+            showResult('result4', { error: error.message }, true);
+        }
+    }
+
+    async function testGetStatistics() {
+        showLoading('result5');
+        try {
+            const response = await fetch('/SubmissionTest/TestGetStatistics');
+            const data = await response.json();
+            showResult('result5', data, !data.success);
+        } catch (error) {
+            showResult('result5', { error: error.message }, true);
+        }
+    }
+
+    async function testStartExam() {
+        const examId = document.getElementById('examId6').value.trim();
+        const studentId = document.getElementById('studentId6').value.trim();
+        if (!examId || !studentId) {
+            alert('Please enter both Exam ID and Student ID');
+            return;
+        }
+
+        if (!confirm('⚠️ This will create a new submission record in the database. Continue?')) {
+            return;
+        }
+
+        showLoading('result6');
+        try {
+            const response = await fetch('/SubmissionTest/TestStartExam', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ examId, studentId })
+            });
+            const data = await response.json();
+            showResult('result6', data, !data.success);
+        } catch (error) {
+            showResult('result6', { error: error.message }, true);
+        }
+    }
+</script>

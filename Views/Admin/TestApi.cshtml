@@ -1,0 +1,133 @@
+@{
+    ViewData["Title"] = "Test API Connection";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="container-fluid py-4">
+    <div class="card">
+        <div class="card-header">
+            <h3><i class="fas fa-network-wired"></i> Test API Connection</h3>
+        </div>
+        <div class="card-body">
+            <div class="mb-4">
+                <h5>Session Information:</h5>
+                <ul>
+                    <li><strong>User ID:</strong> @Context.Session.GetString("UserId")</li>
+                    <li><strong>Username:</strong> @Context.Session.GetString("UserName")</li>
+                    <li><strong>Email:</strong> @Context.Session.GetString("UserEmail")</li>
+                    <li><strong>Role:</strong> @Context.Session.GetString("UserRole")</li>
+                    <li><strong>Token exists:</strong> @(!string.IsNullOrEmpty(Context.Session.GetString("ApiToken")) ? "✅ Yes" : "❌ No")</li>
+                    @if (!string.IsNullOrEmpty(Context.Session.GetString("ApiToken")))
+                    {
+                        var token = Context.Session.GetString("ApiToken");
+                        <li><strong>Token (first 30 chars):</strong> @token.Substring(0, Math.Min(30, token.Length))...</li>
+                    }
+                </ul>
+            </div>
+
+            <hr>
+
+            <div class="mb-4">
+                <h5>API Test Results:</h5>
+                <button type="button" class="btn btn-primary me-2" onclick="testUsersApi()">
+                    <i class="fas fa-users"></i> Test Users API
+                </button>
+                <button type="button" class="btn btn-success me-2" onclick="testClassesApi()">
+                    <i class="fas fa-school"></i> Test Classes API
+                </button>
+                <button type="button" class="btn btn-info" onclick="testCreateClass()">
+                    <i class="fas fa-plus"></i> Test Create Class
+                </button>
+            </div>
+
+            <div id="testResults" class="alert alert-info" style="display: none;">
+                <strong>Results:</strong>
+                <pre id="resultsContent" style="white-space: pre-wrap;"></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function showResults(message) {
+            $('#testResults').show();
+            $('#resultsContent').text(message);
+        }
+
+        async function testUsersApi() {
+            showResults('Testing Users API...');
+            try {
+                const response = await fetch('/api/users', {
+                    headers: {
+                        'Authorization': 'Bearer @Context.Session.GetString("ApiToken")'
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    showResults(`✅ Success!\nRetrieved ${data.length} users\n\n${JSON.stringify(data.slice(0, 2), null, 2)}`);
+                } else {
+                    showResults(`❌ Error: ${response.status} ${response.statusText}\n${await response.text()}`);
+                }
+            } catch (error) {
+                showResults(`❌ Exception: ${error.message}`);
+            }
+        }
+
+        async function testClassesApi() {
+            showResults('Testing Classes API...');
+            try {
+                const response = await fetch('http://localhost:3000/api/classes', {
+                    headers: {
+                        'Authorization': 'Bearer @Context.Session.GetString("ApiToken")'
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    showResults(`✅ Success!\nRetrieved ${data.length} classes\n\n${JSON.stringify(data, null, 2)}`);
+                } else {
+                    showResults(`❌ Error: ${response.status} ${response.statusText}\n${await response.text()}`);
+                }
+            } catch (error) {
+                showResults(`❌ Exception: ${error.message}`);
+            }
+        }
+
+        async function testCreateClass() {
+            showResults('Testing Create Class...');
+            try {
+                const timestamp = new Date().getTime();
+                const testClass = {
+                    name: 'Test Class ' + timestamp,
+                    classCode: 'TEST' + timestamp.toString().slice(-6),
+                    teacherId: '@Context.Session.GetString("UserId")',
+                    courseId: '68f194b085603381b90927e7', // Use existing courseId from the classes data
+                    academicYear: '2024-2025'
+                };
+
+                showResults('Sending request with:\n' + JSON.stringify(testClass, null, 2));
+
+                const response = await fetch('http://localhost:3000/api/classes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer @Context.Session.GetString("ApiToken")'
+                    },
+                    body: JSON.stringify(testClass)
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    showResults(`✅ Success! Class created:\n\n${JSON.stringify(data, null, 2)}`);
+                } else {
+                    const errorText = await response.text();
+                    showResults(`❌ Error: ${response.status} ${response.statusText}\n${errorText}`);
+                }
+            } catch (error) {
+                showResults(`❌ Exception: ${error.message}\n${error.stack}`);
+            }
+        }
+    </script>
+}

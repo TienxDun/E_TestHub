@@ -1,0 +1,227 @@
+@model List<E_TestHub.Models.Class>
+@{
+    ViewData["Title"] = "Quản lý Lớp học";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="container-fluid py-4">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-1"><i class="fas fa-chalkboard-teacher text-primary"></i> Quản lý Lớp học</h2>
+                    <p class="text-muted mb-0">Tạo và quản lý các lớp học trong hệ thống</p>
+                </div>
+                <div>
+                    <a href="@Url.Action("Create", "Class")" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Tạo Lớp học Mới
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Messages -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-white-50 mb-1">Tổng Lớp học</h6>
+                            <h3 class="mb-0">@Model.Count</h3>
+                        </div>
+                        <div class="fs-1 opacity-50">
+                            <i class="fas fa-chalkboard"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-white-50 mb-1">Năm học hiện tại</h6>
+                            <h5 class="mb-0">@DateTime.Now.Year-@(DateTime.Now.Year + 1)</h5>
+                        </div>
+                        <div class="fs-1 opacity-50">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-white-50 mb-1">Tổng Sinh viên</h6>
+                            <h3 class="mb-0">@Model.Sum(c => c.Students.Count)</h3>
+                        </div>
+                        <div class="fs-1 opacity-50">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-white-50 mb-1">Giảng viên</h6>
+                            <h3 class="mb-0">@Model.Select(c => c.TeacherId).Distinct().Count()</h3>
+                        </div>
+                        <div class="fs-1 opacity-50">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Class List Card -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-white py-3">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h5 class="mb-0">Danh sách Lớp học</h5>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-end gap-2">
+                        <input type="text" id="searchInput" class="form-control form-control-sm" 
+                               placeholder="Tìm kiếm lớp học..." style="max-width: 300px;">
+                        <select id="academicYearFilter" class="form-select form-select-sm" style="max-width: 150px;">
+                            <option value="">Tất cả năm học</option>
+                        </select>
+                        <button class="btn btn-sm btn-outline-success" onclick="exportToCSV()">
+                            <i class="fas fa-file-excel me-1"></i>Xuất Excel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle" id="classTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 5%;">#</th>
+                                <th style="width: 15%;">Mã Lớp</th>
+                                <th style="width: 20%;">Tên Lớp</th>
+                                <th style="width: 15%;">Giảng viên</th>
+                                <th style="width: 12%;">Năm học</th>
+                                <th style="width: 10%;" class="text-center">Sĩ số</th>
+                                <th style="width: 13%;" class="text-center">Ngày tạo</th>
+                                <th style="width: 10%;" class="text-center">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Count; i++)
+                            {
+                                var classItem = Model[i];
+                                <tr data-class-id="@classItem.Id" 
+                                    data-academic-year="@classItem.AcademicYear">
+                                    <td>@(i + 1)</td>
+                                    <td>
+                                        <span class="badge bg-primary fs-6">@classItem.ClassCode</span>
+                                    </td>
+                                    <td>
+                                        <strong>@classItem.Name</strong>
+                                    </td>
+                                    <td>
+                                        @if (classItem.Teacher != null)
+                                        {
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-user-tie text-muted me-2"></i>
+                                                <span>@classItem.Teacher.FullName</span>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Chưa phân công</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">@classItem.AcademicYear</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge bg-success fs-6">
+                                            <i class="fas fa-users me-1"></i>@classItem.Students.Count
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <small class="text-muted">
+                                            @classItem.CreatedAt.ToString("dd/MM/yyyy")
+                                        </small>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="btn-group" role="group">
+                                            <a href="@Url.Action("Details", "Class", new { id = classItem.Id })" 
+                                               class="btn btn-sm btn-outline-info" 
+                                               title="Chi tiết">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="@Url.Action("Edit", "Class", new { id = classItem.Id })" 
+                                               class="btn btn-sm btn-outline-primary" 
+                                               title="Chỉnh sửa">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button type="button" 
+                                                    class="btn btn-sm btn-outline-danger delete-class" 
+                                                    data-id="@classItem.Id" 
+                                                    data-name="@classItem.Name"
+                                                    title="Xóa">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-chalkboard-teacher fa-4x text-muted mb-3"></i>
+                    <h5 class="text-muted">Chưa có lớp học nào</h5>
+                    <p class="text-muted mb-3">Hãy tạo lớp học đầu tiên để bắt đầu</p>
+                    <a href="@Url.Action("Create", "Class")" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Tạo Lớp học
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Html.AntiForgeryToken()
+    <script src="~/js/admin/class-management.js"></script>
+}

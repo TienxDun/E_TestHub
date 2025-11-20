@@ -87,140 +87,63 @@
                 </tr>
             </thead>
             <tbody id="examTableBody">
-                <!-- Bài thi đang diễn ra - 9/10/2025 (hôm nay) -->
-                <tr data-status="in-progress" data-subject="Công nghệ phần mềm nâng cao" data-date="2025-10-09">
-                    <td>
-                        <div class="exam-name">Kiểm tra giữa kỳ Công nghệ phần mềm nâng cao</div>
-                    </td>
-                    <td>
-                        <div class="subject-name">Công nghệ phần mềm nâng cao</div>
-                    </td>
-                    <td>
-                        <div class="exam-date">9/10/2025</div>
-                    </td>
-                    <td>
-                        <div class="exam-duration">90 phút</div>
-                    </td>
-                    <td>
-                        <span class="exam-status in-progress">Đang diễn ra</span>
-                    </td>
-                    <td>
-                        <div class="exam-actions">
-                            <a href="@Url.Action("ExamInfo", "Student", new { examId = 1 })" class="exam-action-btn primary">
-                                <i class="fas fa-play"></i>
-                                Vào thi
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-                
-                <!-- 15/10/2025 -->
-                <tr data-status="upcoming" data-subject="Lập trình web nâng cao" data-date="2025-10-15">
-                    <td>
-                        <div class="exam-name">Thi cuối kỳ Lập trình web nâng cao</div>
-                    </td>
-                    <td>
-                        <div class="subject-name">Lập trình web nâng cao</div>
-                    </td>
-                    <td>
-                        <div class="exam-date">15/10/2025</div>
-                    </td>
-                    <td>
-                        <div class="exam-duration">120 phút</div>
-                    </td>
-                    <td>
-                        <span class="exam-status upcoming">Sắp diễn ra</span>
-                    </td>
-                    <td>
-                        <div class="exam-actions">
-                            <a href="@Url.Action("ExamInfo", "Student", new { examId = 2 })" class="exam-action-btn secondary">
-                                <i class="fas fa-info-circle"></i>
-                                Chi tiết
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-                
-                <!-- 22/10/2025 -->
-                <tr data-status="upcoming" data-subject="Tiếng anh chuyên ngành" data-date="2025-10-22">
-                    <td>
-                        <div class="exam-name">Kiểm tra Tiếng anh chuyên ngành</div>
-                    </td>
-                    <td>
-                        <div class="subject-name">Tiếng anh chuyên ngành</div>
-                    </td>
-                    <td>
-                        <div class="exam-date">22/10/2025</div>
-                    </td>
-                    <td>
-                        <div class="exam-duration">60 phút</div>
-                    </td>
-                    <td>
-                        <span class="exam-status upcoming">Sắp diễn ra</span>
-                    </td>
-                    <td>
-                        <div class="exam-actions">
-                            <a href="@Url.Action("ExamInfo", "Student", new { examId = 3 })" class="exam-action-btn secondary">
-                                <i class="fas fa-info-circle"></i>
-                                Chi tiết
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-                
-                <!-- 28/10/2025 -->
-                <tr data-status="upcoming" data-subject="Kiểm định chất lượng phần mềm" data-date="2025-10-28">
-                    <td>
-                        <div class="exam-name">Thi giữa kỳ Kiểm định chất lượng phần mềm</div>
-                    </td>
-                    <td>
-                        <div class="subject-name">Kiểm định chất lượng phần mềm</div>
-                    </td>
-                    <td>
-                        <div class="exam-date">28/10/2025</div>
-                    </td>
-                    <td>
-                        <div class="exam-duration">90 phút</div>
-                    </td>
-                    <td>
-                        <span class="exam-status upcoming">Sắp diễn ra</span>
-                    </td>
-                    <td>
-                        <div class="exam-actions">
-                            <a href="@Url.Action("ExamInfo", "Student", new { examId = 4 })" class="exam-action-btn secondary">
-                                <i class="fas fa-info-circle"></i>
-                                Chi tiết
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-                
-                <!-- 5/11/2025 -->
-                <tr data-status="upcoming" data-subject="Cơ sở dữ liệu phân tán" data-date="2025-11-05">
-                    <td>
-                        <div class="exam-name">Thi cuối kỳ Cơ sở dữ liệu phân tán</div>
-                    </td>
-                    <td>
-                        <div class="subject-name">Cơ sở dữ liệu phân tán</div>
-                    </td>
-                    <td>
-                        <div class="exam-date">5/11/2025</div>
-                    </td>
-                    <td>
-                        <div class="exam-duration">120 phút</div>
-                    </td>
-                    <td>
-                        <span class="exam-status upcoming">Sắp diễn ra</span>
-                    </td>
-                    <td>
-                        <div class="exam-actions">
-                            <a href="@Url.Action("ExamInfo", "Student", new { examId = 5 })" class="exam-action-btn secondary">
-                                <i class="fas fa-info-circle"></i>
-                                Chi tiết
-                            </a>
-                        </div>
-                    </td>
-                </tr>
+                @if (ViewBag.Exams != null && ViewBag.Exams.Count > 0)
+                {
+                    @foreach (var exam in ViewBag.Exams)
+                    {
+                        <tr data-status="@exam.StatusClass" data-subject="@exam.Subject" data-date="@exam.StartTime.ToString("yyyy-MM-dd")">
+                            <td>
+                                <div class="exam-name">@exam.ExamName</div>
+                            </td>
+                            <td>
+                                <div class="subject-name">@exam.Subject</div>
+                            </td>
+                            <td>
+                                <div class="exam-date">@exam.StartTime.ToString("dd/MM/yyyy")</div>
+                            </td>
+                            <td>
+                                <div class="exam-duration">@exam.Duration phút</div>
+                            </td>
+                            <td>
+                                <span class="exam-status @exam.StatusClass">@exam.Status</span>
+                            </td>
+                            <td>
+                                <div class="exam-actions">
+                                    @if (exam.CanTakeExam)
+                                    {
+                                        <a href="@Url.Action("ExamInfo", "Student", new { examId = exam.ExamId })" class="exam-action-btn primary">
+                                            <i class="fas fa-play"></i>
+                                            Vào thi
+                                        </a>
+                                    }
+                                    else if (exam.Status == "Đã hoàn thành")
+                                    {
+                                        <a href="@Url.Action("ViewResults", "Student", new { submissionId = exam.SubmissionId })" class="exam-action-btn success">
+                                            <i class="fas fa-check-circle"></i>
+                                            Xem kết quả
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Action("ExamInfo", "Student", new { examId = exam.ExamId })" class="exam-action-btn secondary">
+                                            <i class="fas fa-info-circle"></i>
+                                            Chi tiết
+                                        </a>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 40px;">
+                            <i class="fas fa-inbox" style="font-size: 48px; color: #ccc; margin-bottom: 16px;"></i>
+                            <p style="color: #666;">Chưa có bài thi nào được phân công</p>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
@@ -351,14 +274,20 @@
 
             console.log('Calendar initialized:', { currentMonth, currentYear, today });
 
-            // Sample exam data (matching the table data)
-            const examData = [
-                { id: 1, name: 'Kiểm tra giữa kỳ Công nghệ phần mềm nâng cao', subject: 'Công nghệ phần mềm nâng cao', date: new Date(2025, 9, 9), duration: '90 phút', status: 'in-progress' },
-                { id: 2, name: 'Thi cuối kỳ Lập trình web nâng cao', subject: 'Lập trình web nâng cao', date: new Date(2025, 9, 15), duration: '120 phút', status: 'upcoming' },
-                { id: 3, name: 'Kiểm tra Tiếng anh chuyên ngành', subject: 'Tiếng anh chuyên ngành', date: new Date(2025, 9, 22), duration: '60 phút', status: 'upcoming' },
-                { id: 4, name: 'Thi giữa kỳ Kiểm định chất lượng phần mềm', subject: 'Kiểm định chất lượng phần mềm', date: new Date(2025, 9, 28), duration: '90 phút', status: 'upcoming' },
-                { id: 5, name: 'Thi cuối kỳ Cơ sở dữ liệu phân tán', subject: 'Cơ sở dữ liệu phân tán', date: new Date(2025, 10, 5), duration: '120 phút', status: 'upcoming' },
-            ];
+            // Get exam data from server (passed via ViewBag)
+            const examData = @Html.Raw(Json.Serialize(ViewBag.Exams ?? new List<object>()));
+            
+            // Convert date strings to Date objects
+            examData.forEach(exam => {
+                exam.date = new Date(exam.StartTime);
+                exam.name = exam.ExamName;
+                exam.subject = exam.Subject;
+                exam.duration = exam.Duration + ' phút';
+                exam.status = exam.StatusClass;
+                exam.id = exam.ExamId;
+            });
+            
+            console.log('Loaded exam data:', examData);
 
             // Toggle between calendar and list view
             toggleBtn.addEventListener('click', function() {

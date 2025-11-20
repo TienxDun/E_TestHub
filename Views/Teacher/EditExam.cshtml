@@ -1,0 +1,281 @@
+@model E_TestHub.Models.EditExamViewModel
+
+@{
+    ViewData["Title"] = "Chỉnh sửa đề thi";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    var subjects = ViewBag.Subjects as List<E_TestHub.Models.Subject> ?? new List<E_TestHub.Models.Subject>();
+}
+
+@section Styles {
+    <link href="~/css/shared/dashboard.css" rel="stylesheet">
+    <link href="~/css/teacher/question-bank.css" rel="stylesheet">
+}
+
+<!-- Welcome Section -->
+<div class="dashboard-welcome-section">
+    <h1 class="dashboard-welcome-title" style="font-weight: 700; color: #1a73e8;">
+        <a href="@Url.Action("ExamManagement", "Teacher")" class="btn btn-outline-secondary btn-sm me-3">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+        Chỉnh sửa đề thi
+    </h1>
+    <p class="dashboard-welcome-subtitle">Cập nhật thông tin đề thi</p>
+</div>
+
+<!-- Edit Exam Form -->
+<div class="dashboard-content-sections">
+    <div class="card">
+        <div class="card-header bg-warning text-dark">
+            <h5 class="mb-0"><i class="fas fa-edit"></i> Thông tin đề thi</h5>
+        </div>
+        <div class="card-body">
+            <form asp-action="EditExam" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="ApiId" />
+                <input type="hidden" asp-for="Id" />
+                
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <!-- Basic Information Section -->
+                <div class="mb-4">
+                    <h6 class="text-muted mb-3">
+                        <i class="fas fa-info-circle"></i> Thông tin cơ bản
+                    </h6>
+
+                    <!-- Title -->
+                    <div class="mb-3">
+                        <label asp-for="Title" class="form-label">
+                            <i class="fas fa-heading"></i> Tiêu đề đề thi <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="Title" type="text" class="form-control" />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                        <small class="form-text text-muted">Tiêu đề từ 5 đến 200 ký tự</small>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label">
+                            <i class="fas fa-align-left"></i> Mô tả
+                        </label>
+                        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                        <small class="form-text text-muted">Tối đa 1000 ký tự</small>
+                    </div>
+
+                    <!-- Subject -->
+                    <div class="mb-3">
+                        <label asp-for="SubjectId" class="form-label">
+                            <i class="fas fa-book"></i> Môn học <span class="text-danger">*</span>
+                        </label>
+                        <select asp-for="SubjectId" class="form-select">
+                            <option value="">-- Chọn môn học --</option>
+                            @foreach (var subject in subjects)
+                            {
+                                <option value="@subject.Id">@subject.Name @(!string.IsNullOrEmpty(subject.Code) ? $"({subject.Code})" : "")</option>
+                            }
+                        </select>
+                        <span asp-validation-for="SubjectId" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Exam Settings Section -->
+                <div class="mb-4">
+                    <h6 class="text-muted mb-3">
+                        <i class="fas fa-cog"></i> Cài đặt đề thi
+                    </h6>
+
+                    <div class="row">
+                        <!-- Duration -->
+                        <div class="col-md-4 mb-3">
+                            <label asp-for="Duration" class="form-label">
+                                <i class="fas fa-clock"></i> Thời gian làm bài (phút) <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="Duration" type="number" class="form-control" 
+                                   min="1" max="300" />
+                            <span asp-validation-for="Duration" class="text-danger"></span>
+                            <small class="form-text text-muted">1 - 300 phút</small>
+                        </div>
+
+                        <!-- Max Attempts -->
+                        <div class="col-md-4 mb-3">
+                            <label asp-for="MaxAttempts" class="form-label">
+                                <i class="fas fa-redo"></i> Số lần làm tối đa
+                            </label>
+                            <input asp-for="MaxAttempts" type="number" class="form-control" 
+                                   min="1" max="10" placeholder="Không giới hạn" />
+                            <span asp-validation-for="MaxAttempts" class="text-danger"></span>
+                            <small class="form-text text-muted">Để trống = không giới hạn</small>
+                        </div>
+
+                        <!-- Passing Score -->
+                        <div class="col-md-4 mb-3">
+                            <label asp-for="PassingScore" class="form-label">
+                                <i class="fas fa-trophy"></i> Điểm đạt (%)
+                            </label>
+                            <input asp-for="PassingScore" type="number" class="form-control" 
+                                   min="0" max="100" step="0.5" />
+                            <span asp-validation-for="PassingScore" class="text-danger"></span>
+                            <small class="form-text text-muted">0 - 100%</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Section -->
+                <div class="mb-4">
+                    <h6 class="text-muted mb-3">
+                        <i class="fas fa-toggle-on"></i> Trạng thái
+                    </h6>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check form-switch">
+                                <input asp-for="IsPublished" class="form-check-input" type="checkbox" 
+                                       id="isPublishedSwitch" role="switch" />
+                                <label class="form-check-label" for="isPublishedSwitch">
+                                    <strong>Đã xuất bản</strong>
+                                    <br />
+                                    <small class="text-muted">Sinh viên có thể xem và làm bài thi này</small>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check form-switch">
+                                <input asp-for="IsLocked" class="form-check-input" type="checkbox" 
+                                       id="isLockedSwitch" role="switch" />
+                                <label class="form-check-label" for="isLockedSwitch">
+                                    <strong>Đã khóa</strong>
+                                    <br />
+                                    <small class="text-muted">Không thể chỉnh sửa hoặc xóa đề thi</small>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Warning for Locked Exam -->
+                @if (Model.IsLocked)
+                {
+                    <div class="alert alert-warning">
+                        <i class="fas fa-lock"></i> 
+                        <strong>Cảnh báo:</strong> Đề thi này đã bị khóa. Bạn vẫn có thể cập nhật thông tin nhưng không thể xóa đề thi.
+                    </div>
+                }
+
+                <!-- Info Box -->
+                @if (!Model.IsPublished)
+                {
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> 
+                        <strong>Lưu ý:</strong> Đề thi chưa được xuất bản. Sinh viên sẽ không thể xem hoặc làm bài thi này.
+                    </div>
+                }
+
+                <!-- Form Actions -->
+                <div class="d-flex justify-content-end gap-2">
+                    <a href="@Url.Action("ExamManagement", "Teacher")" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Hủy
+                    </a>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-save"></i> Cập nhật
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        $(document).ready(function() {
+            // Auto-focus title input
+            $('#Title').focus();
+
+            // Real-time character counter for Description
+            var descCounter = $('<small class="text-muted d-block mt-1" id="descCounter"></small>');
+            $('#Description').after(descCounter);
+            
+            function updateDescCounter() {
+                var length = $('#Description').val().length;
+                var maxLength = 1000;
+                var remaining = maxLength - length;
+                
+                if (length > 0) {
+                    $('#descCounter').text(`Đã nhập: ${length}/${maxLength} ký tự`);
+                    if (remaining < 100) {
+                        $('#descCounter').addClass('text-warning').removeClass('text-danger');
+                    }
+                    if (remaining < 0) {
+                        $('#descCounter').removeClass('text-warning').addClass('text-danger');
+                    }
+                } else {
+                    $('#descCounter').text('');
+                }
+            }
+            
+            // Initialize counter
+            updateDescCounter();
+            
+            $('#Description').on('input', updateDescCounter);
+
+            // Disable form if IsLocked is checked
+            $('#isLockedSwitch').on('change', function() {
+                if ($(this).is(':checked')) {
+                    if (!confirm('Bạn có chắc chắn muốn khóa đề thi này?\n\nSau khi khóa, bạn sẽ không thể xóa đề thi (chỉ có thể cập nhật thông tin).')) {
+                        $(this).prop('checked', false);
+                    }
+                }
+            });
+
+            // Warning when enabling IsPublished
+            $('#isPublishedSwitch').on('change', function() {
+                if ($(this).is(':checked')) {
+                    var confirmMsg = 'Bạn có chắc chắn muốn xuất bản đề thi này?\n\nSau khi xuất bản, sinh viên sẽ có thể xem và làm bài thi.';
+                    if (!confirm(confirmMsg)) {
+                        $(this).prop('checked', false);
+                    }
+                } else {
+                    if (!confirm('Bạn có muốn ẩn đề thi này khỏi sinh viên?')) {
+                        $(this).prop('checked', true);
+                    }
+                }
+            });
+
+            // Form validation feedback
+            $('form').on('submit', function(e) {
+                var title = $('#Title').val().trim();
+                var subjectId = $('#SubjectId').val();
+                var duration = parseInt($('#Duration').val());
+
+                if (!title || title.length < 5) {
+                    e.preventDefault();
+                    alert('Vui lòng nhập tiêu đề đề thi (ít nhất 5 ký tự)');
+                    $('#Title').focus();
+                    return false;
+                }
+
+                if (!subjectId) {
+                    e.preventDefault();
+                    alert('Vui lòng chọn môn học');
+                    $('#SubjectId').focus();
+                    return false;
+                }
+
+                if (!duration || duration < 1 || duration > 300) {
+                    e.preventDefault();
+                    alert('Vui lòng nhập thời gian làm bài hợp lệ (1-300 phút)');
+                    $('#Duration').focus();
+                    return false;
+                }
+
+                // Show loading indicator
+                $(this).find('button[type="submit"]').prop('disabled', true).html(
+                    '<i class="fas fa-spinner fa-spin"></i> Đang cập nhật...'
+                );
+            });
+        });
+    </script>
+}

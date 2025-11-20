@@ -1,0 +1,246 @@
+@model E_TestHub.Models.CreateClassViewModel
+@{
+    ViewData["Title"] = "Tạo Lớp học Mới";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Header -->
+            <div class="d-flex align-items-center mb-4">
+                <a href="@Url.Action("Index", "Class")" class="btn btn-outline-secondary me-3">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div>
+                    <h2 class="mb-1"><i class="fas fa-plus-circle text-primary"></i> Tạo Lớp học Mới</h2>
+                    <p class="text-muted mb-0">Điền thông tin để tạo lớp học mới</p>
+                </div>
+            </div>
+
+            <!-- Form Card -->
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <form asp-action="Create" method="post" id="createClassForm">
+                        <div class="row">
+                            <!-- Class Name -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Name" class="form-label fw-bold">
+                                    Tên Lớp học <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="Name" 
+                                       class="form-control" 
+                                       placeholder="VD: Lập trình Web nâng cao"
+                                       maxlength="100" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                                <small class="text-muted">
+                                    <span id="nameCount">0</span>/100 ký tự
+                                </small>
+                            </div>
+
+                            <!-- Class Code -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ClassCode" class="form-label fw-bold">
+                                    Mã Lớp học <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="ClassCode" 
+                                       class="form-control text-uppercase" 
+                                       placeholder="VD: CS101"
+                                       maxlength="20"
+                                       id="classCodeInput" />
+                                <span asp-validation-for="ClassCode" class="text-danger"></span>
+                                <span id="codeValidationMessage" class="form-text"></span>
+                            </div>
+
+                            <!-- Teacher -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="TeacherId" class="form-label fw-bold">
+                                    Giảng viên <span class="text-danger">*</span>
+                                </label>
+                                <select asp-for="TeacherId" class="form-select">
+                                    <option value="">-- Chọn Giảng viên --</option>
+                                    @if (ViewBag.Teachers != null)
+                                    {
+                                        @foreach (var teacher in (ViewBag.Teachers as List<E_TestHub.Models.User>)!)
+                                        {
+                                            <option value="@teacher.ApiId">
+                                                @teacher.FullName (@teacher.Email)
+                                            </option>
+                                        }
+                                    }
+                                </select>
+                                <span asp-validation-for="TeacherId" class="text-danger"></span>
+                            </div>
+
+                            <!-- Subject (Course) -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="CourseId" class="form-label fw-bold">
+                                    Môn học <span class="text-danger">*</span>
+                                </label>
+                                <select asp-for="CourseId" class="form-select">
+                                    <option value="">-- Chọn Môn học --</option>
+                                    @if (ViewBag.Subjects != null)
+                                    {
+                                        @foreach (var subject in (ViewBag.Subjects as List<E_TestHub.Models.Subject>)!)
+                                        {
+                                            <option value="@subject.Id">
+                                                [@subject.Code] @subject.Name
+                                            </option>
+                                        }
+                                    }
+                                </select>
+                                <span asp-validation-for="CourseId" class="text-danger"></span>
+                            </div>
+
+                            <!-- Academic Year -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="AcademicYear" class="form-label fw-bold">
+                                    Năm học <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="AcademicYear" 
+                                       class="form-control" 
+                                       placeholder="VD: 2024-2025"
+                                       pattern="\d{4}-\d{4}"
+                                       id="academicYearInput" />
+                                <span asp-validation-for="AcademicYear" class="text-danger"></span>
+                                <small class="text-muted">Định dạng: YYYY-YYYY</small>
+                            </div>
+
+                            <!-- Students -->
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label fw-bold">
+                                    Sinh viên <span class="text-muted">(Tùy chọn)</span>
+                                </label>
+                                <div class="border rounded p-3" style="max-height: 250px; overflow-y: auto;">
+                                    @{
+                                        var students = ViewBag.Students as List<E_TestHub.Models.User>;
+                                    }
+                                    @if (students != null && students.Any())
+                                    {
+                                        <div class="form-check mb-2">
+                                            <input type="checkbox" class="form-check-input" id="selectAllStudents" />
+                                            <label class="form-check-label fw-bold" for="selectAllStudents">
+                                                Chọn tất cả
+                                            </label>
+                                        </div>
+                                        <hr class="my-2" />
+                                        @foreach (var student in students)
+                                        {
+                                            <div class="form-check mb-2">
+                                                <input type="checkbox" 
+                                                       class="form-check-input student-checkbox" 
+                                                       name="SelectedStudents" 
+                                                       value="@student.ApiId" 
+                                                       id="student_@student.ApiId" />
+                                                <label class="form-check-label" for="student_@student.ApiId">
+                                                    @student.FullName (@student.StudentCode) - @student.Email
+                                                </label>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <p class="text-muted mb-0">Không có sinh viên nào trong hệ thống</p>
+                                    }
+                                </div>
+                                <small class="text-muted">
+                                    Đã chọn: <span id="selectedStudentCount">0</span> sinh viên
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <a href="@Url.Action("Index", "Class")" class="btn btn-secondary">
+                                <i class="fas fa-times me-2"></i>Hủy
+                            </a>
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                <i class="fas fa-save me-2"></i>Tạo Lớp học
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Character counter for Name
+            $('#Name').on('input', function() {
+                const count = $(this).val().length;
+                $('#nameCount').text(count);
+            });
+
+            // Auto-uppercase for ClassCode
+            $('#classCodeInput').on('input', function() {
+                $(this).val($(this).val().toUpperCase());
+            });
+
+            // Real-time validation for ClassCode
+            let codeCheckTimeout;
+            $('#classCodeInput').on('input', function() {
+                const code = $(this).val();
+                const messageSpan = $('#codeValidationMessage');
+                
+                if (code.length < 2) {
+                    messageSpan.removeClass('text-success text-danger').addClass('text-muted').text('Tối thiểu 2 ký tự');
+                    return;
+                }
+
+                clearTimeout(codeCheckTimeout);
+                messageSpan.removeClass('text-success text-danger').addClass('text-info').html('<i class="fas fa-spinner fa-spin"></i> Đang kiểm tra...');
+
+                codeCheckTimeout = setTimeout(function() {
+                    $.get('@Url.Action("CheckCodeExists", "Class")', { classCode: code }, function(data) {
+                        if (data.exists) {
+                            messageSpan.removeClass('text-success text-info').addClass('text-danger').html('<i class="fas fa-times-circle"></i> Mã lớp học đã tồn tại');
+                        } else {
+                            messageSpan.removeClass('text-danger text-info').addClass('text-success').html('<i class="fas fa-check-circle"></i> Mã lớp học hợp lệ');
+                        }
+                    });
+                }, 500);
+            });
+
+            // Auto-fill Academic Year
+            const currentYear = new Date().getFullYear();
+            const nextYear = currentYear + 1;
+            $('#academicYearInput').attr('placeholder', `VD: ${currentYear}-${nextYear}`);
+
+            // Select All Students
+            $('#selectAllStudents').on('change', function() {
+                $('.student-checkbox').prop('checked', $(this).is(':checked'));
+                updateStudentCount();
+            });
+
+            $('.student-checkbox').on('change', function() {
+                updateStudentCount();
+                const totalCheckboxes = $('.student-checkbox').length;
+                const checkedCheckboxes = $('.student-checkbox:checked').length;
+                $('#selectAllStudents').prop('checked', totalCheckboxes === checkedCheckboxes);
+            });
+
+            function updateStudentCount() {
+                const count = $('.student-checkbox:checked').length;
+                $('#selectedStudentCount').text(count);
+            }
+
+            // Form validation
+            $('#createClassForm').on('submit', function(e) {
+                const code = $('#classCodeInput').val();
+                const messageSpan = $('#codeValidationMessage');
+                
+                if (messageSpan.hasClass('text-danger')) {
+                    e.preventDefault();
+                    alert('Mã lớp học đã tồn tại. Vui lòng chọn mã khác.');
+                    return false;
+                }
+
+                // Disable submit button to prevent double submission
+                $('#submitBtn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Đang tạo...');
+            });
+        });
+    </script>
+}

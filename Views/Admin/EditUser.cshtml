@@ -1,0 +1,295 @@
+@model E_TestHub.Models.EditUserViewModel
+@{
+    ViewData["Title"] = "Chỉnh sửa người dùng";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-2">
+                        <i class="fas fa-user-edit text-primary"></i>
+                        Chỉnh sửa người dùng
+                    </h2>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a asp-action="Dashboard">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a asp-action="UserManagement">Quản lý người dùng</a></li>
+                            <li class="breadcrumb-item active">Chỉnh sửa</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle"></i>
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle"></i>
+                        Thông tin người dùng
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="EditUser" method="post">
+                        @Html.AntiForgeryToken()
+                        @* Only submit ApiId (MongoDB ObjectId), not the internal C# Id *@
+                        <input type="hidden" asp-for="ApiId" />
+                        
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-danger">
+                                <strong>Lỗi:</strong>
+                                <ul>
+                                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                    {
+                                        <li>@error.ErrorMessage</li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                        
+                        <div asp-validation-summary="All" class="alert alert-danger"></div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label required">Email</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                <input asp-for="Email" class="form-control" placeholder="email@example.com" />
+                            </div>
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Full Name -->
+                        <div class="mb-3">
+                            <label asp-for="FullName" class="form-label required">Họ và tên</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                <input asp-for="FullName" class="form-control" placeholder="Nhập họ và tên" />
+                            </div>
+                            <span asp-validation-for="FullName" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Role -->
+                        <div class="mb-3">
+                            <label asp-for="Role" class="form-label required">Vai trò</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-user-tag"></i></span>
+                                <select asp-for="Role" class="form-select" id="roleSelect">
+                                    <option value="">-- Chọn vai trò --</option>
+                                    <option value="3">Quản trị viên (Admin)</option>
+                                    <option value="2">Giáo viên (Teacher)</option>
+                                    <option value="1">Sinh viên (Student)</option>
+                                </select>
+                            </div>
+                            <span asp-validation-for="Role" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Active Status -->
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input asp-for="IsActive" class="form-check-input" type="checkbox" />
+                                <label asp-for="IsActive" class="form-check-label">
+                                    Tài khoản hoạt động
+                                </label>
+                            </div>
+                            <small class="text-muted">Tắt để vô hiệu hóa tài khoản người dùng</small>
+                        </div>
+
+                        <hr class="my-4" />
+
+                        <!-- Role-specific fields -->
+                        <div id="studentFields" style="display: none;">
+                            <h6 class="text-primary mb-3">
+                                <i class="fas fa-graduation-cap"></i>
+                                Thông tin sinh viên
+                            </h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="StudentId" class="form-label">Mã sinh viên</label>
+                                    <input asp-for="StudentId" class="form-control" placeholder="VD: 2151012001" />
+                                    <span asp-validation-for="StudentId" class="text-danger small"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Class" class="form-label">Lớp</label>
+                                    <input asp-for="Class" class="form-control" placeholder="VD: PM233H" />
+                                    <span asp-validation-for="Class" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="teacherFields" style="display: none;">
+                            <h6 class="text-primary mb-3">
+                                <i class="fas fa-chalkboard-teacher"></i>
+                                Thông tin giáo viên
+                            </h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="EmployeeId" class="form-label">Mã giảng viên</label>
+                                    <input asp-for="EmployeeId" class="form-control" placeholder="VD: T001" />
+                                    <span asp-validation-for="EmployeeId" class="text-danger small"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Department" class="form-label">Khoa</label>
+                                    <input asp-for="Department" class="form-control" placeholder="VD: Khoa CNTT" />
+                                    <span asp-validation-for="Department" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="adminFields" style="display: none;">
+                            <h6 class="text-primary mb-3">
+                                <i class="fas fa-user-shield"></i>
+                                Thông tin quản trị viên
+                            </h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="EmployeeId" class="form-label">Mã nhân viên</label>
+                                    <input asp-for="EmployeeId" class="form-control" placeholder="VD: A001" />
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Position" class="form-label">Vị trí</label>
+                                    <input asp-for="Position" class="form-control" placeholder="VD: Quản trị hệ thống" />
+                                    <span asp-validation-for="Position" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4" />
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="UserManagement" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i>
+                                Quay lại
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i>
+                                Lưu thay đổi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            console.log('=== EditUser Scripts Loaded ===');
+            
+            // Configure jQuery validation to ignore hidden fields
+            $.validator.setDefaults({
+                ignore: ":hidden:not(select)"
+            });
+
+            // Function to show/hide role-specific fields
+            function toggleRoleFields() {
+                var role = $('#roleSelect').val();
+                
+                // Hide all role-specific fields first
+                $('#studentFields, #teacherFields, #adminFields').hide();
+                
+                // Disable validation for hidden fields
+                $('#studentFields input, #teacherFields input, #adminFields input').prop('disabled', true);
+                
+                // Show relevant fields based on role and enable validation
+                if (role === '1') { // Student
+                    $('#studentFields').show();
+                    $('#studentFields input').prop('disabled', false);
+                } else if (role === '2') { // Teacher
+                    $('#teacherFields').show();
+                    $('#teacherFields input').prop('disabled', false);
+                } else if (role === '3') { // Admin
+                    $('#adminFields').show();
+                    $('#adminFields input').prop('disabled', false);
+                }
+            }
+
+            // Initialize on page load
+            toggleRoleFields();
+
+            // Handle role change
+            $('#roleSelect').on('change', toggleRoleFields);
+            
+            // Debug: Log form submit
+            $('form').on('submit', function(e) {
+                console.log('=== FORM SUBMIT EVENT ===');
+                console.log('Email:', $('#Email').val());
+                console.log('ApiId:', $('#ApiId').val());
+                console.log('Role:', $('#roleSelect').val());
+                
+                var isValid = $(this).valid();
+                console.log('Form valid:', isValid);
+                
+                if (!isValid) {
+                    console.error('=== VALIDATION FAILED ===');
+                    console.log('Validation errors:', $(this).validate().errorList);
+                    e.preventDefault();
+                    return false;
+                }
+                
+                console.log('=== FORM WILL SUBMIT TO SERVER ===');
+                // Let form submit naturally
+            });
+        });
+    </script>
+}
+
+<style>
+    .required:after {
+        content: " *";
+        color: red;
+    }
+    
+    .card {
+        border: none;
+        border-radius: 10px;
+    }
+    
+    .card-header {
+        border-radius: 10px 10px 0 0 !important;
+        padding: 1rem 1.5rem;
+    }
+    
+    .input-group-text {
+        background-color: #f8f9fa;
+        border-right: none;
+    }
+    
+    .form-control, .form-select {
+        border-left: none;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: #ced4da;
+        box-shadow: none;
+    }
+    
+    .input-group:focus-within .input-group-text {
+        border-color: #86b7fe;
+    }
+    
+    .input-group:focus-within .form-control,
+    .input-group:focus-within .form-select {
+        border-color: #86b7fe;
+    }
+</style>

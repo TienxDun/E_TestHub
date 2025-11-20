@@ -1,0 +1,235 @@
+@model E_TestHub.Models.CreateSubjectViewModel
+@{
+    ViewData["Title"] = "Thêm Môn học mới";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-2">
+                        <i class="fas fa-plus-circle text-primary"></i>
+                        Thêm Môn học mới
+                    </h2>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Dashboard">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a asp-action="Index">Môn học</a></li>
+                            <li class="breadcrumb-item active">Thêm mới</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle"></i>
+                        Thông tin Môn học
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post" id="createSubjectForm">
+                        @Html.AntiForgeryToken()
+                        
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <!-- Subject Code -->
+                        <div class="mb-3">
+                            <label asp-for="Code" class="form-label required">Mã Môn học</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-barcode"></i></span>
+                                <input asp-for="Code" class="form-control" 
+                                       placeholder="VD: CNTT101, MATH201" 
+                                       style="text-transform: uppercase;" />
+                            </div>
+                            <span asp-validation-for="Code" class="text-danger small"></span>
+                            <small class="form-text text-muted">
+                                <i class="fas fa-info-circle"></i>
+                                Chỉ chứa chữ IN HOA và số, không có khoảng trắng
+                            </small>
+                        </div>
+
+                        <!-- Subject Name -->
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label required">Tên Môn học</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-book"></i></span>
+                                <input asp-for="Name" class="form-control" 
+                                       placeholder="VD: Lập trình Web, Toán cao cấp" />
+                            </div>
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label">Mô tả</label>
+                            <div class="input-group">
+                                <span class="input-group-text align-items-start pt-2">
+                                    <i class="fas fa-align-left"></i>
+                                </span>
+                                <textarea asp-for="Description" class="form-control" 
+                                          rows="4" 
+                                          placeholder="Nhập mô tả chi tiết về môn học..."></textarea>
+                            </div>
+                            <span asp-validation-for="Description" class="text-danger small"></span>
+                            <small class="form-text text-muted">
+                                Tối đa 500 ký tự
+                            </small>
+                        </div>
+
+                        <hr class="my-4" />
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i>
+                                Quay lại
+                            </a>
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                <i class="fas fa-save"></i>
+                                Lưu Môn học
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Help Card -->
+            <div class="card mt-4 border-info">
+                <div class="card-body">
+                    <h6 class="card-title">
+                        <i class="fas fa-lightbulb text-warning"></i>
+                        Hướng dẫn
+                    </h6>
+                    <ul class="mb-0">
+                        <li>Mã môn học phải là duy nhất trong hệ thống</li>
+                        <li>Sử dụng mã viết tắt ngắn gọn, dễ nhớ (VD: CNTT101, MATH201)</li>
+                        <li>Tên môn học nên rõ ràng và đầy đủ</li>
+                        <li>Mô tả giúp sinh viên và giáo viên hiểu rõ hơn về nội dung môn học</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            // Convert code to uppercase on input
+            $('#Code').on('input', function () {
+                this.value = this.value.toUpperCase();
+            });
+
+            // Check code exists on blur
+            $('#Code').on('blur', function () {
+                const code = $(this).val().trim();
+                if (code.length >= 2) {
+                    checkCodeExists(code);
+                }
+            });
+
+            function checkCodeExists(code) {
+                $.ajax({
+                    url: '@Url.Action("CheckCodeExists", "Subject")',
+                    type: 'POST',
+                    data: { code: code },
+                    headers: {
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (response) {
+                        if (response.exists) {
+                            $('#Code').addClass('is-invalid');
+                            if ($('#Code').next('.invalid-feedback').length === 0) {
+                                $('#Code').after('<div class="invalid-feedback">Mã môn học đã tồn tại trong hệ thống.</div>');
+                            }
+                        } else {
+                            $('#Code').removeClass('is-invalid');
+                            $('#Code').next('.invalid-feedback').remove();
+                        }
+                    }
+                });
+            }
+
+            // Form validation
+            $('#createSubjectForm').on('submit', function (e) {
+                if (!this.checkValidity()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                $(this).addClass('was-validated');
+            });
+
+            // Character counter for description
+            $('#Description').on('input', function () {
+                const maxLength = 500;
+                const currentLength = $(this).val().length;
+                const remaining = maxLength - currentLength;
+
+                if ($('#charCounter').length === 0) {
+                    $(this).parent().after(`<small id="charCounter" class="form-text text-muted"></small>`);
+                }
+
+                $('#charCounter').text(`${currentLength}/${maxLength} ký tự`);
+
+                if (remaining < 50) {
+                    $('#charCounter').removeClass('text-muted').addClass('text-warning');
+                }
+                if (remaining < 0) {
+                    $('#charCounter').removeClass('text-warning').addClass('text-danger');
+                }
+            });
+        });
+    </script>
+}
+
+<style>
+    .required:after {
+        content: " *";
+        color: red;
+    }
+
+    .card {
+        border: none;
+        border-radius: 10px;
+    }
+
+    .card-header {
+        border-radius: 10px 10px 0 0 !important;
+        padding: 1rem 1.5rem;
+    }
+
+    .input-group-text {
+        background-color: #f8f9fa;
+        border-right: none;
+    }
+
+    .form-control, .form-select {
+        border-left: none;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #ced4da;
+        box-shadow: none;
+    }
+
+    .input-group:focus-within .input-group-text {
+        border-color: #86b7fe;
+    }
+
+    .input-group:focus-within .form-control {
+        border-color: #86b7fe;
+    }
+
+    .border-info {
+        border-width: 2px !important;
+    }
+</style>

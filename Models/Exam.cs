@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace E_TestHub.Models
 {
@@ -14,7 +15,9 @@ namespace E_TestHub.Models
 
         /// <summary>
         /// MongoDB ObjectId (24-char hex string) - CRITICAL for API operations
+        /// Maps to "_id" from MongoDB/Node.js API response
         /// </summary>
+        [JsonPropertyName("_id")]
         public string? ApiId { get; set; }
 
         /// <summary>

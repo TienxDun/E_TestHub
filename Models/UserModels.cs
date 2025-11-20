@@ -12,6 +12,7 @@ namespace E_TestHub.Models
     public class User
     {
         public int Id { get; set; }
+        public string ApiId { get; set; } = string.Empty; // MongoDB _id from API
         public string Email { get; set; } = string.Empty;
         public string FullName { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
@@ -22,6 +23,7 @@ namespace E_TestHub.Models
         
         // Student specific properties
         public string? StudentId { get; set; }
+        public string? StudentCode { get; set; } // Mã sinh viên
         public string? Class { get; set; }
         
         // Teacher specific properties
@@ -37,6 +39,8 @@ namespace E_TestHub.Models
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public bool RememberMe { get; set; }
+        // student | teacher | admin
+        public string SelectedRole { get; set; } = string.Empty;
     }
 
     public class ForgotPasswordViewModel
@@ -90,5 +94,59 @@ namespace E_TestHub.Models
 
         // Admin specific
         public string? Position { get; set; }
+    }
+
+    public class EditUserViewModel
+    {
+        // Internal C# Id (not required, ApiId is the real identifier)
+        public int Id { get; set; }
+
+        // MongoDB ObjectId - CRITICAL for API updates
+        [Required(ErrorMessage = "ApiId là bắt buộc")]
+        public string? ApiId { get; set; }
+
+        [Required(ErrorMessage = "Email là bắt buộc")]
+        [EmailAddress(ErrorMessage = "Email không hợp lệ")]
+        public string Email { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Họ và tên là bắt buộc")]
+        [StringLength(100, MinimumLength = 2, ErrorMessage = "Họ và tên phải từ 2 đến 100 ký tự")]
+        public string FullName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Vai trò là bắt buộc")]
+        public UserRole Role { get; set; }
+
+        public bool IsActive { get; set; }
+
+        // Student specific
+        public string? StudentId { get; set; }
+        public string? Class { get; set; }
+
+        // Teacher specific
+        public string? EmployeeId { get; set; }
+        public string? Department { get; set; }
+
+        // Admin specific
+        public string? Position { get; set; }
+    }
+
+    public class ChangePasswordViewModel
+    {
+        [Required]
+        public int UserId { get; set; }
+
+        [Required(ErrorMessage = "Mật khẩu hiện tại là bắt buộc")]
+        [DataType(DataType.Password)]
+        public string CurrentPassword { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Mật khẩu mới là bắt buộc")]
+        [StringLength(100, MinimumLength = 6, ErrorMessage = "Mật khẩu phải ít nhất 6 ký tự")]
+        [DataType(DataType.Password)]
+        public string NewPassword { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Xác nhận mật khẩu là bắt buộc")]
+        [Compare("NewPassword", ErrorMessage = "Mật khẩu xác nhận không khớp")]
+        [DataType(DataType.Password)]
+        public string ConfirmPassword { get; set; } = string.Empty;
     }
 }

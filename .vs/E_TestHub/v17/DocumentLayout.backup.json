@@ -1,10 +1,14 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\leuti\\Desktop\\ASP.NET Core\\E_TestHub\\",
+  "WorkspaceRootPath": "D:\\DevProject\\CNPMNC\\LyThuyet\\New\\E_TestHub\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{40C8232A-A923-4CD3-8FEA-3FD96386E4E4}|E_TestHub\\E_TestHub.csproj|c:\\users\\leuti\\desktop\\asp.net core\\e_testhub\\e_testhub\\views\\home\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{40C8232A-A923-4CD3-8FEA-3FD96386E4E4}|E_TestHub\\E_TestHub.csproj|solutionrelative:e_testhub\\views\\home\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{DEF58FAF-7958-0318-B05E-D28CB5AB9DDD}|E_TestHub.csproj|d:\\devproject\\cnpmnc\\lythuyet\\new\\e_testhub\\wwwroot\\js\\login.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{DEF58FAF-7958-0318-B05E-D28CB5AB9DDD}|E_TestHub.csproj|solutionrelative:wwwroot\\js\\login.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DEF58FAF-7958-0318-B05E-D28CB5AB9DDD}|E_TestHub.csproj|d:\\devproject\\cnpmnc\\lythuyet\\new\\e_testhub\\views\\admin\\dashboard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{DEF58FAF-7958-0318-B05E-D28CB5AB9DDD}|E_TestHub.csproj|solutionrelative:views\\admin\\dashboard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,24 +18,40 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
+            },
+            {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Login.cshtml",
-              "DocumentMoniker": "C:\\Users\\leuti\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\Views\\Home\\Login.cshtml",
-              "RelativeDocumentMoniker": "E_TestHub\\Views\\Home\\Login.cshtml",
-              "ToolTip": "C:\\Users\\leuti\\Desktop\\ASP.NET Core\\E_TestHub\\E_TestHub\\Views\\Home\\Login.cshtml",
-              "RelativeToolTip": "E_TestHub\\Views\\Home\\Login.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAABKAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-09-26T01:15:54.032Z",
+              "Title": "login.js",
+              "DocumentMoniker": "D:\\DevProject\\CNPMNC\\LyThuyet\\New\\E_TestHub\\wwwroot\\js\\login.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\login.js",
+              "ToolTip": "D:\\DevProject\\CNPMNC\\LyThuyet\\New\\E_TestHub\\wwwroot\\js\\login.js",
+              "RelativeToolTip": "wwwroot\\js\\login.js",
+              "ViewState": "AgIAAA4BAAAAAAAAAAAowBkBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-11-10T00:50:13.981Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Dashboard.cshtml",
+              "DocumentMoniker": "D:\\DevProject\\CNPMNC\\LyThuyet\\New\\E_TestHub\\Views\\Admin\\Dashboard.cshtml",
+              "RelativeDocumentMoniker": "Views\\Admin\\Dashboard.cshtml",
+              "ToolTip": "D:\\DevProject\\CNPMNC\\LyThuyet\\New\\E_TestHub\\Views\\Admin\\Dashboard.cshtml",
+              "RelativeToolTip": "Views\\Admin\\Dashboard.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-10T00:16:07.518Z"
             }
           ]
         }

@@ -108,15 +108,15 @@
                                 
                                 <!-- Quick Login Demo Buttons -->
                                 <div class="mb-3">
-                                    <p class="small text-muted mb-2">🎯 Đăng nhập nhanh với tài khoản demo:</p>
+                                    <p class="small text-muted mb-2">🎯 Chọn loại tài khoản:</p>
                                     <div class="d-grid gap-2">
-                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="quickLogin('student@demo.com', 'student123')">
+                                        <button type="button" class="btn btn-outline-primary btn-sm role-btn" data-role="student" onclick="selectRole('student')">
                                             <i class="fas fa-user-graduate me-1"></i> Sinh viên
                                         </button>
-                                        <button type="button" class="btn btn-outline-success btn-sm" onclick="quickLogin('teacher@demo.com', 'teacher123')">
+                                        <button type="button" class="btn btn-outline-success btn-sm role-btn" data-role="teacher" onclick="selectRole('teacher')">
                                             <i class="fas fa-chalkboard-teacher me-1"></i> Giáo viên
                                         </button>
-                                        <button type="button" class="btn btn-outline-warning btn-sm" onclick="quickLogin('admin@demo.com', 'admin123')">
+                                        <button type="button" class="btn btn-outline-warning btn-sm role-btn" data-role="admin" onclick="selectRole('admin')">
                                             <i class="fas fa-user-shield me-1"></i> Quản trị viên
                                         </button>
                                     </div>
@@ -124,12 +124,13 @@
                             </div>
                             
                             <form id="loginForm" class="etesthub-form" method="post" asp-action="Login">
-                                @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+                                @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage) || !string.IsNullOrEmpty(ViewBag.Error))
                                 {
                                     <div class="alert alert-danger" role="alert">
-                                        @ViewBag.ErrorMessage
+                                        @(string.IsNullOrEmpty(ViewBag.ErrorMessage) ? ViewBag.Error : ViewBag.ErrorMessage)
                                     </div>
                                 }
+                                <input type="hidden" name="selectedRole" id="selectedRole" value="@Model?.SelectedRole" />
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold text-dark">Email</label>
                                     <input asp-for="Email" type="email" class="form-control etesthub-input" placeholder="example@etesthub.com">
@@ -151,12 +152,7 @@
                                 </div>
                                 <button type="submit" class="btn etesthub-btn-login w-100 mb-3 py-3 fw-semibold">Đăng nhập</button>
                                 
-                                <div class="etesthub-divider text-center mb-3">Hoặc</div>
-                                
-                                <button type="button" class="btn etesthub-btn-google w-100 py-3">
-                                    <i class="fab fa-google me-2"></i>
-                                    Đăng nhập bằng Google
-                                </button>
+                                <!-- Không có đăng nhập nhanh demo -->
                             </form>
 
                             <form id="forgotPasswordForm" class="etesthub-form" style="display: none;">

@@ -1,0 +1,266 @@
+@model E_TestHub.Models.AssignExamViewModel
+@{
+    ViewData["Title"] = "Gán Đề Thi Cho Lớp Học";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    var exams = ViewBag.Exams as List<E_TestHub.Models.Exam> ?? new List<E_TestHub.Models.Exam>();
+    var classes = ViewBag.Classes as List<E_TestHub.Models.Class> ?? new List<E_TestHub.Models.Class>();
+    var subjects = ViewBag.Subjects as List<E_TestHub.Models.Subject> ?? new List<E_TestHub.Models.Subject>();
+    var selectedExamId = ViewBag.SelectedExamId as string;
+}
+
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-1">
+                        <i class="fas fa-calendar-plus me-2 text-primary"></i>
+                        Gán Đề Thi Cho Lớp Học
+                    </h2>
+                    <p class="text-muted mb-0">Phân công đề thi cho lớp học với thời gian làm bài cụ thể</p>
+                </div>
+                <div>
+                    <a href="@Url.Action("ExamAssignments")" class="btn btn-outline-info me-2">
+                        <i class="fas fa-list me-1"></i> Danh sách phân công
+                    </a>
+                    <a href="@Url.Action("ExamManagement")" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Quay lại
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="mb-0">
+                        <i class="fas fa-clipboard-check me-2"></i>
+                        Thông Tin Phân Công
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="AssignExam" method="post" id="assignExamForm">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <!-- Exam Selection -->
+                        <div class="mb-4">
+                            <label asp-for="ExamId" class="form-label">
+                                <i class="fas fa-file-alt me-1"></i>
+                                <strong>Chọn đề thi</strong>
+                                <span class="text-danger">*</span>
+                            </label>
+                            <select asp-for="ExamId" class="form-select form-select-lg" id="examSelect" required>
+                                <option value="">-- Chọn đề thi --</option>
+                                @foreach (var exam in exams)
+                                {
+                                    var subject = subjects.FirstOrDefault(s => s.Id == exam.SubjectId);
+                                    var isSelected = exam.ApiId == selectedExamId;
+                                    <option value="@exam.ApiId" 
+                                            data-subject="@subject?.Name" 
+                                            data-duration="@exam.Duration"
+                                            data-questions="@exam.QuestionCount"
+                                            data-score="@exam.TotalScore"
+                                            selected="@isSelected">
+                                        @exam.Title (@subject?.Name)
+                                    </option>
+                                }
+                            </select>
+                            <span asp-validation-for="ExamId" class="text-danger"></span>
+                            
+                            <!-- Exam Info Display -->
+                            <div id="examInfo" class="mt-3 p-3 bg-light rounded" style="display: none;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <small class="text-muted d-block mb-1">
+                                            <i class="fas fa-book me-1"></i>Môn học:
+                                        </small>
+                                        <strong id="examSubject">-</strong>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <small class="text-muted d-block mb-1">
+                                            <i class="fas fa-clock me-1"></i>Thời gian:
+                                        </small>
+                                        <strong id="examDuration">-</strong>
+                                    </div>
+                                    <div class="col-md-6 mt-2">
+                                        <small class="text-muted d-block mb-1">
+                                            <i class="fas fa-list-ol me-1"></i>Số câu hỏi:
+                                        </small>
+                                        <strong id="examQuestions">-</strong>
+                                    </div>
+                                    <div class="col-md-6 mt-2">
+                                        <small class="text-muted d-block mb-1">
+                                            <i class="fas fa-star me-1"></i>Tổng điểm:
+                                        </small>
+                                        <strong id="examScore">-</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Class Selection -->
+                        <div class="mb-4">
+                            <label asp-for="ClassId" class="form-label">
+                                <i class="fas fa-users me-1"></i>
+                                <strong>Chọn lớp học</strong>
+                                <span class="text-danger">*</span>
+                            </label>
+                            <select asp-for="ClassId" class="form-select form-select-lg" id="classSelect" required>
+                                <option value="">-- Chọn lớp học --</option>
+                                @foreach (var classItem in classes)
+                                {
+                                    <option value="@classItem.Id" 
+                                            data-students="@classItem.Students.Count"
+                                            data-code="@classItem.ClassCode">
+                                        @classItem.Name (@classItem.ClassCode) - @classItem.Students.Count sinh viên
+                                    </option>
+                                }
+                            </select>
+                            <span asp-validation-for="ClassId" class="text-danger"></span>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- Start Date & Time -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label asp-for="StartDate" class="form-label">
+                                    <i class="fas fa-calendar me-1"></i>
+                                    <strong>Ngày bắt đầu</strong>
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="StartDate" type="date" class="form-control" required />
+                                <span asp-validation-for="StartDate" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="StartTimeOfDay" class="form-label">
+                                    <i class="fas fa-clock me-1"></i>
+                                    <strong>Giờ bắt đầu</strong>
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="StartTimeOfDay" type="time" class="form-control" required />
+                                <span asp-validation-for="StartTimeOfDay" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- End Date & Time -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label asp-for="EndDate" class="form-label">
+                                    <i class="fas fa-calendar me-1"></i>
+                                    <strong>Ngày kết thúc</strong>
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="EndDate" type="date" class="form-control" required />
+                                <span asp-validation-for="EndDate" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="EndTimeOfDay" class="form-label">
+                                    <i class="fas fa-clock me-1"></i>
+                                    <strong>Giờ kết thúc</strong>
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="EndTimeOfDay" type="time" class="form-control" required />
+                                <span asp-validation-for="EndTimeOfDay" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Info Alert -->
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Lưu ý:</strong>
+                            <ul class="mb-0 mt-2">
+                                <li>Chỉ có thể gán các đề thi đã xuất bản</li>
+                                <li>Sinh viên chỉ có thể làm bài trong khoảng thời gian đã thiết lập</li>
+                                <li>Thời gian kết thúc phải sau thời gian bắt đầu</li>
+                            </ul>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg px-5" id="submitBtn">
+                                <i class="fas fa-check-circle me-2"></i>
+                                Gán Đề Thi
+                            </button>
+                            <a href="@Url.Action("ExamManagement")" class="btn btn-outline-secondary btn-lg px-5 ms-2">
+                                <i class="fas fa-times me-2"></i>
+                                Hủy
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // Set default dates
+            const today = new Date();
+            const nextWeek = new Date(today);
+            nextWeek.setDate(nextWeek.getDate() + 7);
+            
+            $('#StartDate').val(today.toISOString().split('T')[0]);
+            $('#EndDate').val(nextWeek.toISOString().split('T')[0]);
+            
+            // Set default times
+            $('#StartTimeOfDay').val('08:00');
+            $('#EndTimeOfDay').val('23:59');
+            
+            // Show exam info when selected
+            $('#examSelect').on('change', function() {
+                const selectedOption = $(this).find('option:selected');
+                
+                if (selectedOption.val()) {
+                    const subject = selectedOption.data('subject');
+                    const duration = selectedOption.data('duration');
+                    const questions = selectedOption.data('questions');
+                    const score = selectedOption.data('score');
+                    
+                    $('#examSubject').text(subject || 'N/A');
+                    $('#examDuration').text(duration + ' phút');
+                    $('#examQuestions').text(questions + ' câu');
+                    $('#examScore').text(score + ' điểm');
+                    
+                    $('#examInfo').slideDown();
+                } else {
+                    $('#examInfo').slideUp();
+                }
+            });
+            
+            // Trigger change if exam pre-selected
+            if ($('#examSelect').val()) {
+                $('#examSelect').trigger('change');
+            }
+            
+            // Form validation and prevent double submit
+            let isSubmitting = false;
+            $('#assignExamForm').on('submit', function(e) {
+                if (isSubmitting) {
+                    e.preventDefault();
+                    return false;
+                }
+                
+                if (!$(this).valid()) {
+                    e.preventDefault();
+                    return false;
+                }
+                
+                isSubmitting = true;
+                $('#submitBtn').prop('disabled', true)
+                    .html('<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...');
+            });
+        });
+    </script>
+}
